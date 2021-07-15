@@ -1,6 +1,7 @@
 module.exports = {
     NULL_VALUE: '필요한 값이 없습니다.',
     OUT_OF_VALUE: '파라미터 값이 잘못 되었습니다.',
+    TRY_CATCH_ERROR: 'catch error',
   
     /* Member */
     MEMBER_CREATE_SUCCESS: '회원 생성 성공',
