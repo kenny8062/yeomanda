@@ -33,7 +33,8 @@ const signup = async(req, res) => {
                 birth : birth
             }
         };
-
+        console.log(params)
+        console.log(docClient)
         docClient.put(params, function(err, data){
             if (err) {
                 res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
