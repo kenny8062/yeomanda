@@ -53,7 +53,44 @@ const signup = async(req, res) => {
     }
 }
 
+const login = async (req, res) => {
+    try{
+        const { email, password } = req.body
+        if(!email || !password) {
+            res.status(statusCode.BAD_REQUEST).send(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE)
+        }
+
+        AWS.config.update(userConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        const params = {
+            TableName : userConfig.aws_table_name,
+            KeyConditionExpression: 'email = :i',
+            ExpressionAttributeValues: {
+                ':i' : email
+            }
+            
+        };
+        const checkEmail = await docClient.query(params).promise()
+        if(!checkEmail){
+            res.status(statusCode.BAD_REQUEST).send(statusCode.BAD_REQUEST, responseMessage.NO_USER)
+        }
+        const checkPw = await bcrypt.compare(password, checkEmail.Items[0].password)
+        if(!checkPw){
+            res.status(statusCode.BAD_REQUEST).send(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW)
+        }
+
+        const token = await jwt.sign(checkEmail);
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {'token' : token}));
+    } catch (err) {
+        console.log(err);
+        return res
+            .status(statusCode.INTERNAL_SERVER_ERROR)
+            .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR));
+    }
+}
+
 module.exports = {
     signup,
+    login
 };
   
