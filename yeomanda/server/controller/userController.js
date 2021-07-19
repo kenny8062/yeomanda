@@ -5,14 +5,22 @@ const bcrypt = require('bcryptjs');
 const jwt = require('../modules/jwt')
 const AWS = require('aws-sdk')
 const userConfig = require('../config/dynamodb/User')
+const emailValidator = require("email-validator");
+const isValidBirthdate = require('is-valid-birthdate')
+
 
 const signup = async(req, res) => {
     try{
         const { email, password, name, birth } = req.body;
         if(!email || !password || !name || !birth){
-            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
         }   
-
+        if(typeof email != 'string' || typeof password != 'string' || typeof name != 'string' || typeof birth != 'string'){
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+        }
+        if(!emailValidator.validate(email) || isValidBirthdate(birth)){
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_VALIDATION));
+        }
         /**
          * hash password
          */
@@ -33,14 +41,12 @@ const signup = async(req, res) => {
                 birth : birth
             }
         };
-        console.log(params)
-        console.log(docClient)
         docClient.put(params, function(err, data){
             if (err) {
-                res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
+                return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
             } else {
                 const { user } = data
-                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, user))
+                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, user))
             }
         })
 
@@ -57,7 +63,7 @@ const login = async (req, res) => {
     try{
         const { email, password } = req.body
         if(!email || !password) {
-            res.status(statusCode.BAD_REQUEST).send(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE)
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
         }
 
         AWS.config.update(userConfig.aws_iam_info);
@@ -72,11 +78,11 @@ const login = async (req, res) => {
         };
         const checkEmail = await docClient.query(params).promise()
         if(!checkEmail){
-            res.status(statusCode.BAD_REQUEST).send(statusCode.BAD_REQUEST, responseMessage.NO_USER)
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
         }
         const checkPw = await bcrypt.compare(password, checkEmail.Items[0].password)
         if(!checkPw){
-            res.status(statusCode.BAD_REQUEST).send(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW)
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
         }
 
         const token = await jwt.sign(checkEmail);

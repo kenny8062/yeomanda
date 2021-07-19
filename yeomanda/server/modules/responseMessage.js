@@ -1,6 +1,7 @@
 module.exports = {
     NULL_VALUE: '필요한 값이 없습니다.',
     OUT_OF_VALUE: '파라미터 값이 잘못 되었습니다.',
+    WRONG_VALIDATION: '입력데이터의 형식이 잘못 되었습니다.',
     TRY_CATCH_ERROR: 'catch error',
   
     /* Member */
@@ -18,7 +19,6 @@ module.exports = {
     ALREADY_ID: '존재하는 ID 입니다.',
     NO_USER: '존재하지않는 유저 id 입니다.',
     MISS_MATCH_PW: '비밀번호가일치하지않습니다',
-    WRONG_NUMBER: '잘못된 휴대전화 번호입니다.', // 추가함..
   
     /* User */
     READ_USER_SUCCESS: '사용자 조회 성공',
