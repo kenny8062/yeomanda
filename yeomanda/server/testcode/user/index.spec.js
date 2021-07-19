@@ -7,7 +7,7 @@ describe('POST /user', () => {
     it('signup should return success', (done) => {
         request(app)
         .post('/user/signup')
-        .send({email: 'test2@test2.com', password: 'test2', name: 'test2', birth: '1996/07/27'})
+        .send({email: 'test4@test4.com', password: 'test4', name: 'test4', birth: '1996/07/27'})
         .expect(200)
         .end((err, res) => {
             if(err){
