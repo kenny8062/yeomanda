@@ -3,20 +3,31 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "test": "node_modules/.bin/mocha testcode/**/**.js --reporter spec"
   },
   "dependencies": {
+    "aws-sdk": "^2.946.0",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
+    "email-validator": "^2.0.4",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "2.3.2"
+    "is-valid-birthdate": "^0.1.0",
+    "mocha": "^9.0.2",
+    "nodemon": "^2.0.12",
+    "prettier": "2.3.2",
+    "should": "^13.2.3",
+    "supertest": "^6.1.3"
   }
 }
