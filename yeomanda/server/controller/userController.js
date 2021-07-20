@@ -11,11 +11,11 @@ const isValidBirthdate = require('is-valid-birthdate')
 
 const signup = async(req, res) => {
     try{
-        const { email, password, name, birth} = req.body; // 앞전에 미들웨어를 통해서 file은 사전에 처리되어 여기서는 req에 file이 없다. 
-        if(!email || !password || !name || !birth ){
+        const { email, password, name, birth, sex} = req.body; // 앞전에 미들웨어를 통해서 file은 사전에 처리되어 여기서는 req에 file이 없다. 
+        if(!email || !password || !name || !birth || !sex){
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
         }   
-        if(typeof email != 'string' || typeof password != 'string' || typeof name != 'string' || typeof birth != 'string' ){
+        if(typeof email != 'string' || typeof password != 'string' || typeof name != 'string' || typeof birth != 'string' || typeof sex !='string'){
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
         }
         if(!emailValidator.validate(email)){
@@ -45,6 +45,7 @@ const signup = async(req, res) => {
                 password : saltedPassword,
                 name : name,
                 birth : birth,
+                sex : sex,
                 files : fileKey
             }
         };
@@ -52,8 +53,7 @@ const signup = async(req, res) => {
             if (err) {
                 return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
             } else {
-                const { user } = data
-                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, user))
+                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS))
             }
         })
 
