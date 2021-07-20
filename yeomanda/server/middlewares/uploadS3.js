@@ -15,7 +15,7 @@ const upload = multer({
       bucket: "yeomanda-userface",
       contentType: multerS3.AUTO_CONTENT_TYPE,
       key: (req, file, cb) => {
-        cb(null, `upload/${Date.now()}_${file.originalname}`)
+        cb(null, `${req.body.email}/${file.originalname}`)
       },
       acl: 'public-read',
     })
