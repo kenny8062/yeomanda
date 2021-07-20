@@ -4,21 +4,21 @@ const statusCode = require('../modules/statusCode');
 const bcrypt = require('bcryptjs');
 const jwt = require('../modules/jwt')
 const AWS = require('aws-sdk')
-const userConfig = require('../config/dynamodb/User')
+const userConfig = require('../config/aws/User')
 const emailValidator = require("email-validator");
 const isValidBirthdate = require('is-valid-birthdate')
 
 
 const signup = async(req, res) => {
     try{
-        const { email, password, name, birth } = req.body;
-        if(!email || !password || !name || !birth){
+        const { email, password, name, birth} = req.body; // 앞전에 미들웨어를 통해서 file은 사전에 처리되어 여기서는 req에 file이 없다. 
+        if(!email || !password || !name || !birth ){
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
         }   
-        if(typeof email != 'string' || typeof password != 'string' || typeof name != 'string' || typeof birth != 'string'){
+        if(typeof email != 'string' || typeof password != 'string' || typeof name != 'string' || typeof birth != 'string' ){
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
         }
-        if(!emailValidator.validate(email) || isValidBirthdate(birth)){
+        if(!emailValidator.validate(email)){
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.WRONG_VALIDATION));
         }
         /**
@@ -27,6 +27,12 @@ const signup = async(req, res) => {
         const salt = await bcrypt.genSalt(10)
         const saltedPassword = await bcrypt.hash(password, salt)
 
+        /**
+         * receive user face image  
+         */
+        const fileKey = req.files.map((files) => {
+            return files.key;
+        })
         /**
          * connect to aws dynamodb
          */
@@ -38,7 +44,8 @@ const signup = async(req, res) => {
                 email : email,
                 password : saltedPassword,
                 name : name,
-                birth : birth
+                birth : birth,
+                files : fileKey
             }
         };
         docClient.put(params, function(err, data){
