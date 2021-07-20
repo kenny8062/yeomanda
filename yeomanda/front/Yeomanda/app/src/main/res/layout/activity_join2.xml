@@ -6,4 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".joinActivity.JoinActivity2">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/nameEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/birthEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="birth" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/mBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="남" />
+
+            <Button
+                android:id="@+id/wBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="여" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/nextBtn2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다음" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

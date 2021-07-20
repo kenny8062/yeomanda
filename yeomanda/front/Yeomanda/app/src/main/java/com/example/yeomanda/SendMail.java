@@ -10,7 +10,7 @@ import javax.mail.SendFailedException;
 
 public class SendMail extends AppCompatActivity {
     String user = "hangichan97@gmail.com"; // 보내는 계정의 id
-    String password = "gksrlcks1!"; // 보내는 계정의 pw
+    String password = "gksrlcks1@"; // 보내는 계정의 pw
     public String sendSecurityCode(Context context, String sendTo) {
         try {
             GmailSender gMailSender = new GmailSender(user, password);
