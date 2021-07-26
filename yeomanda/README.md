@@ -49,7 +49,11 @@ module.exports = {
 ```
 
 ##### image store : s3 
-- s3 cannot store file bigger than 400KB
+- dynamdb cannot store file bigger than 400KB
+- store user image in s3 that connected with user's email
+- store image by middleware
+<https://github.com/jjmmll0727/yeomanda/blob/main/yeomanda/server/middlewares/uploadS3.js>
+
 
 ##### test code : mocha
 - testcode directory
