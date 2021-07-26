@@ -1,9 +1,9 @@
 ### STACK
 
-##### database : aws dynamodb 
+##### database : AWS dynamodb 
 - to connect aws remotely, accesskey, secretkey and region should involved in configuration data.
 - dynamodb does not support validator.
-- hased password is not longer than 50 in dynamodb
+- <strong>hased password is not longer than 50 in dynamodb</strong>
 
 ``` javascript
 const AWS = require('aws-sdk')
