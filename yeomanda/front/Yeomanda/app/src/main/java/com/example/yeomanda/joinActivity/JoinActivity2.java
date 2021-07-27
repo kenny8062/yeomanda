@@ -13,7 +13,7 @@ import com.example.yeomanda.Retrofit.JoinDto;
 
 public class JoinActivity2 extends AppCompatActivity {
     JoinDto joinDto;
-    Button mBtn,wBtn;
+    Button mBtn,wBtn,nextBtn;
     boolean isMan, isWoman =false;
     EditText birthEdt,nameEdt;
     @Override
@@ -29,6 +29,7 @@ public class JoinActivity2 extends AppCompatActivity {
         wBtn=findViewById(R.id.wBtn);
         birthEdt=findViewById(R.id.birthEdt);
         nameEdt=findViewById(R.id.nameEdt);
+        nextBtn=findViewById(R.id.nextBtn2);
 
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,8 +38,35 @@ public class JoinActivity2 extends AppCompatActivity {
                     wBtn.setBackgroundResource(R.drawable.ic_disabled_button);
                     isWoman =false;
                 }
+                mBtn.setBackgroundResource(R.drawable.ic_sub_black_lined_button);
+                isMan=true;
             }
         });
 
+        wBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isMan){
+                    mBtn.setBackgroundResource(R.drawable.ic_disabled_button);
+                    isMan=false;
+                }
+                wBtn.setBackgroundResource(R.drawable.ic_sub_black_lined_button);
+                isWoman=true;
+            }
+        });
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isWoman) joinDto.setSex("W");
+                else joinDto.setSex("M");
+                joinDto.setName(nameEdt.getText().toString());
+                joinDto.setBirth(birthEdt.getText().toString());
+                Intent intent = new Intent(getApplicationContext(),JoinActivity3.class);
+                intent.putExtra("joinDto",joinDto);
+                startActivity(intent);
+            }
+        });
     }
+
+
 }
