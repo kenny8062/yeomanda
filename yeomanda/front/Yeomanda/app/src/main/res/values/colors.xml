@@ -6,5 +6,16 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#f7f7fa</color>
+    <color name="colorAccent">#03DAC5</color>
+    <!-- 제플린 스타일 가이드 -->
+    <color name="playviolet">#33353d</color>
+    <color name="gray">#dddde2</color>
+    <color name="back">#f7f7fa</color>
+    <color name="white">#ffffff</color>
+    <color name="sub_black">#333d4b</color>
+    <color name="line">#e8e8f1</color>
+    <color name="sub_gray">#b9bcce</color>
+    <color name="main_black">#131820</color>
 </resources>

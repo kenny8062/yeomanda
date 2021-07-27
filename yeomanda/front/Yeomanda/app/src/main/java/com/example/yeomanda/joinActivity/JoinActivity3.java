@@ -19,7 +19,7 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.yeomanda.MainActivity;
+import com.example.yeomanda.LoginActivity;
 import com.example.yeomanda.R;
 import com.example.yeomanda.Retrofit.JoinDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
@@ -31,6 +31,7 @@ public class JoinActivity3 extends AppCompatActivity {
     JoinDto joinDto;
     Button nextBtn;
     ImageView selfimage1,selfimage2,selfimage3;
+    MultipartBody.Part[] selfimage=new MultipartBody.Part[3];
     Uri uri[]=new Uri[3];
     final int MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE =1;
     private final int GET_IMAGE_FOR_PICTURE1 = 300;
@@ -44,6 +45,7 @@ public class JoinActivity3 extends AppCompatActivity {
         setContentView(R.layout.activity_join_main3);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},1);
         retrofitClient=new RetrofitClient();
+        context=this;
         init();
     }
 
@@ -59,7 +61,11 @@ public class JoinActivity3 extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                for(int i=0;i<3;i++){
+                    selfimage[i]=retrofitClient.prepareFilePart("files", uri[i], context);
+                }
+                retrofitClient.uploadSign_up(joinDto,selfimage);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });

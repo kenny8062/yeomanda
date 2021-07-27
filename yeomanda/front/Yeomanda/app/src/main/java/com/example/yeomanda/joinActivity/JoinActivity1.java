@@ -45,6 +45,7 @@ public class JoinActivity1 extends AppCompatActivity {
         passwordEdt=findViewById(R.id.passwordEdt);
         certificationNumEdt=findViewById(R.id.certNum);
         linearLayout=findViewById(R.id.linearlayout);
+        joinDto=new JoinDto();
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +62,8 @@ public class JoinActivity1 extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isAuth){
+                if(!isAuth){
+                    System.out.println(emailEdt.getText().toString());
                     joinDto.setEmail(emailEdt.getText().toString());
                     joinDto.setPassword(passwordEdt.getText().toString());
                     Intent intent=new Intent(getApplicationContext(),JoinActivity2.class);

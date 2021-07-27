@@ -6,7 +6,8 @@ const jwt = require('../modules/jwt')
 const AWS = require('aws-sdk')
 const userConfig = require('../config/aws/User')
 const emailValidator = require("email-validator");
-const isValidBirthdate = require('is-valid-birthdate')
+const isValidBirthdate = require('is-valid-birthdate');
+const { NULL_VALUE } = require('../modules/responseMessage');
 
 
 const signup = async(req, res) => {
@@ -68,9 +69,11 @@ const signup = async(req, res) => {
 
 const login = async (req, res) => {
     try{
+
+        const failed = "fail"
         const { email, password } = req.body
         if(!email || !password) {
-            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+            return res.status(statusCode.OK).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE, {'token' : failed}));
         }
 
         AWS.config.update(userConfig.aws_iam_info);
@@ -84,14 +87,14 @@ const login = async (req, res) => {
             
         };
         const checkEmail = await docClient.query(params).promise()
-        if(!checkEmail){
-            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+
+        if(checkEmail.Items.length ===0){
+            return res.status(statusCode.OK).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER, {'token' : failed}));
         }
         const checkPw = await bcrypt.compare(password, checkEmail.Items[0].password)
         if(!checkPw){
-            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
+            return res.status(statusCode.OK).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW, {'token' : failed}));
         }
-
         const token = await jwt.sign(checkEmail);
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {'token' : token}));
     } catch (err) {
@@ -106,4 +109,3 @@ module.exports = {
     signup,
     login
 };
-  

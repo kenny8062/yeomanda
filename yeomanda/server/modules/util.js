@@ -5,9 +5,10 @@ module.exports = {
       message,
       data,
     }),
-    fail: (status, message) => ({
+    fail: (status, message,data) => ({
       status,
       success: false,
       message,
+      data,
     }),
   };

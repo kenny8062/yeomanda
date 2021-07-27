@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.loader.content.CursorLoader;
@@ -23,11 +24,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static JoinService joinService;
-    private static JoinResponceDto joinResponceDto=null;
+    private static JoinResponseDto joinResponseDto =null;
+    private static LoginResponseDto loginResponseDto=null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("URL")
+                .baseUrl("http://172.30.24.236:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         joinService=retrofit.create(JoinService.class);
@@ -48,8 +50,18 @@ public class RetrofitClient {
         Thread thread = new Thread() {
             @Override
             public void run() {
+//                try {
+//                    Log.d("Tag",joinDto.getEmail());
+//                    Log.d("Tag",joinDto.getPassword());
+//                    Log.d("Tag",joinDto.getName());
+//                    Log.d("Tag",joinDto.getSex());
+//                    Log.d("Tag",joinDto.getBirth());
+//                    joinResponseDto = joinService.uploadJoin(joinDto.getEmail(),joinDto.getPassword(),joinDto.getName(),joinDto.getSex(),joinDto.getBirth(),selfimage).execute().body();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 try {
-                    joinResponceDto= joinService.uploadJoin(createPartFromString(joinDto.getEmail()),createPartFromString(joinDto.getPassword()),createPartFromString(joinDto.getName()),createPartFromString(joinDto.getSex()),createPartFromString(joinDto.getBirth()),selfimage).execute().body();
+                    joinResponseDto = joinService.uploadJoin(createPartFromString(joinDto.getEmail()),createPartFromString(joinDto.getPassword()),createPartFromString(joinDto.getName()),createPartFromString(joinDto.getSex()),createPartFromString(joinDto.getBirth()),selfimage).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -83,5 +95,26 @@ public class RetrofitClient {
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
     }
+    public LoginResponseDto login(LoginDto loginDto){
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    loginResponseDto = joinService.login(loginDto).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
 
+        try {
+            thread.join();
+            Log.d("t",loginResponseDto.getMessage());
+            return loginResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
