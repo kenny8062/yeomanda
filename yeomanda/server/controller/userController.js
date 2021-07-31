@@ -6,8 +6,6 @@ const jwt = require('../modules/jwt')
 const AWS = require('aws-sdk')
 const userConfig = require('../config/aws/User')
 const emailValidator = require("email-validator");
-const isValidBirthdate = require('is-valid-birthdate');
-const { NULL_VALUE } = require('../modules/responseMessage');
 
 
 const signup = async(req, res) => {
