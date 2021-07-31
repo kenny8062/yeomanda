@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const travelersController = require('../../controller/travelersController');
 
-router.post('/showall', travelersController.login);
+router.post('/showtravelers', travelersController.showtravelers);
 
 
 module.exports = router;
