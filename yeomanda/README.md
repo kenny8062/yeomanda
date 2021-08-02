@@ -54,6 +54,7 @@ module.exports = {
 - It is supported for free tier
 - designed table for each traveler
 - database ide : "tableplus"
+- `sudo mysql -h database-yeomanda.cqriqomipg3n.ap-northeast-2.rds.amazonaws.com -p travelers -u jaymee -p`
 
 - "travel_with" TABLE
 
