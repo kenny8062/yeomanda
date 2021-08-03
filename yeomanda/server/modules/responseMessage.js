@@ -52,6 +52,11 @@ module.exports = {
     /* 서버에러 */
     INTERNAL_SERVER_ERROR: '서버 내부 오류',
     EMPTY_TOKEN: '토큰 없음',
-    EXPIRED_TOKEN: '만료된 토큰'
+    EXPIRED_TOKEN: '만료된 토큰',
+
+    /* 데이터베이스 */
+    DISCONNECT_DATABASE: '데이터베이스 연결 실패',
+    QUERY_ERROR: '쿼리문 에러',
+    QUERY_SUCCESS: '쿼리문 성공'
   };
   
