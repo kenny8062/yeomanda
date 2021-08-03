@@ -8,7 +8,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
-public interface JoinService {
+public interface RetrofitService {
 
     @Multipart
     @POST("/user/signup")
@@ -30,4 +30,9 @@ public interface JoinService {
     Call<LoginResponseDto> login(
             @Body LoginDto loginDto
             );
+
+    @POST("travelers/registerPlan")
+    Call<CreateBoardResponseDto> createBoard(
+      @Body CreateBoardDto[] createBoardDto
+    );
 }

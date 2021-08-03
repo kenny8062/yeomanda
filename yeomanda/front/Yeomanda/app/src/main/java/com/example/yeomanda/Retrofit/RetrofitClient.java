@@ -23,16 +23,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static JoinService joinService;
+    private static RetrofitService retrofitService;
     private static JoinResponseDto joinResponseDto =null;
     private static LoginResponseDto loginResponseDto=null;
+    private static CreateBoardResponseDto createBoardResponseDto=null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://172.30.24.236:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        joinService=retrofit.create(JoinService.class);
+        retrofitService =retrofit.create(RetrofitService.class);
     }
 
     private String getRealPathFromURI(Uri contentUri) {
@@ -56,12 +57,12 @@ public class RetrofitClient {
 //                    Log.d("Tag",joinDto.getName());
 //                    Log.d("Tag",joinDto.getSex());
 //                    Log.d("Tag",joinDto.getBirth());
-//                    joinResponseDto = joinService.uploadJoin(joinDto.getEmail(),joinDto.getPassword(),joinDto.getName(),joinDto.getSex(),joinDto.getBirth(),selfimage).execute().body();
+//                    joinResponseDto = retrofitService.uploadJoin(joinDto.getEmail(),joinDto.getPassword(),joinDto.getName(),joinDto.getSex(),joinDto.getBirth(),selfimage).execute().body();
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
                 try {
-                    joinResponseDto = joinService.uploadJoin(createPartFromString(joinDto.getEmail()),createPartFromString(joinDto.getPassword()),createPartFromString(joinDto.getName()),createPartFromString(joinDto.getSex()),createPartFromString(joinDto.getBirth()),selfimage).execute().body();
+                    joinResponseDto = retrofitService.uploadJoin(createPartFromString(joinDto.getEmail()),createPartFromString(joinDto.getPassword()),createPartFromString(joinDto.getName()),createPartFromString(joinDto.getSex()),createPartFromString(joinDto.getBirth()),selfimage).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -100,7 +101,7 @@ public class RetrofitClient {
             @Override
             public void run() {
                 try {
-                    loginResponseDto = joinService.login(loginDto).execute().body();
+                    loginResponseDto = retrofitService.login(loginDto).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -112,6 +113,29 @@ public class RetrofitClient {
             thread.join();
             Log.d("t",loginResponseDto.getMessage());
             return loginResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public CreateBoardResponseDto createboard(CreateBoardDto[] createBoardDto){
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    createBoardResponseDto = retrofitService.createBoard(createBoardDto).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+
+        try {
+            thread.join();
+            Log.d("t",createBoardResponseDto.getMessage());
+            return createBoardResponseDto;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;
