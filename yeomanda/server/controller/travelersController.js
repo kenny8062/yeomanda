@@ -14,12 +14,11 @@ const statusCode = require('../modules/statusCode');
      */
 
 const mysql_config = require('../config/aws/Travelers');
-const { json } = require('express');
 const conn = mysql_config.init()
 mysql_config.connect(conn)
 
 const showTravelers = async(req, res) => {
-    const location_gps = req.body
+    const { latitude, logitude } = req.body
     const sql = 'select * from travel_with;'
     conn.query(sql, function(err, data){
         if(err){
@@ -32,24 +31,54 @@ const showTravelers = async(req, res) => {
 
 }
 const registerPlan = async(req, res) => {
-    const plan = req.body
-    const jsonPlan = JSON.parse(JSON.stringify(plan));
-    for(var i=0; i<Object.keys(jsonPlan).length; i++){
-        const params = {
-            email : jsonPlan[i]["travelMate"].toString(),
-            location_gps : jsonPlan[i]["location_gps"].toString(),
-            team_no : 0,
-            travelDate : jsonPlan[i]["travelDate"].toString(),
-            isfinished : 0,
-        }
-        const sql = 'insert into travel_with set ?;'
-        conn.query(sql, params, function(err, data){
+    try{
+        const sql_team_no = 'select max(team_no) as newTeam from travel_with;'
+        var new_team_no = 0
+        var success_count = 0
+        /**
+         * search how many team has registered 
+         */
+        conn.query(sql_team_no, function(err, data){
             if(err){
-                return res.send(`failed to store data to database at ${i+1} try`)
+                console.log(err)
+                return res.send('failed to get new team number')
+            }
+            else{
+                new_team_no = data[0].newTeam
+
+                const plan = req.body
+                const jsonPlan = JSON.parse(JSON.stringify(plan));
+                for(var i=0; i<Object.keys(jsonPlan).length; i++){
+                    // latitude and logitude from request & concat them to location_gps in table field
+                    const location_gps = jsonPlan[i]["latitude"].toString() + '/' + jsonPlan[i]["logitude"].toString()
+                    const params = {
+                        email : jsonPlan[i]["travelMate"].toString(),
+                        location_gps : location_gps,
+                        team_no : new_team_no+1,
+                        travelDate : jsonPlan[i]["travelDate"].toString(),
+                        isfinished : 0,
+                    }
+                    // add new plan
+                    const sql = 'insert into travel_with set ?;'
+                    conn.query(sql, params, function(err, data){
+                        if(err){
+                            console.log(err)
+                            return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, "failed to store new plan"))
+                        }else{
+                            // just for sending response only one time
+                            success_count = success_count + 1
+                            if (success_count === Object.keys(jsonPlan).length){
+                                return res.status(statusCode.OK).
+                                    send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "success to store new plan!!")) 
+                            }
+                        }
+                    })
+                }
             }
         })
+    }catch(err){
+        return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
-    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "success to store new plan!!"))
 }
 
 
