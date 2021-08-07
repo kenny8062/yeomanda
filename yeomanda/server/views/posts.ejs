@@ -1,0 +1,52 @@
+<html>
+    <!DOCTYPE html>
+     <html lang = "ko">
+     <head>
+       <meta charset = "UTF-8">
+       <meta name = "viewport" content = "width = device-width, initial scale = 1.0">
+       <title>posts</title>
+     </head>
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+     <style>
+        body{
+            position: absolute;
+            left: 45%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            
+        }
+        div{
+            padding: 20px;
+        }
+        input{
+            transition: all 0.5s ease-in-out;
+            outline: none;
+            padding: 20px 50px 20px 50px;
+            border:none;
+    
+            border-bottom: gray 1px solid;
+            font-size: 18px;    
+            cursor: pointer;
+        }
+        input:focus{
+            box-shadow: 3px 3px 10px 2px #74b9ff;
+    
+    
+        }
+    
+    </style>
+
+     <body>
+       <input type = "email" placeholder = "EMAIL" id = "email" value = ""> <br><br>
+       <input type = "password" placeholder = "PASSWORD" id = "password" value = ""> <br><br>
+       <input type= "button" onclick='loginClick()' value = "로그인하기">
+        <a href = "/users/signup" >회원가입하기</a>
+     </body>  
+    <script>
+       
+    </script>
+</html>

@@ -1,0 +1,98 @@
+<html>
+    <!DOCTYPE html>
+     <html lang = "ko">
+     <head>
+       <meta charset = "UTF-8">
+       <meta name = "viewport" content = "width = device-width, initial scale = 1.0">
+       <title>signup</title>
+     </head>
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+     <style>
+        body{
+            position: absolute;
+            left: 45%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            
+        }
+        div{
+            padding: 20px;
+        }
+        input{
+            transition: all 0.5s ease-in-out;
+            outline: none;
+            padding: 20px 50px 20px 50px;
+            border:none;
+    
+            border-bottom: gray 1px solid;
+            font-size: 18px;    
+            cursor: pointer;
+        }
+        input:focus{
+            box-shadow: 3px 3px 10px 2px #74b9ff;
+    
+    
+        }
+    
+    </style>
+
+    <body>
+        <input type = "email" placeholder = "EMAIL" id = "email" value = ""> <br><br>
+        <input type = "password" placeholder = "PASSWORD" id = "password" value = ""> <br><br>
+        <input type = "text" placeholder = "BIRTH" id = "birth" value = ""> <br><br>
+        <input type = "text" placeholder = "SEX" id = "sex" value = ""> <br><br>
+        <input type = "text" placeholder = "NAME" id = "name" value = ""> <br><br>
+
+        <form> 
+           <input type = "file" name="files" id="files" accept = "image/png, image/jpeg, image/jpg" multiple><br><br> 
+        </form>
+
+       <input type = "button" onclick='signupClick()' value = "회원가입하기"><br><br>
+       <a href = "/users/login" >로그인하기</a>
+
+     </body>  
+    <script>
+
+        function signupClick()
+        {
+            var frm = new FormData(); 
+            const email = document.getElementById("email").value;
+            frm.append("email", email)
+            const pw = document.getElementById("password").value;
+            frm.append("password", pw)
+            const name = document.getElementById("name").value;
+            frm.append("name", name)
+            const birth = document.getElementById("birth").value;
+            frm.append("birth", birth)
+            const sex = document.getElementById("sex").value;
+            frm.append("sex", sex)
+            // file upload 항목을 제일 마지막에 넣어야 한다. 그래야 미들웨어에서 req 정보를 가져올 수 있어.
+            const photoFile = document.getElementById("files"); 
+            for(var i = 0; i < photoFile.files.length; i++){
+                frm.append("files", photoFile.files[i])
+            }
+
+
+            axios({
+                method: 'POST', //통신 방식
+                url: '/user/signup', //통신할 페이지
+                data: frm,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                } //인자로 보낼 데이터
+            })
+            .then(res => {
+                console.log(res);
+                alert("success to signup!!");
+                window.location = "/users/login"
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    </script>
+</html>
