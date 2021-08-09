@@ -81,9 +81,14 @@ const registerPlan = async(req, res) => {
     }
 }
 
+const showPosts = async(req, res) => {
+    const {title, content} = req.body
+    return res.status(statusCode.OK).send({'title' : title, 'content' : content})
+}
 
 
 module.exports = {
     showTravelers,
-    registerPlan
+    registerPlan,
+    showPosts
 };

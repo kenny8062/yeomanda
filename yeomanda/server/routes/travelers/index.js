@@ -4,6 +4,6 @@ const travelersController = require('../../controller/travelersController');
 
 router.post('/showTravelers', travelersController.showTravelers);
 router.post('/registerPlan', travelersController.registerPlan);
-
+router.post('/showPosts', travelersController.showPosts);
 
 module.exports = router;

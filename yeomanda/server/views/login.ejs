@@ -64,10 +64,21 @@
                 } //인자로 보낼 데이터
             })
             .then(res => {
-                console.log(res);
-                alert("success to login!!");
-                //showPopup()
-                window.location = "/users/posts"
+                if(res.data.data.token === 'fail'){
+                    alert('fail to login')
+                    window.location = "/users/login"
+                }
+                else{
+                    console.log(res.data.data.token);
+                    const token = res.data.data.token;
+                    //axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+                    localStorage.setItem('JWT', token);
+                    //document.cookie = token;
+                    alert("success to login!!");
+                    //showPopup()
+                    window.location = "/users/posts"
+                }
+                
             })
             .catch(err => {
                 console.log(err);
@@ -75,3 +86,7 @@
         }
     </script>
 </html>
+
+<!--
+    https://jihyehwang09.github.io/2019/01/29/javascript15/
+-->

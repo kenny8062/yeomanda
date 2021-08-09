@@ -41,12 +41,42 @@
     </style>
 
      <body>
-       <input type = "email" placeholder = "EMAIL" id = "email" value = ""> <br><br>
-       <input type = "password" placeholder = "PASSWORD" id = "password" value = ""> <br><br>
-       <input type= "button" onclick='loginClick()' value = "로그인하기">
-        <a href = "/users/signup" >회원가입하기</a>
+        <input type = "text" placeholder = "title" id = "title" value = ""> <br><br>
+        <input type = "text" placeholder = "content" id = "content" value = ""> <br><br>
+       <input type= "button" onclick='showPosts()' value = "게시글 작성하기">
      </body>  
+
     <script>
-       
+       function showPosts() {
+            const token = localStorage.getItem('JWT')
+            //alert(token)
+            axios.defaults.headers.common['Authorization'] = token
+            console.log("here")
+            const title = document.getElementById('title').value
+            const content = document.getElementById('content').value
+            axios({
+                method: 'POST', //통신 방식
+                url: '/travelers/showPosts', //통신할 페이지
+                headers: {
+                    "Access-Control-Allow-Origin" : "*",
+                    "Content-type": "Application/json",
+                    Authorization: token
+                },
+                data: {
+                    "title" : title,
+                    "content" : content
+                }, //인자로 보낼 데이터
+                withCredentials: true,
+                crossDomain: true,
+                credentials: "include"
+            }).
+            then((res) => {
+                console.log(res)
+                alert(title + '\n' + content)
+            }).
+            catch((err) => {
+                console.log(err)
+            })
+       }
     </script>
 </html>
