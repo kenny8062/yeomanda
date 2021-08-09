@@ -20,7 +20,7 @@ const verifyToken = {
     if (user === TOKEN_INVALID) {
       return res.status(sc.UNAUTHORIZED).send(ut.fail(sc.UNAUTHORIZED, rm.INVALID_TOKEN));
     }
-    if (user.id === undefined) {
+    if (user === undefined) {
       return res.status(sc.UNAUTHORIZED).send(ut.fail(sc.UNAUTHORIZED, rm.INVALID_TOKEN));
     }
     req.decoded = user;

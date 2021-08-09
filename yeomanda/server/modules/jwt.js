@@ -5,9 +5,8 @@ const TOKEN_INVALID = -2;
 
 const sign = async (user) => {
   const payload = {
-    id: user._id,
-    name: user.name,
-    phonenumber: user.phonenumber,
+    name: user.Items[0].name,
+    birth: user.Items[0].birth,
   }; // token에 암호화되어 저장되는 값
   const token = jwt.sign(payload, secretKey, options);
   return token;

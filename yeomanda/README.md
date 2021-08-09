@@ -79,4 +79,9 @@ module.exports = {
 - <https://github.com/jjmmll0727/yeomanda/blob/main/yeomanda/server/testcode/user/index.spec.js>
 
 
+### SKILL
+##### jwt token
+- payload 를 잘 맞춰야 한다. 
+- jwt sign 함수로 들어오는 파라미터를 잘 파악해야 한다. 
+
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
