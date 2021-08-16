@@ -55,6 +55,7 @@ module.exports = {
 - designed table for each traveler
 - database ide : "tableplus"
 - `sudo mysql -h database-yeomanda.cqriqomipg3n.ap-northeast-2.rds.amazonaws.com -p travelers -u jaymee -p`
+- jaymeedev
 
 - "travel_with" TABLE
 
@@ -83,5 +84,10 @@ module.exports = {
 ##### jwt token
 - payload 를 잘 맞춰야 한다. 
 - jwt sign 함수로 들어오는 파라미터를 잘 파악해야 한다. 
+
+
+##### reverse geocoding api
+- get location informatin from latitude & logitude 
+- use google api
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]

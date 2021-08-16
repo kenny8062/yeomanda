@@ -28,10 +28,14 @@ const getLocation = async(latlng) => {
 }
 const showTravelers = async(req, res) => {
     const { latitude, logitude } = req.body
+    /**
+     * find traveler who is closed with login user.
+     */
     const latlng = latitude + ',' + logitude
     const locationResult = await getLocation(latlng)
-    const country = locationResult.data.plus_code.global_code
-    const sql = 'select * from travel_with;'
+    const country = locationResult.data.plus_code.global_code // country code ex)87G8M376+PJ - koera
+    console.log(country)
+    const sql = `select * from travel_with where region_info = '${country}';`
     conn.query(sql, function(err, data){
         if(err){
             return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, "fail"))
@@ -62,7 +66,6 @@ const registerPlan = async(req, res) => {
                 const jsonPlan = JSON.parse(JSON.stringify(plan));
 
                 const location_gps = jsonPlan[0]["latitude"].toString() + ',' + jsonPlan[0]["logitude"].toString()
-                console.log(location_gps)
                 const locationResult = await getLocation(location_gps)
                 const country = locationResult.data.plus_code.global_code
 
