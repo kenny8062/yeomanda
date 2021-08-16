@@ -1,6 +1,8 @@
 const util = require('../modules/util');
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
+const axios = require('axios')
+const googleapis = require('../config/googleApi')
 
 /**
  * connection to aws mysql server
@@ -17,8 +19,18 @@ const mysql_config = require('../config/aws/Travelers');
 const conn = mysql_config.init()
 mysql_config.connect(conn)
 
+const getLocation = async(latlng) => {
+    try{
+        return await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&key=${googleapis.key}`)
+    }catch(err){
+        console.log(err);
+    };
+}
 const showTravelers = async(req, res) => {
     const { latitude, logitude } = req.body
+    const latlng = latitude + ',' + logitude
+    const locationResult = await getLocation(latlng)
+    console.log(locationResult)
     const sql = 'select * from travel_with;'
     conn.query(sql, function(err, data){
         if(err){
