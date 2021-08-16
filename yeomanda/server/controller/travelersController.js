@@ -30,7 +30,7 @@ const showTravelers = async(req, res) => {
     const { latitude, logitude } = req.body
     const latlng = latitude + ',' + logitude
     const locationResult = await getLocation(latlng)
-    console.log(locationResult)
+    const country = locationResult.data.plus_code.global_code
     const sql = 'select * from travel_with;'
     conn.query(sql, function(err, data){
         if(err){
@@ -50,7 +50,7 @@ const registerPlan = async(req, res) => {
         /**
          * search how many team has registered 
          */
-        conn.query(sql_team_no, function(err, data){
+        conn.query(sql_team_no, async function(err, data){
             if(err){
                 console.log(err)
                 return res.send('failed to get new team number')
@@ -60,15 +60,21 @@ const registerPlan = async(req, res) => {
 
                 const plan = req.body
                 const jsonPlan = JSON.parse(JSON.stringify(plan));
+
+                const location_gps = jsonPlan[0]["latitude"].toString() + ',' + jsonPlan[0]["logitude"].toString()
+                console.log(location_gps)
+                const locationResult = await getLocation(location_gps)
+                const country = locationResult.data.plus_code.global_code
+
                 for(var i=0; i<Object.keys(jsonPlan).length; i++){
                     // latitude and logitude from request & concat them to location_gps in table field
-                    const location_gps = jsonPlan[i]["latitude"].toString() + '/' + jsonPlan[i]["logitude"].toString()
                     const params = {
                         email : jsonPlan[i]["travelMate"].toString(),
                         location_gps : location_gps,
                         team_no : new_team_no+1,
                         travelDate : jsonPlan[i]["travelDate"].toString(),
                         isfinished : 0,
+                        region_info : country
                     }
                     // add new plan
                     const sql = 'insert into travel_with set ?;'
