@@ -3,7 +3,7 @@ const router = express.Router();
 const verifyToken = require('../middlewares/verifyToken');
 
 router.use('/user', require('./user'));
-router.use('/travelers', verifyToken.checkToken, require('./travelers'));
+router.use('/travelers', require('./travelers'));
 
 
 
