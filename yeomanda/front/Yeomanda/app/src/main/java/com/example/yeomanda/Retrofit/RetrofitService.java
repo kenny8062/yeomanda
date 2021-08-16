@@ -13,12 +13,6 @@ public interface RetrofitService {
     @Multipart
     @POST("/user/signup")
     Call<JoinResponseDto> uploadJoin(
-//            @Part("email") String email,
-//            @Part("password") String password,
-//            @Part("name") String name,
-//            @Part("sex") String sex,
-//            @Part("birth") String birth,
-//            @Part MultipartBody.Part[] totalselfimage);
             @Part("email") RequestBody email,
             @Part("password") RequestBody password,
             @Part("name") RequestBody name,
@@ -34,5 +28,9 @@ public interface RetrofitService {
     @POST("travelers/registerPlan")
     Call<CreateBoardResponseDto> createBoard(
       @Body CreateBoardDto[] createBoardDto
+    );
+    @POST("travelers/showTravelers")
+    Call<CreateBoardResponseDto> sendLocation(
+            @Body LocationDto locationDto
     );
 }

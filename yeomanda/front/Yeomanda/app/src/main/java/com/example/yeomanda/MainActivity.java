@@ -22,6 +22,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.yeomanda.Retrofit.LocationDto;
+import com.example.yeomanda.Retrofit.RetrofitClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Location mCurrentLocatiion;
     LatLng currentPosition;
 
-
+    RetrofitClient retrofitClient;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
@@ -109,8 +111,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void init(){
+        /*
+        retrofitClient=new RetrofitClient();
+        LocationDto locationDto=new LocationDto();
+        locationDto.setLatitude(location.getLatitude());
+        locationDto.setLongitude(location.getLongitude());
+        retrofitClient.sendLocation(locationDto);
+        */
         createBoardBtn=findViewById(R.id.createBoardBtn);
-
         createBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

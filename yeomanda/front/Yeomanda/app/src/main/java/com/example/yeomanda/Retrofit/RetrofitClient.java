@@ -141,4 +141,18 @@ public class RetrofitClient {
             return null;
         }
     }
+    public CreateBoardResponseDto sendLocation(LocationDto locationDto){
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    createBoardResponseDto=retrofitService.sendLocation(locationDto).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        return null;
+    }
 }
