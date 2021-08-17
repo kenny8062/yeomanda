@@ -69,7 +69,7 @@ const registerPlan = async(req, res) => {
                 const plan = req.body
                 const jsonPlan = JSON.parse(JSON.stringify(plan));
 
-                const location_gps = jsonPlan[0]["latitude"].toString() + ',' + jsonPlan[0]["longitude"].toString()
+                const location_gps = jsonPlan[0]["latitude"] + ',' + jsonPlan[0]["longitude"]
                 const locationResult = await getLocation(location_gps)
                 const country = locationResult.data.plus_code.global_code
 

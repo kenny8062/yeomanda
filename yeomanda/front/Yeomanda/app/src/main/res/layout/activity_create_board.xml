@@ -19,21 +19,26 @@
             android:inputType="textPersonName"
             android:text="Date" />
 
-        <EditText
-            android:id="@+id/editTextTextPersonName2"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="email" />
+            android:id="@+id/ll"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextTextPersonName3"
+            <EditText
+                android:id="@+id/editTextTextPersonName2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="email" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/plusBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="email" />
+            android:text="Button" />
 
         <Button
             android:id="@+id/createBtn"

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="아이디를 입력해주세요" />
+            android:text="woals1@woals1.com" />
 
         <EditText
             android:id="@+id/password_edt"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="비밀번호를 입력해주세요" />
+            android:text="woals1" />
 
         <CheckBox
             android:id="@+id/autologin_box"

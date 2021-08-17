@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.yeomanda.Retrofit.LocationDto;
+import com.example.yeomanda.Retrofit.LocationResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
+    private LocationResponseDto locationResponseDto;
     Button createBoardBtn;
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
@@ -82,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Intent intent=getIntent();
-        //String token=intent.getStringExtra("token");
-        //Log.d("Tag",token);
+        Intent intent=getIntent();
+        String token=intent.getStringExtra("token");
+        Log.d("Tag",token);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -111,13 +113,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void init(){
-        /*
-        retrofitClient=new RetrofitClient();
-        LocationDto locationDto=new LocationDto();
-        locationDto.setLatitude(location.getLatitude());
-        locationDto.setLongitude(location.getLongitude());
-        retrofitClient.sendLocation(locationDto);
-        */
+
+
+
+
         createBoardBtn=findViewById(R.id.createBoardBtn);
         createBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,6 +224,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
 
+
+                if(locationResponseDto==null) {
+                    //근처 TeamInfo 가져오기
+                    retrofitClient = new RetrofitClient();
+                    LocationDto locationDto = new LocationDto();
+                    locationDto.setLatitude(Double.toString(location.getLatitude()));
+                    locationDto.setLongitude(Double.toString(location.getLongitude()));
+                    Log.d("a", locationDto.getLatitude());
+                    Log.d("a", locationDto.getLongitude());
+
+                    locationResponseDto = retrofitClient.sendLocation(locationDto);
+                    while (locationResponseDto == null) {
+                    }
+                    if (locationResponseDto.getData().size() != 0)
+                        System.out.print(locationResponseDto.getData().get(0).getEmail());
+                }
 
                 //현재 위치에 마커 생성하고 이동
                 setCurrentLocation(location, markerTitle, markerSnippet);

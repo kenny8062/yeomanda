@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -27,10 +28,11 @@ public class RetrofitClient {
     private static JoinResponseDto joinResponseDto =null;
     private static LoginResponseDto loginResponseDto=null;
     private static CreateBoardResponseDto createBoardResponseDto=null;
+    private static LocationResponseDto locationResponseDto=null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.30.24.236:3000/")
+                .baseUrl("http://172.30.1.48:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
@@ -119,7 +121,7 @@ public class RetrofitClient {
         }
     }
 
-    public CreateBoardResponseDto createboard(CreateBoardDto[] createBoardDto){
+    public CreateBoardResponseDto createboard(ArrayList<CreateBoardDto> createBoardDto){
         Thread thread = new Thread() {
             @Override
             public void run() {
@@ -141,18 +143,26 @@ public class RetrofitClient {
             return null;
         }
     }
-    public CreateBoardResponseDto sendLocation(LocationDto locationDto){
+    public LocationResponseDto sendLocation(LocationDto locationDto){
         Thread thread = new Thread(){
             @Override
             public void run(){
                 try {
-                    createBoardResponseDto=retrofitService.sendLocation(locationDto).execute().body();
+                    locationResponseDto=retrofitService.sendLocation(locationDto).execute().body();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         };
         thread.start();
-        return null;
+
+        try {
+            thread.join();
+            return locationResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

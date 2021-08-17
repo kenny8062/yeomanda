@@ -1,5 +1,7 @@
 package com.example.yeomanda.Retrofit;
 
+import java.util.ArrayList;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -27,10 +29,10 @@ public interface RetrofitService {
 
     @POST("travelers/registerPlan")
     Call<CreateBoardResponseDto> createBoard(
-      @Body CreateBoardDto[] createBoardDto
+      @Body ArrayList<CreateBoardDto> createBoardDto
     );
     @POST("travelers/showTravelers")
-    Call<CreateBoardResponseDto> sendLocation(
+    Call<LocationResponseDto> sendLocation(
             @Body LocationDto locationDto
     );
 }
