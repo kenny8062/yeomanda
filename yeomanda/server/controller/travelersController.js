@@ -38,14 +38,14 @@ const showTravelers = async(req, res) => {
     const sql = `select * from travel_with where region_info = '${country}';`
     conn.query(sql, function(err, data){
         if(err){
-            return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, "fail"))
+            return res.send(util.fail(statusCode.OK, responseMessage.NO_BODY, "no body"))
         }
         else{
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, data))
         }
     })
-
 }
+
 const registerPlan = async(req, res) => {
     try{
         const sql_team_no = 'select max(team_no) as newTeam from travel_with;'
