@@ -27,20 +27,24 @@ const getLocation = async(latlng) => {
     };
 }
 const showTravelers = async(req, res) => {
-    const { latitude, logitude } = req.body
+    const { latitude, longitude } = req.body
     /**
      * find traveler who is closed with login user.
      */
-    const latlng = latitude + ',' + logitude
+    const latlng = latitude + ',' + longitude
     const locationResult = await getLocation(latlng)
     const country = locationResult.data.plus_code.global_code // country code ex)87G8M376+PJ - koera
     console.log(country)
+    const temp = "no body"
     const sql = `select * from travel_with where region_info = '${country}';`
     conn.query(sql, function(err, data){
         if(err){
-            return res.send(util.fail(statusCode.OK, responseMessage.NO_BODY, "no body"))
+            return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, "fail"))
         }
         else{
+           // if(data.length === 0){
+           //     return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "no body"))
+          //  }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, data))
         }
     })
@@ -65,7 +69,7 @@ const registerPlan = async(req, res) => {
                 const plan = req.body
                 const jsonPlan = JSON.parse(JSON.stringify(plan));
 
-                const location_gps = jsonPlan[0]["latitude"].toString() + ',' + jsonPlan[0]["logitude"].toString()
+                const location_gps = jsonPlan[0]["latitude"].toString() + ',' + jsonPlan[0]["longitude"].toString()
                 const locationResult = await getLocation(location_gps)
                 const country = locationResult.data.plus_code.global_code
 
