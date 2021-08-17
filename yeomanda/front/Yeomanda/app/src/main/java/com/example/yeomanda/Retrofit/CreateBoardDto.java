@@ -6,10 +6,10 @@ public class CreateBoardDto {
 
     @SerializedName("latitude")
     @Expose
-    private Double latitude;
+    private String latitude;
     @SerializedName("longitude")
     @Expose
-    private Double longitude;
+    private String longitude;
     @SerializedName("travelMate")
     @Expose
     private String travelMate;
@@ -17,20 +17,20 @@ public class CreateBoardDto {
     @Expose
     private String travelDate;
 
-    public Double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
 
-    public Double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
