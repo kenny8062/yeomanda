@@ -37,19 +37,32 @@ const showTravelers = async(req, res) => {
     const latlng = latitude + ',' + longitude
     const locationResult = await getLocation(latlng)
     const country = locationResult.data.plus_code.global_code // country code ex)87G8M376+PJ - koera
-    console.log(country)
+    /**
+     * travel_with table에서 찾는 데이터들에서 이메일을 추출하여, dynamodb user table 에서 pk로 접근하여 name을 뽑아낸다.
+     */
     const sql = `select * from travel_with where region_info = '${country}';` // 이 조건 바꿔야 해
     conn.query(sql, async function(err, teams){
         if(err){
-            return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, "fail"))
+            return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
+                "fail to select * from travel_with where region_info = ?"))
         }
         else{
             AWS.config.update(userConfig.aws_iam_info);
             const docClient = new AWS.DynamoDB.DocumentClient();
 
+            /**
+             * teams -> 비슷한 지역에 있는 사용자들의 plan들
+            "email",
+            "location_gps",
+            "team_no",
+            "travelDate",
+            "isfinished",
+            "region_info"
+             */
+
+            // email을 가지고 USER table에서 name을 가져온다.
             const nameList = []
             for(var i=0; i<teams.length; i++){
-                console.log(teams[i].email)
                 const params = {
                     TableName : userConfig.aws_table_name,
                     KeyConditionExpression: 'email = :i',
@@ -57,12 +70,9 @@ const showTravelers = async(req, res) => {
                         ':i' : teams[i].email
                     }
                 };
-                const checkEmail = await docClient.query(params).promise()   
-                console.log(checkEmail.Items[0])          
-                const name = checkEmail.Items[i].name.toString()
-                nameList.push(name)
+                const result = await docClient.query(params).promise()
+                nameList.push(result.Items[0].name)
             }
-            console.log(nameList)
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, { teams, nameList }))
         }
     })
