@@ -57,6 +57,8 @@ module.exports = {
     /* 데이터베이스 */
     DISCONNECT_DATABASE: '데이터베이스 연결 실패',
     QUERY_ERROR: '쿼리문 에러',
-    QUERY_SUCCESS: '쿼리문 성공'
+    QUERY_SUCCESS: '쿼리문 성공',
+    NO_BODY : '조건에 부합하는 결과 없음',
+    ADD_FAVORITE : '즐겨찾기 추가 완료'
   };
   

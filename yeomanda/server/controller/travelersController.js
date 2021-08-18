@@ -3,7 +3,8 @@ const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
 const axios = require('axios')
 const googleapis = require('../config/googleApi')
-
+const AWS = require('aws-sdk')
+const userConfig = require('../config/aws/User')
 /**
  * connection to aws mysql server
  */
@@ -26,6 +27,8 @@ const getLocation = async(latlng) => {
         console.log(err);
     };
 }
+
+// right after login api
 const showTravelers = async(req, res) => {
     const { latitude, longitude } = req.body
     /**
@@ -35,20 +38,36 @@ const showTravelers = async(req, res) => {
     const locationResult = await getLocation(latlng)
     const country = locationResult.data.plus_code.global_code // country code ex)87G8M376+PJ - koera
     console.log(country)
-    const temp = "no body"
-    const sql = `select * from travel_with where region_info = '${country}';`
-    conn.query(sql, function(err, data){
+    const sql = `select * from travel_with where region_info = '${country}';` // 이 조건 바꿔야 해
+    conn.query(sql, async function(err, teams){
         if(err){
             return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, "fail"))
         }
         else{
-           // if(data.length === 0){
-           //     return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "no body"))
-          //  }
-            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, data))
+            AWS.config.update(userConfig.aws_iam_info);
+            const docClient = new AWS.DynamoDB.DocumentClient();
+
+            const nameList = []
+            for(var i=0; i<teams.length; i++){
+                console.log(teams[i].email)
+                const params = {
+                    TableName : userConfig.aws_table_name,
+                    KeyConditionExpression: 'email = :i',
+                    ExpressionAttributeValues: {
+                        ':i' : teams[i].email
+                    }
+                };
+                const checkEmail = await docClient.query(params).promise()   
+                console.log(checkEmail.Items[0])          
+                const name = checkEmail.Items[i].name.toString()
+                nameList.push(name)
+            }
+            console.log(nameList)
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, { teams, nameList }))
         }
     })
 }
+
 
 const registerPlan = async(req, res) => {
     try{
