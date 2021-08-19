@@ -50,6 +50,7 @@ module.exports = {
 ```
 
 - "USER" TABLE
+
 |email(pk, String)|birth(String)|files(String, s3 stored location)|name(String)|password(String, encrypted)|sex(String)|
 |---|---|---|---|---|---|
 |temp0@temp0.com|960727|[{ "S" : "temp0@temp0.com/apply.jpeg" }]|temp0|fe4972@fn2%fnw|M|
@@ -57,6 +58,7 @@ module.exports = {
 |temp2@temp2.com|960727|[{ "S" : "temp2@temp2.com/apply.jpeg" }]|temp2|iou87GI8H@#dwd2|M|
 
 - "MARKUP_FAVORITE" TABLE
+
 |date(DATE)|email(String)|favorite_team_no(NUMBER)|
 |---|---|---|
 |36294614|temp0@temp0.com|1|
