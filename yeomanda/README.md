@@ -49,6 +49,19 @@ module.exports = {
 }
 ```
 
+- "USER" TABLE
+|email(pk, String)|birth(String)|files(String, s3 stored location)|name(String)|password(String, encrypted)|sex(String)|
+|---|---|---|---|---|---|
+|temp0@temp0.com|960727|[{ "S" : "temp0@temp0.com/apply.jpeg" }]|temp0|fe4972@fn2%fnw|M|
+|temp1@temp1.com|960727|[{ "S" : "temp1@temp1.com/apply.jpeg" }]|temp1|28yhk2hid$#|M|
+|temp2@temp2.com|960727|[{ "S" : "temp2@temp2.com/apply.jpeg" }]|temp2|iou87GI8H@#dwd2|M|
+
+- "MARKUP_FAVORITE" TABLE
+|date(DATE)|email(String)|favorite_team_no(NUMBER)|
+|---|---|---|
+|36294614|temp0@temp0.com|1|
+|4762042|temp1@temp1.com|2|
+
 2. <strong>AWS RDS - mysql</strong>
 - for storing traveler's information to show to other travelers who is located closely
 - It is supported for free tier
