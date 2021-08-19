@@ -102,5 +102,9 @@ module.exports = {
 ##### reverse geocoding api
 - get location informatin from latitude & logitude 
 - use google api
+- `global_code` is a 4 character area code and 6 character or longer local code (849VCWC8+R9)
+- `compound_code` is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
+
+
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
