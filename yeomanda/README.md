@@ -59,10 +59,10 @@ module.exports = {
 
 - "MARKUP_FAVORITE" TABLE
 
-|date(DATE)|email(String)|favorite_team_no(NUMBER)|
-|---|---|---|
-|36294614|temp0@temp0.com|1|
-|4762042|temp1@temp1.com|2|
+|email(String)|favorite_team_no(LIST)|
+|---|---|
+|temp0@temp0.com|[1,2,3]|
+|temp1@temp1.com|[10,11,12]|
 
 2. <strong>AWS RDS - mysql</strong>
 - for storing traveler's information to show to other travelers who is located closely
