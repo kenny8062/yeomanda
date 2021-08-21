@@ -4,11 +4,38 @@ const statusCode = require('../modules/statusCode');
 // dynamodb
 const AWS = require('aws-sdk')
 const favoriteConfig = require('../config/aws/Favorite')
+const userConfig = require('../config/aws/User')
+
 
 // rds mysql
 const mysql_config = require('../config/aws/Travelers'); 
 const conn = mysql_config.init()
 mysql_config.connect(conn)
+
+// s3 getObject
+const multer  = require('multer')
+const multerS3 = require('multer-s3')
+const fs = require('fs')
+const s3 = new AWS.S3({
+    accessKeyId: userConfig.aws_iam_info.accessKeyId,
+    secretAccessKey: userConfig.aws_iam_info.secretAccessKey,
+    region : 'ap-northEast-2'
+});
+
+const getObjectFromS3 = async (req, res, path) => {
+    AWS.config.loadFromPath(path);
+    const params = { Bucket: "yeomanda-userface" }
+    s3.getObject(params, function(err, data){
+        if(err){
+            console.log('something wrong when get object from the path.');
+            return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.NO_FILES_IN_S3))
+        }
+        else{
+            res.send({data})
+        }
+    })
+
+}
 
 
 const favorite = async (req, res) => {
@@ -72,6 +99,42 @@ const favorite = async (req, res) => {
 }
 
 
+const userDetail = async (req, res) => {
+    const { email } = req.body
+
+    AWS.config.update(userConfig.aws_iam_info);
+    const docClient = new AWS.DynamoDB.DocumentClient();
+    const params_to_find_userDetail = {
+        TableName : userConfig.aws_table_name,
+        KeyConditionExpression: 'email = :i',
+        ExpressionAttributeValues: {
+            ':i' : email
+        }   
+    };
+
+    const checkEmail_from_user = await docClient.query(params_to_find_userDetail).promise()
+    
+    if(checkEmail_from_user.Items.length === 0){
+        console.log("해당 이메일에 맞는 회원이 없습니다.")
+        return res.status(statusCode.OK).send(util.fail(statusCode.NOT_FOUND, responseMessage.READ_USER_FAIL))
+    }
+    else{
+        /**
+         *  if response query result, password is showed.
+         */
+        const userFace = await getObjectFromS3()
+        // .......
+        const userResult = {
+            'email' : checkEmail_from_user.Items[0].email,
+            'birth' : checkEmail_from_user.Items[0].birth,
+            'sex' : checkEmail_from_user.Items[0].sex,
+            'name' : checkEmail_from_user.Items[0].name
+        }
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
+    }
+}
+
 module.exports = {
     favorite,
+    userDetail
 }
