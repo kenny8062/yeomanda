@@ -13,28 +13,36 @@ const conn = mysql_config.init()
 mysql_config.connect(conn)
 
 // s3 getObject
-const multer  = require('multer')
-const multerS3 = require('multer-s3')
-const fs = require('fs')
 const s3 = new AWS.S3({
     accessKeyId: userConfig.aws_iam_info.accessKeyId,
     secretAccessKey: userConfig.aws_iam_info.secretAccessKey,
     region : 'ap-northEast-2'
 });
 
-const getObjectFromS3 = async (req, res, path) => {
-    AWS.config.loadFromPath(path);
-    const params = { Bucket: "yeomanda-userface" }
-    s3.getObject(params, function(err, data){
-        if(err){
-            console.log('something wrong when get object from the path.');
-            return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.NO_FILES_IN_S3))
-        }
-        else{
-            res.send({data})
-        }
-    })
 
+/**
+ * function that getPbjects from s3 with given path.
+ */
+const getObjectFromS3 = async (path) => {
+    
+    //for(var i=0; i<path.length; i++){
+        const params = { Bucket: "yeomanda-userface", Key: path}
+        //AWS.config.loadFromPath(path[i]);
+        s3.getObject(params, function(err, data){
+            if(err){
+                console.log('something wrong when get object from the path.');
+                //return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.NO_FILES_IN_S3))
+            }
+            else{
+                //const result = Buffer.from(data.Body).toString('utf8');
+                //console.log(result)
+                //fileList.push(result)
+                //res.send({data})
+                return Buffer.from(data.Body)
+
+            }
+        })
+    //}
 }
 
 
@@ -122,15 +130,24 @@ const userDetail = async (req, res) => {
         /**
          *  if response query result, password is showed.
          */
-        const userFace = await getObjectFromS3()
-        // .......
+        const s3path = checkEmail_from_user.Items[0].files
+        console.log(s3path)
+        var fileList = []
+        for(var i=0; i<s3path.length; i++){
+            const result = await getObjectFromS3(s3path[i])
+            console.log(result)
+            fileList.push(result)
+        }
         const userResult = {
             'email' : checkEmail_from_user.Items[0].email,
             'birth' : checkEmail_from_user.Items[0].birth,
             'sex' : checkEmail_from_user.Items[0].sex,
-            'name' : checkEmail_from_user.Items[0].name
+            'name' : checkEmail_from_user.Items[0].name,
+            'files' : fileList
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
+        //return res.write('buffer', userFace);
+
     }
 }
 
