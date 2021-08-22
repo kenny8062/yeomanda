@@ -9,6 +9,7 @@ const userConfig = require('../config/aws/User')
 
 // rds mysql
 const mysql_config = require('../config/aws/Travelers'); 
+const { get } = require('../routes/markup');
 const conn = mysql_config.init()
 mysql_config.connect(conn)
 
@@ -18,52 +19,34 @@ const s3 = new AWS.S3({
     secretAccessKey: userConfig.aws_iam_info.secretAccessKey,
     region : 'ap-northEast-2'
 });
-
+/**
+ * delay function 
+ */
+const sleep = (ms) => {
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
+}
 
 /**
  * function that getPbjects from s3 with given path.
  */
 const getObjectFromS3 = async (list, path) => {
-    return new Promise((resolve, reject) => {
-        for(var i=0; i<path.length; i++){
-            const params = { Bucket: "yeomanda-userface", Key: path[i]}
-            s3.getObject(params, function(err, data){
-                if(err){
-                    console.log('something wrong when get object from the path.');
-                    //return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.NO_FILES_IN_S3))
-                }
-                else{
-                    //const result = Buffer.from(data.Body).toString('utf8');
-                    //console.log(result)
-                    //fileList.push(result)
-                    //res.send({data})
-                    list.push(data.Body)
-    
-                }
-            })
-        }
-        resolve(list)
-        //AWS.config.loadFromPath(path[i]);
-        
-    })
-    //for(var i=0; i<path.length; i++){
-        const params = { Bucket: "yeomanda-userface", Key: path}
-        //AWS.config.loadFromPath(path[i]);
-        s3.getObject(params, function(err, data){
+    for(var i=0; i<path.length; i++){
+        const params = { Bucket: "yeomanda-userface", Key: path[i]}
+        s3.getObject(params, async function(err, data){
             if(err){
                 console.log('something wrong when get object from the path.');
-                //return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.NO_FILES_IN_S3))
             }
             else{
-                //const result = Buffer.from(data.Body).toString('utf8');
-                //console.log(result)
-                //fileList.push(result)
-                //res.send({data})
-                return Buffer.from(data.Body)
-
+                list.push(data.Body)
+                if(list.length === path.length){
+                    return list
+                }
+                //Buffer.from(data.Body).toString('utf8')
             }
         })
-    //}
+    }    //AWS.config.loadFromPath(path[i]);
 }
 
 
@@ -152,14 +135,16 @@ const userDetail = async (req, res) => {
          *  if response query result, password is showed.
          */
         const s3path = checkEmail_from_user.Items[0].files
-        const fileList = []
+        var fileList = []
+        var result = await getObjectFromS3(fileList, s3path)
+        
         //getObjectFromS3(fileList, s3path).then()//result => {res.send(result)}).catch(err => {res.send(err)})
         const userResult = {
             'email' : checkEmail_from_user.Items[0].email,
             'birth' : checkEmail_from_user.Items[0].birth,
             'sex' : checkEmail_from_user.Items[0].sex,
             'name' : checkEmail_from_user.Items[0].name,
-            'files' : await getObjectFromS3(fileList, s3path).then()
+            'files' : result
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
         //return res.write('buffer', userFace);
