@@ -1,6 +1,10 @@
 const util = require('../modules/util');
+const fs = require('fs')
+const path = require('path');
+const utils = require('util')
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
+
 // dynamodb
 const AWS = require('aws-sdk')
 const favoriteConfig = require('../config/aws/Favorite')
@@ -19,14 +23,15 @@ const s3 = new AWS.S3({
     secretAccessKey: userConfig.aws_iam_info.secretAccessKey,
     region : 'ap-northEast-2'
 });
-/**
- * delay function 
- */
+
+// delay function 
 const sleep = (ms) => {
     return new Promise(resolve=>{
         setTimeout(resolve,ms)
     })
 }
+
+const writeFile = utils.promisify(fs.writeFile)
 
 /**
  * function that getPbjects from s3 with given path.
@@ -135,16 +140,43 @@ const userDetail = async (req, res) => {
          *  if response query result, password is showed.
          */
         const s3path = checkEmail_from_user.Items[0].files
-        var fileList = []
-        var result = await getObjectFromS3(fileList, s3path)
+        for(var i=0; i<s3path.length; i++){
+            const params = { Bucket: "yeomanda-userface", Key: s3path[i]}
+            //s3.getObject(params, { stream : true }).promise().then((data) => {
+                const readStream = s3.getObject(params).createReadStream();
+                console.log(typeof readStream)
+                const writeStream = fs.createWriteStream(path.join(__dirname, `../userfaces/${checkEmail_from_user.Items[0].email}_${i}.txt`));
+                readStream.pipe(writeStream)
+                //xwriteFile('../public/images/test.txt', data.Body)         
+                //Buffer.from(data.Body).toString('utf8')     
+        }
+        // s3path.forEach((i) => {
+        //     const params = { Bucket: "yeomanda-userface", Key: i}
+        //     s3.getObject(params, async function(err, data){
+        //         fileList.push(data.Body)
+        //         console.log(fileList)
+        //     })
+
+        // })
+        //var result = await getObjectFromS3(fileList, s3path)
         
         //getObjectFromS3(fileList, s3path).then()//result => {res.send(result)}).catch(err => {res.send(err)})
+        var userfaces = []
+        fs.readFile(path.join(__dirname, '../userfaces/test.txt'), (err, data) => {
+            if (err) {
+              console.error(err)
+            }
+            console.log(data)
+            //userfaces.push(data)
+        })
+        console.log(userfaces)
+        //const userfaces = fs.readFileSync(`../public/userfaces/${checkEmail_from_user.Items[0].email}_0.txt`, 'utf8')
         const userResult = {
             'email' : checkEmail_from_user.Items[0].email,
             'birth' : checkEmail_from_user.Items[0].birth,
             'sex' : checkEmail_from_user.Items[0].sex,
             'name' : checkEmail_from_user.Items[0].name,
-            'files' : result
+            'files' : userfaces
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
         //return res.write('buffer', userFace);
