@@ -1,7 +1,6 @@
 const util = require('../modules/util');
 const fs = require('fs')
 const path = require('path');
-const utils = require('util')
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
 
@@ -13,7 +12,6 @@ const userConfig = require('../config/aws/User')
 
 // rds mysql
 const mysql_config = require('../config/aws/Travelers'); 
-const { get } = require('../routes/markup');
 const conn = mysql_config.init()
 mysql_config.connect(conn)
 
@@ -29,29 +27,6 @@ const sleep = (ms) => {
     return new Promise(resolve=>{
         setTimeout(resolve,ms)
     })
-}
-
-const writeFile = utils.promisify(fs.writeFile)
-
-/**
- * function that getPbjects from s3 with given path.
- */
-const getObjectFromS3 = async (list, path) => {
-    for(var i=0; i<path.length; i++){
-        const params = { Bucket: "yeomanda-userface", Key: path[i]}
-        s3.getObject(params, async function(err, data){
-            if(err){
-                console.log('something wrong when get object from the path.');
-            }
-            else{
-                list.push(data.Body)
-                if(list.length === path.length){
-                    return list
-                }
-                //Buffer.from(data.Body).toString('utf8')
-            }
-        })
-    }    //AWS.config.loadFromPath(path[i]);
 }
 
 
@@ -116,7 +91,7 @@ const favorite = async (req, res) => {
 }
 
 
-const userDetail = async (req, res) => {
+const userDetail = async (req, res, next) => {
     const { email } = req.body
 
     AWS.config.update(userConfig.aws_iam_info);
@@ -142,35 +117,19 @@ const userDetail = async (req, res) => {
         const s3path = checkEmail_from_user.Items[0].files
         for(var i=0; i<s3path.length; i++){
             const params = { Bucket: "yeomanda-userface", Key: s3path[i]}
-            //s3.getObject(params, { stream : true }).promise().then((data) => {
                 const readStream = s3.getObject(params).createReadStream();
-                console.log(typeof readStream)
                 const writeStream = fs.createWriteStream(path.join(__dirname, `../userfaces/${checkEmail_from_user.Items[0].email}_${i}.txt`));
                 readStream.pipe(writeStream)
-                //xwriteFile('../public/images/test.txt', data.Body)         
                 //Buffer.from(data.Body).toString('utf8')     
         }
-        // s3path.forEach((i) => {
-        //     const params = { Bucket: "yeomanda-userface", Key: i}
-        //     s3.getObject(params, async function(err, data){
-        //         fileList.push(data.Body)
-        //         console.log(fileList)
-        //     })
-
-        // })
-        //var result = await getObjectFromS3(fileList, s3path)
-        
-        //getObjectFromS3(fileList, s3path).then()//result => {res.send(result)}).catch(err => {res.send(err)})
+        /**
+         * call blocking function readFileSync -> to push items in list
+         */
         var userfaces = []
-        fs.readFile(path.join(__dirname, '../userfaces/test.txt'), (err, data) => {
-            if (err) {
-              console.error(err)
-            }
-            console.log(data)
-            //userfaces.push(data)
-        })
-        console.log(userfaces)
-        //const userfaces = fs.readFileSync(`../public/userfaces/${checkEmail_from_user.Items[0].email}_0.txt`, 'utf8')
+        for(var i=0; i<s3path.length; i++){
+            const file = fs.readFileSync(path.join(__dirname, `../userfaces/${checkEmail_from_user.Items[0].email}_${i}.txt`)); // 파일을 읽을 때까지 여기서 블로킹됩니다.
+            userfaces.push((file))
+        }
         const userResult = {
             'email' : checkEmail_from_user.Items[0].email,
             'birth' : checkEmail_from_user.Items[0].birth,
@@ -179,8 +138,6 @@ const userDetail = async (req, res) => {
             'files' : userfaces
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
-        //return res.write('buffer', userFace);
-
     }
 }
 
