@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.yeomanda.Retrofit.LocationDto;
 import com.example.yeomanda.Retrofit.LocationResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
+import com.example.yeomanda.Retrofit.TeamInfoDto;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -46,9 +47,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener{
     private GoogleMap mMap;
-
 
     private Marker currentMarker = null;
 
@@ -74,9 +74,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
-    private LocationResponseDto locationResponseDto;
+    private LocationResponseDto locationResponseDto=null;
     Button createBoardBtn;
-
+    double lat,lon;
+    String locationArr[];
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
 
@@ -116,10 +117,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void init(){
-
-
-
-
         createBoardBtn=findViewById(R.id.createBoardBtn);
         createBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,12 +199,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         // 현재 오동작을 해서 주석처리
 
-    /*
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        mMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney"));
-   */
+
         //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
@@ -234,13 +226,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         = new LatLng(location.getLatitude(), location.getLongitude());
 
 
+
                 String markerTitle = getCurrentAddress(currentPosition);
                 String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
 
-/*
+
                 if(locationResponseDto==null) {
                     //근처 TeamInfo 가져오기
                     retrofitClient = new RetrofitClient();
@@ -251,13 +244,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.d("a", locationDto.getLongitude());
 
                     locationResponseDto = retrofitClient.sendLocation(locationDto);
-                    while (locationResponseDto == null) {
+                    while(locationResponseDto == null) {}
+                    if (locationResponseDto.getData().size() != 0){
+                        System.out.print(locationResponseDto.getData().get(0).getEmail()[0]);
+                        for(int i=0;i<locationResponseDto.getData().size();i++) {
+                            locationArr=locationResponseDto.getData().get(i).getLocationGps().split(",");
+                            lat=Double.parseDouble(locationArr[0]);
+                            lon=Double.parseDouble(locationArr[1]);
+                            LatLng teamsGPS = new LatLng(lat, lon);
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(teamsGPS)
+                                    .title(locationResponseDto.getData().get(i).getTeamNo().toString()))
+                                    .setTag(locationResponseDto.getData().get(i));
+                        }
                     }
-                    if (locationResponseDto.getData().size() != 0)
-                        System.out.print(locationResponseDto.getData().get(0).getEmail());
                 }
 
- */
+
                 //현재 위치에 마커 생성하고 이동
                 setCurrentLocation(location, markerTitle, markerSnippet);
 
@@ -270,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     };
 
 
-
+    //현재 위치 업데이트 메소드
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
@@ -340,10 +343,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
+    //현재위치를 지오코더를 이용하여 GPS -> 주소로 변환
     public String getCurrentAddress(LatLng latlng) {
 
-        //지오코더... GPS를 주소로 변환
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
         List<Address> addresses;
@@ -377,14 +379,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public boolean checkLocationServicesStatus() {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
 
 
+    //현재위치 마커추가
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
 
@@ -407,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
+    //위치가 안잡힐경우 디폴트 위치값 설정
     public void setDefaultLocation() {
 
 
@@ -431,6 +428,61 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(cameraUpdate);
 
     }
+
+
+    //마커 클릭시 이벤트
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        TeamInfoDto teamInfoDto= (TeamInfoDto) marker.getTag();
+        String[] items=teamInfoDto.getEmail();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(teamInfoDto.getTravelDate());
+
+
+        builder.setItems(items, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int pos)
+            {
+                Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(),PersonInfo.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setPositiveButton("채팅", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+        /*
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(getApplicationContext(), "Cancel Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+        */
+        builder.setNeutralButton("즐겨찾기", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(getApplicationContext(), "Neutral Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        return false;
+    }
+
+
+
+
 
 
     //여기부터는 런타임 퍼미션 처리을 위한 메소드들
@@ -547,7 +599,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         builder.create().show();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -572,5 +623,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
     }
+
+    public boolean checkLocationServicesStatus() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+
+
 
 }

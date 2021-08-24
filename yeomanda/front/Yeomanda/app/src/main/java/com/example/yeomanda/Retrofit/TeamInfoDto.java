@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class TeamInfoDto {
     @SerializedName("email")
     @Expose
-    private String email;
+    private String[] email;
     @SerializedName("location_gps")
     @Expose
     private String locationGps;
@@ -21,12 +21,16 @@ public class TeamInfoDto {
     @SerializedName("region_info")
     @Expose
     private String regionInfo;
+    @SerializedName("name")
+    @Expose
+    private String[] nameList;
 
-    public String getEmail() {
+
+    public String[] getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String[] email) {
         this.email = email;
     }
 
@@ -68,6 +72,14 @@ public class TeamInfoDto {
 
     public void setRegionInfo(String regionInfo) {
         this.regionInfo = regionInfo;
+    }
+
+    public String[] getNameList() {
+        return nameList;
+    }
+
+    public void setNameList(String[] nameList) {
+        this.nameList = nameList;
     }
 
 }
