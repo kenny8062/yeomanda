@@ -21,12 +21,13 @@
         android:theme="@style/Theme.Yeomanda"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Board_Info"></activity>
+        <activity android:name=".PersonInfo"></activity>
+        <activity android:name=".Board_Info" />
         <activity android:name=".CreateBoard" />
         <activity android:name=".joinActivity.JoinActivity3" />
         <activity android:name=".joinActivity.JoinActivity2" />
         <activity android:name=".joinActivity.JoinActivity1" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
