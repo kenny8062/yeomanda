@@ -2,10 +2,12 @@ package com.example.yeomanda.Retrofit;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class TeamInfoDto {
     @SerializedName("email")
     @Expose
-    private String[] email;
+    private ArrayList<String> email;
     @SerializedName("location_gps")
     @Expose
     private String locationGps;
@@ -23,14 +25,14 @@ public class TeamInfoDto {
     private String regionInfo;
     @SerializedName("name")
     @Expose
-    private String[] nameList;
+    private ArrayList<String> nameList;
 
 
-    public String[] getEmail() {
+    public ArrayList<String> getEmail() {
         return email;
     }
 
-    public void setEmail(String[] email) {
+    public void setEmail(ArrayList<String> email) {
         this.email = email;
     }
 
@@ -74,11 +76,11 @@ public class TeamInfoDto {
         this.regionInfo = regionInfo;
     }
 
-    public String[] getNameList() {
+    public ArrayList<String> getNameList() {
         return nameList;
     }
 
-    public void setNameList(String[] nameList) {
+    public void setNameList(ArrayList<String> nameList) {
         this.nameList = nameList;
     }
 
