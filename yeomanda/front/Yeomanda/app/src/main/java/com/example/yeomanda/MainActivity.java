@@ -84,9 +84,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /*
         Intent intent=getIntent();
         String token=intent.getStringExtra("token");
         Log.d("Tag",token);
+
+         */
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -121,11 +124,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         createBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent=new Intent(getApplicationContext(),Board_Info.class);
+                startActivity(intent);
+
+                /*
                 Intent intent=new Intent(getApplicationContext(),CreateBoard.class);
                 intent.putExtra("lat",location.getLatitude());
                 intent.putExtra("lon",location.getLongitude());
                 startActivity(intent);
+            */
             }
+
         });
     }
     @Override
@@ -192,6 +202,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         // 현재 오동작을 해서 주석처리
 
+    /*
+        LatLng sydney = new LatLng(-33.852, 151.211);
+        mMap.addMarker(new MarkerOptions()
+                .position(sydney)
+                .title("Marker in Sydney"));
+   */
         //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
@@ -224,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
 
-
+/*
                 if(locationResponseDto==null) {
                     //근처 TeamInfo 가져오기
                     retrofitClient = new RetrofitClient();
@@ -241,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         System.out.print(locationResponseDto.getData().get(0).getEmail());
                 }
 
+ */
                 //현재 위치에 마커 생성하고 이동
                 setCurrentLocation(location, markerTitle, markerSnippet);
 
