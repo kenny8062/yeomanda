@@ -70,6 +70,7 @@ const login = async (req, res) => {
 
         const failed = "fail"
         const { email, password } = req.body
+        console.log(req.body)
         if(!email || !password) {
             return res.status(statusCode.OK).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE, {'token' : failed}));
         }

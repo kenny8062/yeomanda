@@ -3,6 +3,8 @@ const fs = require('fs')
 const path = require('path');
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
+const stream = require('stream')
+
 
 // dynamodb
 const AWS = require('aws-sdk')
@@ -90,8 +92,10 @@ const favorite = async (req, res) => {
     }
 }
 
-
-const userDetail = async (req, res, next) => {
+/**
+ * 이름 선택하면 해당 여행객의 상세 정보 반환 
+ */
+const userDetail = async (req, res) => {
     const { email } = req.body
 
     AWS.config.update(userConfig.aws_iam_info);
@@ -112,30 +116,21 @@ const userDetail = async (req, res, next) => {
     }
     else{
         /**
-         *  if response query result, password is showed.
+         *  response url of s3 bucket 
          */
         const s3path = checkEmail_from_user.Items[0].files
+        var userfacesURLlist = []
         for(var i=0; i<s3path.length; i++){
-            const params = { Bucket: "yeomanda-userface", Key: s3path[i]}
-                const readStream = s3.getObject(params).createReadStream();
-                const writeStream = fs.createWriteStream(path.join(__dirname, `../userfaces/${checkEmail_from_user.Items[0].email}_${i}.txt`));
-                readStream.pipe(writeStream)
-                //Buffer.from(data.Body).toString('utf8')     
+            const userfaceURL = 'https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/' + s3path[i];
+            userfacesURLlist.push(userfaceURL)   
         }
-        /**
-         * call blocking function readFileSync -> to push items in list
-         */
-        var userfaces = []
-        for(var i=0; i<s3path.length; i++){
-            const file = fs.readFileSync(path.join(__dirname, `../userfaces/${checkEmail_from_user.Items[0].email}_${i}.txt`)); // 파일을 읽을 때까지 여기서 블로킹됩니다.
-            userfaces.push((file))
-        }
+
         const userResult = {
             'email' : checkEmail_from_user.Items[0].email,
             'birth' : checkEmail_from_user.Items[0].birth,
             'sex' : checkEmail_from_user.Items[0].sex,
             'name' : checkEmail_from_user.Items[0].name,
-            'files' : userfaces
+            'files' : userfacesURLlist
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
     }
