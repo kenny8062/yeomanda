@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="woals1@woals1.com" />
+            android:text="aaa0@aaa0.com" />
 
         <EditText
             android:id="@+id/password_edt"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="woals1" />
+            android:text="aaa0" />
 
         <CheckBox
             android:id="@+id/autologin_box"

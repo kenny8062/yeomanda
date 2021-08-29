@@ -10,19 +10,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.yeomanda.Retrofit.CreateBoardDto;
+import com.example.yeomanda.Retrofit.CreateBoardResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;
 
 public class CreateBoard extends AppCompatActivity {
     Double lat,lon;
-    EditText edt1,edt2 ,et;
-    ArrayList<EditText> edt;
-    Button createBtn ,plusBtn;
+    EditText edt1,edt2 , edt = null;
+    ArrayList<EditText> edts;
+    Button createBtn ,plusBtn,cancleBtn;
     LinearLayout ll;
     CreateBoardDto createBoardDto;
+
     int count=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,39 +43,51 @@ public class CreateBoard extends AppCompatActivity {
         edt1=findViewById(R.id.editTextTextPersonName);
         edt2=findViewById(R.id.editTextTextPersonName2);
         plusBtn=findViewById(R.id.plusBtn);
+        cancleBtn=findViewById(R.id.cancelBtn);
         ll = findViewById(R.id.ll);
-        edt=new ArrayList<>();
-        edt.add(edt2);
+        edts =new ArrayList<>();
+        edts.add(edt2);
         plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                et = new EditText(getApplicationContext());
+                edt = new EditText(getApplicationContext());
                 LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                et.setLayoutParams(p);
-                et.setText("editText" + count + "번");
-                et.setId(count++);
-                edt.add(et);
-                ll.addView(et);
+                edt.setLayoutParams(p);
+                edt.setText("");
+                edt.setId(count++);
+                edts.add(edt);
+                ll.addView(edt);
+            }
+        });
+
+        cancleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edts.size()!=0)
+                    ll.removeView(edts.get(edts.size()-1));
+                    edts.remove(edts.size()-1);
             }
         });
 
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAG", String.valueOf(count));
-                Log.d("TAG", "////////////////////////////////////////////////////////////////////");
-                Log.d("TAG", String.valueOf(count));
                 ArrayList<CreateBoardDto> createBoardDtos=new ArrayList<>();
                 for(int i=0;i<count;i++){
                     createBoardDto=new CreateBoardDto();
                     createBoardDto.setLatitude(Double.toString(lat));
                     createBoardDto.setLongitude(Double.toString(lon));
-                    createBoardDto.setTravelDate(edt1.toString());
-                    createBoardDto.setTravelMate(edt.get(i).toString());
+                    createBoardDto.setTravelDate(edt1.getText().toString());
+                    createBoardDto.setTravelMate(edts.get(i).getText().toString());
                     createBoardDtos.add(createBoardDto);
                 }
                 RetrofitClient retrofitClient=new RetrofitClient();
-                retrofitClient.createboard(createBoardDtos);
+                CreateBoardResponseDto createBoardResponseDto= retrofitClient.createboard(createBoardDtos);
+                if(createBoardResponseDto.getSuccess()) {
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"이메일을 다시 확인해주세요",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

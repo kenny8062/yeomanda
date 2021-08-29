@@ -22,7 +22,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity android:name=".PersonInfo"></activity>
-        <activity android:name=".Board_Info" />
         <activity android:name=".CreateBoard" />
         <activity android:name=".joinActivity.JoinActivity3" />
         <activity android:name=".joinActivity.JoinActivity2" />

@@ -22,8 +22,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +53,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TextView showTravelerView;
     ArrayList<TextView> showTravelersView;
     LinearLayout ll;
+    ListView listView;
+    ArrayAdapter<String> adapter;
 
     Location mCurrentLocatiion;
     LatLng currentPosition;
@@ -83,11 +89,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private Location location;
     private LocationResponseDto locationResponseDto=null;
-    Button createBoardBtn;
+    Button createBoardBtn,nextTeamBtn;
     double lat,lon;
+    int count=0;
     String locationArr[];
+
+    View dialogView;
+    ArrayList<String> items=new ArrayList<>();
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
+    HashMap<TextView,Integer> textViewHashMap;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +145,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-                //Intent intent=new Intent(getApplicationContext(),Board_Info.class);
-                //startActivity(intent);
 
 
                 Intent intent=new Intent(getApplicationContext(),CreateBoard.class);
@@ -286,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                 //현재 위치에 마커 생성하고 이동
-                setCurrentLocation(location, markerTitle, markerSnippet);
+                //setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
             }
@@ -427,7 +440,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //mMap.moveCamera(cameraUpdate);
 
     }
-
     //위치가 안잡힐경우 디폴트 위치값 설정
     public void setDefaultLocation() {
 
@@ -446,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = mMap.addMarker(markerOptions);
+        //currentMarker = mMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mMap.moveCamera(cameraUpdate);
@@ -458,36 +470,82 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(Marker marker) {
         TeamInfoDto teamInfoDto= (TeamInfoDto) marker.getTag();
-        //ArrayList<String> items=teamInfoDto.getNameList();
-        String[] items= teamInfoDto.getNameList().toArray(new String[0]);
-        final Dialog dlg = new Dialog(this);
-        // 액티비티의 타이틀바를 숨긴다.
-        dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        count=0;
+        items=new ArrayList<>();
 
-        // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        dlg.setContentView(R.layout.custom_show_travelers);
+        dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
 
-        // 커스텀 다이얼로그를 노출한다.
-        dlg.show();
-
-
-        ll = dlg.findViewById(R.id.showTravelersLayout);
-        showTravelersView=new ArrayList<>();
-
+        nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
+        ArrayList<Integer> indexNum=new ArrayList<>();
         for(int i=0;i<teamInfoDto.getNameList().size();i++){
-            showTravelerView=new TextView(getApplicationContext());
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            showTravelerView.setLayoutParams(p);
-            showTravelerView.setText(teamInfoDto.getNameList().get(i));
-            showTravelerView.setId(i);
-            showTravelersView.add(showTravelerView);
-            ll.addView(showTravelerView);
+            if(teamInfoDto.getNameList().get(i).equals("~")){
+                indexNum.add(i);
+                count++;
+            }
         }
-       // View dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
+        if(count==0){
+            items=teamInfoDto.getNameList();
+            showAlertDialog(dialogView,items,indexNum,teamInfoDto);
+        }else{
+            nextTeamBtn.setVisibility(View.VISIBLE);
+            for (int i=0;i<indexNum.get(count-1);i++){
+                items.add(teamInfoDto.getNameList().get(i));
+            }
+            showAlertDialog(dialogView,items,indexNum,teamInfoDto);
+
+            nextTeamBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
+                    nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
+                    nextTeamBtn.setVisibility(View.VISIBLE);
+                    items=new ArrayList<>();
+                    if(count<2) {
+                        for (int i = indexNum.get(--count)+1; i < teamInfoDto.getNameList().size(); i++) {
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        nextTeamBtn.setVisibility(View.INVISIBLE);
+                        showAlertDialog(dialogView, items, indexNum, teamInfoDto);
+
+                    }else{
+                        for (int i = indexNum.get(count-1)+1; i < indexNum.get(count--); i++) {
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        showAlertDialog(dialogView, items, indexNum, teamInfoDto);
+                    }
+                }
+
+            });
+        }
 
 
-/*
+
+
+
+
+
+        return false;
+    }
+
+    public void showAlertDialog(View dialogView,ArrayList<String> items,ArrayList<Integer> indexNum,TeamInfoDto teamInfoDto){
+
+        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+        listView=dialogView.findViewById(R.id.personList);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),items.get(position).toString(),Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getApplicationContext(),PersonInfo.class);
+                intent.putExtra("이메일",teamInfoDto.getEmail().get(position));
+                startActivity(intent);
+            }
+        });
+
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("20201010~20201012");
         builder.setView(dialogView);
 
         builder.setPositiveButton("채팅", new DialogInterface.OnClickListener(){
@@ -507,58 +565,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-*/
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        TeamInfoDto teamInfoDto= (TeamInfoDto) marker.getTag();
-        //ArrayList<String> items=teamInfoDto.getNameList();
-        String[] items= teamInfoDto.getNameList().toArray(new String[0]);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(teamInfoDto.getTravelDate());
-
-
-        builder.setItems(items, new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int pos)
-            {
-                Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(),PersonInfo.class);
-                startActivity(intent);
-            }
-        });
-
-        builder.setPositiveButton("채팅", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNeutralButton("즐겨찾기", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                Toast.makeText(getApplicationContext(), "Neutral Click", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        return false;
-
-         */
-        return false;
     }
 
 

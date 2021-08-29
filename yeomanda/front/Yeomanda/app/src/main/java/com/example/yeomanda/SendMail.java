@@ -14,7 +14,7 @@ public class SendMail extends AppCompatActivity {
     public String sendSecurityCode(Context context, String sendTo) {
         try {
             GmailSender gMailSender = new GmailSender(user, password);
-            gMailSender.sendMail("playground 이메일 인증입니다.", "인증코드는 : " + gMailSender.getEmailCode() + " 입니다.", sendTo);
+            gMailSender.sendMail("Yeomanda 이메일 인증입니다.", "인증코드는 : " + gMailSender.getEmailCode() + " 입니다.", sendTo);
             Toast.makeText(context, "이메일을 성공적으로 보냈습니다.", Toast.LENGTH_SHORT).show();
             return gMailSender.getEmailCode();
         } catch (SendFailedException e) {

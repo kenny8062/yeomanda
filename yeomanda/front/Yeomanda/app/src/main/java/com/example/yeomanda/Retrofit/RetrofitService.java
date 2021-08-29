@@ -31,6 +31,7 @@ public interface RetrofitService {
     Call<CreateBoardResponseDto> createBoard(
       @Body ArrayList<CreateBoardDto> createBoardDto
     );
+
     @POST("travelers/showTravelers")
     Call<LocationResponseDto> sendLocation(
             @Body LocationDto locationDto
