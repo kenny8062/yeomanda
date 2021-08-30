@@ -110,5 +110,9 @@ module.exports = {
 - `compound_code` is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
 
 
+### CI/CD
+##### github action
+- .github/workflows
+
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
