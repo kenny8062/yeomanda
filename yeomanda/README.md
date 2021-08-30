@@ -113,6 +113,8 @@ module.exports = {
 ### CI/CD
 ##### github action
 - .github/workflows
+- how to get ssh key for ec2 instance
+- ssh-keygen -y -f /path_to_key_pair/my-key-pair.pem
 
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
