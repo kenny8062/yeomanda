@@ -72,6 +72,7 @@ module.exports = {
 - `sudo mysql -h database-yeomanda.cqriqomipg3n.ap-northeast-2.rds.amazonaws.com -p travelers -u jaymee -p`
 - jaymeedev
 
+
 - "travel_with" TABLE
 
 |email(pk, String)|location_gps(String)|team_no(int)|travelDate(String)|isfinished(int)|
