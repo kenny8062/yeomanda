@@ -38,3 +38,21 @@ jobs:
       # 만약 build 스크립트가 없는 경우, 오류 없이 지나간다.
       - run: npm run build --if-present --prefix /yeomanda/yeomanda/server
       - run: npm run test --prefix /yeomanda/yeomanda/server
+      
+  deploy:
+     needs: [build]
+     runs-on: ubuntu-latest
+
+     steps:
+     - name: SSH and deploy node app
+       uses: appleboy/ssh-action@master
+       with:
+         host: ${{ secrets.SSH_HOST }}
+         username: ${{ secrets.SSH_USERNAME }}
+         key: ${{ secrets.SSH_KEY }}
+         port: ${{ secrets.SSH_PORT }}
+         script: |
+           cd ~/yeomanda/server
+           git pull origin main
+           npm install --production
+           pm2 start .bin/www
