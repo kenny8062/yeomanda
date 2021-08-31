@@ -121,4 +121,6 @@ module.exports = {
 - to generate rsa key pair --> `ssh-keygen -t rsa && cat ~/.ssh/id_rsa.pub` at lunix server --> deploy key 
 - private key format should include ----BEGIN ~ ...
 
+
+
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
