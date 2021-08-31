@@ -117,7 +117,7 @@ module.exports = {
 ##### github action
 - .github/workflows
 - how to get ssh key for ec2 instance
-- ssh-keygen -y -f /path_to_key_pair/my-key-pair.pem 
+- to get private ssh key --> `cat path_to_key_pair/linux_ec2.pem`
 - to generate rsa key pair --> `ssh-keygen -t rsa`
 
 
