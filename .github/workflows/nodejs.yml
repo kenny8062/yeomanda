@@ -39,7 +39,7 @@ jobs:
       - run: npm run build --if-present --prefix /yeomanda/yeomanda/server
       - run: npm run test --prefix /yeomanda/yeomanda/server
       
-      
+
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
          
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -i private_key ${USER_NAME}@${HOST_NAME} '
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
 
             cd yeomanda/yeomanda/server &&
             git pull origin main &&
