@@ -116,7 +116,7 @@ module.exports = {
 ### CI/CD
 ##### github action
 - .github/workflows
-- to connect to ec2 instance `✘ ijaemin@ijaemins-MBP  ~/Desktop  sudo ssh -i "yeo.pem" ubuntu@ec2-13-125-145-209.ap-northeast-2.compute.amazonaws.com`
+- to connect to ec2 instance `✘ ijaemin@ijaemins-MBP  ~/Desktop  ssh -i "yeo.pem" ubuntu@ec2-13-125-145-209.ap-northeast-2.compute.amazonaws.com`
 - to get private ssh key --> `cat path_to_key_pair/linux_ec2.pem` at local --> secrets --> used to connect to ec2 instance
 - to generate rsa key pair --> `ssh-keygen -t rsa && cat ~/.ssh/id_rsa.pub` at lunix server --> deploy key 
 - private key format should include ----BEGIN ~ END ----
