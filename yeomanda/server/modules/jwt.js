@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { secretKey, options } = require('../config/jwtKey');
+const { secretKey, options } = require('../config/jwtkey');
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
 
