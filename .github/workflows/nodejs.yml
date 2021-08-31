@@ -48,7 +48,7 @@ jobs:
       - name: SSH and deploy node app
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
-          HOST_NAME : ${{ secrets.HOSTNAME  }}
+          HOST_NAME : ${{ secrets.HOST_NAME  }}
           USER_NAME : ${{ secrets.USER_NAME  }}
          
         run: |
