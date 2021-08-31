@@ -119,7 +119,7 @@ module.exports = {
 - how to get ssh key for ec2 instance
 - to get private ssh key --> `cat path_to_key_pair/linux_ec2.pem` at local --> secrets --> used to connect to ec2 instance
 - to generate rsa key pair --> `ssh-keygen -t rsa && cat ~/.ssh/id_rsa.pub` at lunix server --> deploy key 
-- private key format should include ----BEGIN ~ ...
+- private key format should include ----BEGIN ~ END ----
 
 
 
