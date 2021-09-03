@@ -123,7 +123,7 @@ module.exports = {
 - how to git pull gitignore file every time...?
 
 - ssh: connect to host *** port 22: Connection timed out
-- to solve -> `sudo ufw allow ssh` at linux
+- to solve -> `sudo ufw allow ssh` at linux i think it is not a solution
 
 
 
