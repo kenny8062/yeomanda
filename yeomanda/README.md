@@ -125,7 +125,7 @@ module.exports = {
 - ssh: connect to host *** port 22: Connection timed out
 - to solve -> `sudo ufw allow ssh` at linux i think it is not a solution
 
-
+- buffer data was deleted
 
 
 
