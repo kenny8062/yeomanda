@@ -56,8 +56,9 @@ jobs:
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
 
-            cd yeomanda/yeomanda/server &&
+            cd yeomanda &&
             git pull origin main &&
+            cd yeomanda/server
             npm install &&
             npm run start
           '
