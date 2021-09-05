@@ -36,4 +36,9 @@ public interface RetrofitService {
     Call<LocationResponseDto> sendLocation(
             @Body LocationDto locationDto
     );
+
+    @POST("markup/userDetail")
+    Call<ProfileResponseDto> showProfile(
+            @Body EmailDto emailDto
+    );
 }

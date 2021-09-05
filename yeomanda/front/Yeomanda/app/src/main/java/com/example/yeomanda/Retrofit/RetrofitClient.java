@@ -29,10 +29,11 @@ public class RetrofitClient {
     private static LoginResponseDto loginResponseDto=null;
     private static CreateBoardResponseDto createBoardResponseDto=null;
     private static LocationResponseDto locationResponseDto=null;
+    private static ProfileResponseDto profileResponseDto= null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.20.10.2:3000/")
+                .baseUrl("http://172.20.10.14:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
@@ -160,6 +161,31 @@ public class RetrofitClient {
         try {
             thread.join();
             return locationResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ProfileResponseDto showProfile(String email){
+        Thread thread = new Thread(){
+          @Override
+          public void run(){
+              try {
+                  Log.d("EmailDto",email);
+                  EmailDto emailDto1 =new EmailDto();
+                  emailDto1.setEmail(email);
+                  profileResponseDto=retrofitService.showProfile(emailDto1).execute().body();
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+        };
+        thread.start();
+
+        try {
+            thread.join();
+            return profileResponseDto;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;

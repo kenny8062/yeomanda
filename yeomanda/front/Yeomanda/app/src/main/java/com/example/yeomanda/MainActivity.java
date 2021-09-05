@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,15 +18,11 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yeomanda.Retrofit.LocationDto;
@@ -53,7 +48,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -90,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationResponseDto locationResponseDto=null;
     Button createBoardBtn,nextTeamBtn, backTeamBtn;
     double lat,lon;
-    int count=0;
+    int teamNumCount;
     String locationArr[];
 
     View dialogView;
@@ -431,96 +425,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(Marker marker) {
         TeamInfoDto teamInfoDto= (TeamInfoDto) marker.getTag();
-        count=0;
+
         items=new ArrayList<>();
 
         dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
 
-        backTeamBtn=dialogView.findViewById(R.id.backTeamBtn);
-        nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
         ArrayList<Integer> indexNum=new ArrayList<>();
         for(int i=0;i<teamInfoDto.getNameList().size();i++){
             if(teamInfoDto.getNameList().get(i).equals("/")){
                 indexNum.add(i);
-                count++;
             }
         }
-        if(count==0){
-            items=teamInfoDto.getNameList();
-            showAlertDialog(dialogView,items,teamInfoDto);
-        }else{
-            nextTeamBtn.setVisibility(View.VISIBLE);
-            for (int i=0;i<indexNum.get(count-1);i++){
-                items.add(teamInfoDto.getNameList().get(i));
-            }
-            showAlertDialog(dialogView,items,teamInfoDto);
-
-            nextTeamBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
-                    nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
-                    backTeamBtn = dialogView.findViewById(R.id.backTeamBtn);
-                    backTeamBtn.setVisibility(View.VISIBLE);
-                    items=new ArrayList<>();
-                    if(count<2) {
-                        for (int i = indexNum.get(--count)+1; i < teamInfoDto.getNameList().size(); i++) {
-                            items.add(teamInfoDto.getNameList().get(i));
-                        }
-                        nextTeamBtn.setVisibility(View.INVISIBLE);
-                        showAlertDialog(dialogView, items,teamInfoDto);
-
-                    }else{
-                        for (int i = indexNum.get(count-1)+1; i < indexNum.get(count--); i++) {
-                            items.add(teamInfoDto.getNameList().get(i));
-                        }
-                        showAlertDialog(dialogView, items, teamInfoDto);
-                    }
-                }
-
-            });
-
-            backTeamBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
-                    nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
-                    backTeamBtn = dialogView.findViewById(R.id.backTeamBtn);
-                    nextTeamBtn.setVisibility(View.VISIBLE);
-                    items=new ArrayList<>();
-                    if(count==0) {
-                        for (int i = 0; i < indexNum.get(count++); i++) {
-                            items.add(teamInfoDto.getNameList().get(i));
-                        }
-                        backTeamBtn.setVisibility(View.INVISIBLE);
-                        showAlertDialog(dialogView, items,teamInfoDto);
-                    }else{
-                        for (int i = indexNum.get(count-1)+1; i < indexNum.get(count--); i++){
-                            items.add(teamInfoDto.getNameList().get(i));
-                        }
-                        showAlertDialog(dialogView, items, teamInfoDto);
-                    }
-                }
-            });
-        }
-
-        return false;
-    }
-
-    public void showAlertDialog(View dialogView,ArrayList<String> items,TeamInfoDto teamInfoDto){
-
-        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
-        listView=dialogView.findViewById(R.id.personList);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),items.get(position).toString(),Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(getApplicationContext(),PersonInfo.class);
-                intent.putExtra("이메일",teamInfoDto.getEmail().get(position));
-                startActivity(intent);
-            }
-        });
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -545,8 +460,95 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
 
+        backTeamBtn=alertDialog.findViewById(R.id.backTeamBtn);
+        nextTeamBtn=alertDialog.findViewById(R.id.nextTeamBtn);
+
+
+        listView=alertDialog.findViewById(R.id.personList);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),items.get(position).toString(),Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getApplicationContext(), Profile.class);
+                intent.putExtra("이메일",teamInfoDto.getEmail().get(position));
+                startActivity(intent);
+            }
+        });
+
+        teamNumCount =0;
+        //같은 위치에 한 팀만 있을 경우
+        if(indexNum.size()==0){
+            items=teamInfoDto.getNameList();
+            adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+            listView.setAdapter(adapter);
+        }
+        //같은 위치에 2개 이상의 팀이 있을 경우
+        else{
+            nextTeamBtn.setVisibility(View.VISIBLE);
+            for (int i = 0; i<indexNum.get(teamNumCount); i++){
+                items.add(teamInfoDto.getNameList().get(i));
+            }
+            adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+            listView.setAdapter(adapter);
+
+            nextTeamBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    backTeamBtn.setVisibility(View.VISIBLE);
+                    items.clear();
+                    //마지막 팀
+                    if(indexNum.size()== teamNumCount +1) {
+                        for (int i = indexNum.get(teamNumCount)+1; i < teamInfoDto.getNameList().size(); i++) {
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+                        listView.setAdapter(adapter);
+                        nextTeamBtn.setVisibility(View.INVISIBLE);
+
+                    }
+                    //그 외의 팀
+                    else{
+                        for (int i = indexNum.get(teamNumCount)+1; i < indexNum.get(teamNumCount +1); i++) {
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        teamNumCount++;
+                        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+                        listView.setAdapter(adapter);
+                    }
+                }
+
+            });
+
+            backTeamBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nextTeamBtn.setVisibility(View.VISIBLE);
+                    items.clear();
+
+                    //첫번째 팀
+                    if(teamNumCount ==0) {
+                        for (int i = 0; i < indexNum.get(teamNumCount); i++) {
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+                        listView.setAdapter(adapter);
+                        backTeamBtn.setVisibility(View.INVISIBLE);
+                    }
+                    //그 외의 팀
+                    else{
+                        for (int i = indexNum.get(teamNumCount -1)+1; i < indexNum.get(teamNumCount); i++){
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        teamNumCount--;
+                        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+                        listView.setAdapter(adapter);
+                    }
+                }
+            });
+        }
+        return false;
+    }
 
 
 
