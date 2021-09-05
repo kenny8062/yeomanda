@@ -123,6 +123,7 @@ module.exports = {
 - host name : `ec2-3-34-187-47.ap-northeast-2.compute.amazonaws.com`
 - user name : ubuntu
 - `ssh: connect to host *** port 22: Connection timed out` -> connect to ec2 instance fail
+
 - nohup
 
 stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}') <br>
@@ -135,6 +136,5 @@ git pull origin main <br>
 cd yeomanda/server <br>
 npm install <br>
 npm run start <br>
-
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
