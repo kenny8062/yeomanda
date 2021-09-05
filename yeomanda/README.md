@@ -116,14 +116,27 @@ module.exports = {
 ### CI/CD
 ##### github action
 - .github/workflows
-- to connect to ec2 instance `✘ ijaemin@ijaemins-MBP  ~/Desktop  ssh -i "yeo.pem" ubuntu@ec2-13-125-145-209.ap-northeast-2.compute.amazonaws.com`
-- to get private ssh key --> `cat path_to_key_pair/[ssh_key].pem` at local --> secrets --> used to connect to ec2 instance
+- to connect to ec2 instance `✘ ijaemin@ijaemins-MBP  ~/Desktop  ssh -i "yeo.pem" ubuntu@ec2-3-34-187-47.ap-northeast-2.compute.amazonaws.com`
+- to get private ssh key --> `vi path_to_key_pair/[ssh_key].pem` at local --> secrets --> used to connect to ec2 instance
 - to generate rsa key pair --> `ssh-keygen -t rsa && cat ~/.ssh/id_rsa.pub` at lunix server --> deploy key 
 - private key format should include ----BEGIN ~ END ----
-- host name : `ec2-13-125-145-209.ap-northeast-2.compute.amazonaws.com`
+- host name : `ec2-3-34-187-47.ap-northeast-2.compute.amazonaws.com`
 - user name : ubuntu
-- ssh: connect to host *** port 22: Connection timed out
-- to solve -> `sudo ufw allow ssh` at linux i think it is not a solution
+- `ssh: connect to host *** port 22: Connection timed out` -> connect to ec2 instance fail
+- nohup
+
+> stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}')
+for stop_target in ${stop_list};do
+        kill -9 $stop_target
+done
+
+>cd yeomanda
+git pull origin main
+cd yeomanda/server
+npm install
+npm run start
+
+
 
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
