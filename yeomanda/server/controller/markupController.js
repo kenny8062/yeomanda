@@ -96,8 +96,8 @@ const favorite = async (req, res) => {
  * 이름 선택하면 해당 여행객의 상세 정보 반환 
  */
 const userDetail = async (req, res) => {
+    console.log(req)
     const { email } = req.body
-    console.log(req.body)
     AWS.config.update(userConfig.aws_iam_info);
     const docClient = new AWS.DynamoDB.DocumentClient();
     const params_to_find_userDetail = {

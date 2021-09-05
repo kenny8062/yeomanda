@@ -43,10 +43,9 @@ jobs:
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
-
+    with: ${{ secrets.TOKEN }}
     steps:
       - uses: actions/checkout@v2
-      - with: ${{ secrets.TOKEN }}
       - name: SSH and deploy node app
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
