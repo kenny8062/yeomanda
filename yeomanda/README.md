@@ -131,7 +131,7 @@ for stop_target in ${stop_list};do <br>
         kill -9 $stop_target <br>
 done <br>
 
-cd ./yeomanda <br>
+cd ./repo/yeomanda <br>
 git pull origin main <br>
 cd yeomanda/server <br>
 npm install <br>
@@ -140,5 +140,6 @@ npm run start <br>
 
 - new try
 - pm2
+- ...
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
