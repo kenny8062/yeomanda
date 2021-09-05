@@ -7,7 +7,7 @@ router.use('/travelers', require('./travelers'));
 router.use('/markup', require('./markup'));
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'chimchak1' });
+    res.render('index', { title: 'chimchak2' });
 });
 
 
