@@ -125,6 +125,4 @@ module.exports = {
 - ssh: connect to host *** port 22: Connection timed out
 - to solve -> `sudo ufw allow ssh` at linux i think it is not a solution
 
-- buffer data was deleted
-
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
