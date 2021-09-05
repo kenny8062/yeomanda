@@ -75,9 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
-    TextView showTravelerView;
-    ArrayList<TextView> showTravelersView;
-    LinearLayout ll;
+
+
     ListView listView;
     ArrayAdapter<String> adapter;
 
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private Location location;
     private LocationResponseDto locationResponseDto=null;
-    Button createBoardBtn,nextTeamBtn;
+    Button createBoardBtn,nextTeamBtn, backTeamBtn;
     double lat,lon;
     int count=0;
     String locationArr[];
@@ -97,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     View dialogView;
     ArrayList<String> items=new ArrayList<>();
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-    // (참고로 Toast에서는 Context가 필요했습니다.)
-    HashMap<TextView,Integer> textViewHashMap;
 
 
 
@@ -265,11 +262,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         for(int i=0;i<locationResponseDto.getData().size();i++) {
                             for (int j = 0; j < i; j++) {
                                 if (locationResponseDto.getData().get(i).getLocationGps().equals(locationResponseDto.getData().get(j).getLocationGps())) {
-                                    locationResponseDto.getData().get(j).getEmail().add("~");
-                                    locationResponseDto.getData().get(j).getNameList().add("~");
+                                    locationResponseDto.getData().get(j).getEmail().add("/");
+                                    locationResponseDto.getData().get(j).getNameList().add("/");
                                     locationResponseDto.getData().get(j).getEmail().addAll(locationResponseDto.getData().get(i).getEmail());
                                     locationResponseDto.getData().get(j).getNameList().addAll(locationResponseDto.getData().get(i).getNameList());
-                                    locationResponseDto.getData().get(j).setTravelDate(locationResponseDto.getData().get(j).getTravelDate() + "~" + locationResponseDto.getData().get(i).getTravelDate());
+                                    locationResponseDto.getData().get(j).setTravelDate(locationResponseDto.getData().get(j).getTravelDate() + "/" + locationResponseDto.getData().get(i).getTravelDate());
                                     break;
                                 }
                             }
@@ -282,13 +279,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             lon=Double.parseDouble(locationArr[1]);
                             LatLng teamsGPS = new LatLng(lat, lon);
 
-                            /*
-                            for(int j=0;j<i;j++){
-                                if(locationResponseDto.getData().get(i).getLocationGps().equals(locationResponseDto.getData().get(j).getLocationGps())){
-
-                                }
-                            }*/
-
                             mMap.addMarker(new MarkerOptions()
                                     .position(teamsGPS)
                                     .title(locationResponseDto.getData().get(i).getTeamNo().toString()))
@@ -296,10 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }
                 }
-
-
-                //현재 위치에 마커 생성하고 이동
-                //setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
             }
@@ -416,33 +402,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
-
-    //현재위치 마커추가
-    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
-
-
-        if (currentMarker != null) currentMarker.remove();
-
-
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-
-
-        currentMarker = mMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-        //mMap.moveCamera(cameraUpdate);
-
-    }
     //위치가 안잡힐경우 디폴트 위치값 설정
     public void setDefaultLocation() {
-
 
         //디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
@@ -475,59 +436,78 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
 
+        backTeamBtn=dialogView.findViewById(R.id.backTeamBtn);
         nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
         ArrayList<Integer> indexNum=new ArrayList<>();
         for(int i=0;i<teamInfoDto.getNameList().size();i++){
-            if(teamInfoDto.getNameList().get(i).equals("~")){
+            if(teamInfoDto.getNameList().get(i).equals("/")){
                 indexNum.add(i);
                 count++;
             }
         }
         if(count==0){
             items=teamInfoDto.getNameList();
-            showAlertDialog(dialogView,items,indexNum,teamInfoDto);
+            showAlertDialog(dialogView,items,teamInfoDto);
         }else{
             nextTeamBtn.setVisibility(View.VISIBLE);
             for (int i=0;i<indexNum.get(count-1);i++){
                 items.add(teamInfoDto.getNameList().get(i));
             }
-            showAlertDialog(dialogView,items,indexNum,teamInfoDto);
+            showAlertDialog(dialogView,items,teamInfoDto);
 
             nextTeamBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
                     nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
-                    nextTeamBtn.setVisibility(View.VISIBLE);
+                    backTeamBtn = dialogView.findViewById(R.id.backTeamBtn);
+                    backTeamBtn.setVisibility(View.VISIBLE);
                     items=new ArrayList<>();
                     if(count<2) {
                         for (int i = indexNum.get(--count)+1; i < teamInfoDto.getNameList().size(); i++) {
                             items.add(teamInfoDto.getNameList().get(i));
                         }
                         nextTeamBtn.setVisibility(View.INVISIBLE);
-                        showAlertDialog(dialogView, items, indexNum, teamInfoDto);
+                        showAlertDialog(dialogView, items,teamInfoDto);
 
                     }else{
                         for (int i = indexNum.get(count-1)+1; i < indexNum.get(count--); i++) {
                             items.add(teamInfoDto.getNameList().get(i));
                         }
-                        showAlertDialog(dialogView, items, indexNum, teamInfoDto);
+                        showAlertDialog(dialogView, items, teamInfoDto);
                     }
                 }
 
             });
+
+            backTeamBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
+                    nextTeamBtn = dialogView.findViewById(R.id.nextTeamBtn);
+                    backTeamBtn = dialogView.findViewById(R.id.backTeamBtn);
+                    nextTeamBtn.setVisibility(View.VISIBLE);
+                    items=new ArrayList<>();
+                    if(count==0) {
+                        for (int i = 0; i < indexNum.get(count++); i++) {
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        backTeamBtn.setVisibility(View.INVISIBLE);
+                        showAlertDialog(dialogView, items,teamInfoDto);
+                    }else{
+                        for (int i = indexNum.get(count-1)+1; i < indexNum.get(count--); i++){
+                            items.add(teamInfoDto.getNameList().get(i));
+                        }
+                        showAlertDialog(dialogView, items, teamInfoDto);
+                    }
+                }
+            });
         }
-
-
-
-
-
-
 
         return false;
     }
 
-    public void showAlertDialog(View dialogView,ArrayList<String> items,ArrayList<Integer> indexNum,TeamInfoDto teamInfoDto){
+    public void showAlertDialog(View dialogView,ArrayList<String> items,TeamInfoDto teamInfoDto){
 
         adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
         listView=dialogView.findViewById(R.id.personList);
@@ -543,7 +523,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("20201010~20201012");
         builder.setView(dialogView);
@@ -555,6 +534,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
             }
         });
+
         builder.setNeutralButton("즐겨찾기", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int id)
