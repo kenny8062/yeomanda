@@ -125,16 +125,15 @@ module.exports = {
 - `ssh: connect to host *** port 22: Connection timed out` -> connect to ec2 instance fail
 - nohup
 
-> stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}')
-for stop_target in ${stop_list};do
-        kill -9 $stop_target
-done
+> stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}') <br>
+for stop_target in ${stop_list};do <br>
+        kill -9 $stop_target <br>
+done <br>
 
->cd ./yeomanda
-git pull origin main
-cd yeomanda/server
-npm install
-npm run start
-
+>cd ./yeomanda <br>
+git pull origin main <br>
+cd yeomanda/server <br>
+npm install <br>
+npm run start <br>
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
