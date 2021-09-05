@@ -131,7 +131,7 @@ for stop_target in ${stop_list};do <br>
         kill -9 $stop_target <br>
 done <br>
 
-cd ./yeomanda <br>
+cd ./repo/yeomanda <br>
 git pull origin main <br>
 cd yeomanda/server <br>
 npm install <br>
