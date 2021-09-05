@@ -46,7 +46,8 @@ jobs:
     steps:
       - name: SSH and deploy node app
       - uses: actions/checkout@v2
-      - with: ${{ secrets.TOKEN }}
+        with: 
+          token: ${{ secrets.TOKEN }}
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOST_NAME : ${{ secrets.HOST_NAME  }}
