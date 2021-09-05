@@ -7,8 +7,8 @@ router.use('/travelers', require('./travelers'));
 router.use('/markup', require('./markup'));
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'chimchak5' });
-});
+    res.render('index', { title: 'chimchak6' });
+})
 
 
 module.exports = router;
