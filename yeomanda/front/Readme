@@ -1,0 +1,15 @@
+Retrofit2 사용중 오류
+
+@POST("markup/userDetail")
+Call<ProfileResponseDto> showProfile(
+        @Body String email
+); 으로 보낼 경우에는 서버로 리퀘스트가 가지를 않는다.
+
+하지만 String email 객체 하나만 가지고 있는 EmailDto 클래스를 만들어서
+
+@POST("markup/userDetail")
+Call<ProfileResponseDto> showProfile(
+        @Body EmailDto email
+);
+
+로 보낼 경우에는 리퀘스트가 잘 간다.
