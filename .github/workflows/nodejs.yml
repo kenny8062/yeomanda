@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: SSH and deploy node app
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with: 
           token: ${{ secrets.TOKEN }}
         env:
