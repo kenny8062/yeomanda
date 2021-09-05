@@ -44,10 +44,12 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: SSH and deploy node app
+      - name: 체크아웃 Github-Action
         uses: actions/checkout@v2
         with: 
           token: ${{ secrets.TOKEN }}
+          
+      - name: connect with ssh
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOST_NAME : ${{ secrets.HOST_NAME  }}
