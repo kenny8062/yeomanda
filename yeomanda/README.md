@@ -125,12 +125,12 @@ module.exports = {
 - `ssh: connect to host *** port 22: Connection timed out` -> connect to ec2 instance fail
 - nohup
 
-> stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}') <br>
+stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}') <br>
 for stop_target in ${stop_list};do <br>
         kill -9 $stop_target <br>
 done <br>
 
->cd ./yeomanda <br>
+cd ./yeomanda <br>
 git pull origin main <br>
 cd yeomanda/server <br>
 npm install <br>
