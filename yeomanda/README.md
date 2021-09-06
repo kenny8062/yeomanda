@@ -99,6 +99,10 @@ module.exports = {
 - function(done) -> 해당 함수를 비동기 테스트로 인지하고, 비동기 로직이 완료되면 done() 을 실행함으로써, 테스트가 완료된다. 
 - done()을 실행해주지 않으면 2000ms 이후에 타임아웃 실패로 간주한다. 
 
+> notice!!
+
+test code should be really simple so that, do not need to require gitignore file.
+
 
 ### SKILL
 ##### jwt token
