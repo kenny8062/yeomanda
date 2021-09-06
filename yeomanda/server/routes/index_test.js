@@ -1,14 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middlewares/verifyToken');
+//const verifyToken = require('../middlewares/verifyToken');
 
 router.use('/user', require('./user'));
 router.use('/travelers', require('./travelers'));
 router.use('/markup', require('./markup'));
-
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'chimchak man2' });
-})
-
 
 module.exports = router;
