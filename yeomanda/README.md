@@ -124,22 +124,33 @@ module.exports = {
 - user name : ubuntu
 - `ssh: connect to host *** port 22: Connection timed out` -> connect to ec2 instance fail
 
-- nohup
+- nohup : 리눅스에서 프로세스를 실행한 터미널의 세션 연결이 끊어지더라도 지속적으로 동작 할 수 있게 해주는 명령어
+- `nohup`[process] &
 
-stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}') <br>
-for stop_target in ${stop_list};do <br>
-        kill -9 $stop_target <br>
-done <br>
+```shell
+stop_list=$(ps -ef | grep "node ./bin/www" | awk '{print $2}') 
+for stop_target in ${stop_list};do 
+        kill -9 $stop_target 
+done 
 
-cd ./repo/yeomanda <br>
-git pull origin main <br>
-cd yeomanda/server <br>
-npm install <br>
-npm run start <br>
+cd ./repo/yeomanda 
+git pull origin main 
+cd yeomanda/server 
+npm install 
+npm run start 
+```
 
+***
 
-- new try
-- pm2
-- ...
+shell scripts do not operate cd, git command, So.
+>ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
+            pm2 stop www
+            pm2 delete www
+            pm2 kill
+            cd ./repo/yeomanda
+            git pull origin main
+            cd yeomanda/server
+            pm2 start ./bin/www
+          '
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
