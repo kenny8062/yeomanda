@@ -8,7 +8,7 @@ router.use('/markup', require('./markup'));
 
 router.get('/', function(req, res, next) {
     res.render('index', { title: 'chimchak' });
-});
+})
 
 
 module.exports = router;
