@@ -39,7 +39,9 @@ jobs:
       #- run: npm run build --if-present --prefix /yeomanda/yeomanda/server
       #- run: npm run test --prefix /yeomanda/yeomanda/server
       - name: Decrypt config.tar.gpg
-        run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase= "${{ secrets.CONFIG_KEY }}" --output config.tar config.tar.gpg
+        run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase= "$CONFIG_KEY" --output config.tar config.tar.gpg
+        env:
+          CONFIG_KEY: $
         working-directory: ./yeomanda/server
 
       - name: Unzip config.tar file
