@@ -47,14 +47,12 @@ jobs:
         working-directory: ./yeomanda/server
 
       - name: npm install and test and build 
-        run: npm ci
         working-directory: ./yeomanda/server
-        
-        run: npm run test
-        working-directory: ./yeomanda/server
-        
-        run: npm run build --if-present
-        working-directory: ./yeomanda/server
+
+        run: |
+          npm ci
+          npm run test
+          npm run build --if-present
 
       
 
