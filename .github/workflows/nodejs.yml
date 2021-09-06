@@ -38,6 +38,13 @@ jobs:
       # 만약 build 스크립트가 없는 경우, 오류 없이 지나간다.
       - run: npm run build --if-present --prefix /yeomanda/yeomanda/server
       - run: npm run test --prefix /yeomanda/yeomanda/server
+      # - run: npm ci
+      #   working-directory: ~/yeomanda/server
+      # - run: npm run test
+      #   working-directory: ~/yeomanda/server
+      # - run: npm run build
+      #   working-directory: ~/yeomanda/server
+
       
 
   deploy:
