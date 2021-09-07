@@ -157,4 +157,14 @@ shell scripts do not operate cd, git command, So.
             pm2 start ./bin/www
           '
 
+
+
+> ISSUE
+1. test code should be simple
+test code에서 gitignore file 을 열람한다면, CI 과정의 테스트에서 오류를 범한다.(github action이 gitignore file을 열람하지 못하기 때문.)<br>
+그렇기 때문에 테스트 코드는 최대한 심플해야 한다. <br>
+
+
+
+
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]

@@ -2,7 +2,6 @@ const should = require('should')
 const request = require('supertest')
 const assert = require('assert')
 const sinon = require('sinon')
-const userController = require('../../controller/userController')
 const faker = require("faker");
 const chai = require('chai')
 const expect = chai.expect
