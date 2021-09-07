@@ -1,11 +1,18 @@
-const { json } = require('express')
 const should = require('should')
 const request = require('supertest')
-const app_test = require('../../app_test')
 const assert = require('assert')
+const sinon = require('sinon')
+const userController = require('../../controller/userController')
+const faker = require("faker");
+const chai = require('chai')
+const expect = chai.expect
+const jest = require('jest-mock')
+
 /**
  * function의 파라미터로 done을 넣어주면 해당 함수를 비동기 함수로 취급하고 비동기 로직이 끝나면 callback으로 done이 실행되고 테스트 코드는 끝이난다. 
  * 만약에 done을 실행하지 않으면 2000ms 이 지났을 경우 타임아웃 실패로 처리한다.
+ * 
+ * 과연 데이터베이스를 접근하지 않는 가장 간단한 테스트 코드는 어떻게 작성하는 것인가...
  */
 
 
@@ -15,6 +22,62 @@ describe("Test suite", () => {
     })
 })
 
+const mockRequest = () => {
+    const req = {}
+    req.body = jest.fn().mockReturnValue(req)
+    req.params = jest.fn().mockReturnValue(req)
+    return req
+}
+
+const mockResponse = () => {
+    const res = {}
+    res.send = jest.fn().mockReturnValue(res)
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    return res
+}
+
+// describe("Check method userController.login ", () => {
+//     it('should 200 and return yes', async() => {
+//         const req = mockRequest();
+//         const res = mockResponse();
+  
+//         await userController.testing(req, res);
+//         expect(res.send.mock.calls[0][0]).equal('yes')
+//     });
+// });
+
+// describe("Check method userController.login ", () => {
+//     it('should 200 and return yes', async() => {
+//         //const req = mockRequest();
+//         //const req = { body: { email: faker.internet.email(), password: faker.internet.password() } };
+//         const req = { body: { email: 'woals1@woals1.com', password: 'woals1'}}
+//         const res = mockResponse();
+  
+//         await userController.login(req, res);
+//         expect(res.send.mock.calls[0][0].message).equal('로그인 성공')
+//     });
+// });
+
+/**
+ * complex test code that run in local below
+ */
+
+// describe('POST /users', () => {
+//     it('return users', (done) => {
+//         request(app_test)
+//         .post('/user/login')
+//         .send({email: 'woals1@woals1.com', password: 'woals1'})
+//         .expect(200)
+//         .end((err, res) => {
+//             if(err){
+//                 throw err;
+//             }
+//             res.body.should.have.property('success');
+//         });
+//         done(); 
+//     });
+// });
 // describe('POST /user', () => {
 //     // signup shoule get files...
 

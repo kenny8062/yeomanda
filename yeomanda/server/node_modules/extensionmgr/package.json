@@ -1,0 +1,23 @@
+{
+  "name": "extensionmgr",
+  "version": "0.1.0",
+  "description": "\"simple extension manangement tool,very lightweight\"",
+  "main": "extensionmgr.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/influx6/extensionmgr.js"
+  },
+  "keywords": [
+    "'extensions'",
+    "'plugins'",
+    "'extension",
+    "manager'",
+    "'plugin",
+    "manager'"
+  ],
+  "author": "Alexander Ewetumo",
+  "license": "MIT"
+}

@@ -7,6 +7,10 @@ const AWS = require('aws-sdk')
 const userConfig = require('../config/aws/User')
 const emailValidator = require("email-validator");
 
+const testing = async(req, res) => {
+    const { email, password } = req.body
+    return res.status(200).send('yes')
+}
 
 const signup = async(req, res) => {
     try{
@@ -106,5 +110,6 @@ const login = async (req, res) => {
 
 module.exports = {
     signup,
-    login
+    login,
+    testing
 };
