@@ -1,5 +1,6 @@
 package com.example.yeomanda.Retrofit;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -16,7 +17,7 @@ public class LocationResponseDto {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<TeamInfoDto> data = null;
+    private ArrayList<TeamInfoDto> data = null;
 
     public Integer getStatus() {
         return status;
@@ -42,11 +43,11 @@ public class LocationResponseDto {
         this.message = message;
     }
 
-    public List<TeamInfoDto> getData() {
+    public ArrayList<TeamInfoDto> getData() {
         return data;
     }
 
-    public void setData(List<TeamInfoDto> data) {
+    public void setData(ArrayList<TeamInfoDto> data) {
         this.data = data;
     }
 
