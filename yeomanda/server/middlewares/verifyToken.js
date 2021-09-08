@@ -12,7 +12,6 @@ const verifyToken = {
       return res.status(sc.BAD_REQUEST).send(ut.fail(sc.BAD_REQUEST, rm.EMPTY_TOKEN));
     }
     const user = await jwt.verify(token);
-    console.log(user)
 
     if (user === TOKEN_EXPIRED) {
       return res.status(sc.UNAUTHORIZED).send(ut.fail(sc.UNAUTHORIZED, rm.EXPIRED_TOKEN));

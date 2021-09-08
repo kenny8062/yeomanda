@@ -65,11 +65,15 @@ const favorite = async (req, res) => {
             }
         })
     }
-    // case2 : favorite table에 이메일이 있는 경우 -> 누적 추가
+    // case2 : favorite table에 이메일이 있는 경우 -> 누적 추가 
+    // 9/8 but, 이미 추가한 팀을 추가할 경우에는 예외 처리 해줘야 해 
     else{
         const favorite_list = checkEmail_from_favorite.Items[0].favorite_team_no
         const accumulate_favorite_list = []
         for(var i=0; i<favorite_list.length; i++){
+            if(favorite_list[i] === favorite_team_no){
+                return res.status(statusCode.OK).send(util.fail(statusCode.BAD_REQUEST, responseMessage.ALREADY_ADDED, "이미 추가한 팀입니다."))
+            }
             accumulate_favorite_list.push(favorite_list[i])
         }
         accumulate_favorite_list.push(favorite_team_no)
@@ -135,7 +139,15 @@ const userDetail = async (req, res) => {
     }
 }
 
+const showFavorites = async(req, res) => {
+    try{
+
+    }catch(err){
+
+    }
+}
 module.exports = {
     favorite,
-    userDetail
+    userDetail,
+    showFavorites
 }

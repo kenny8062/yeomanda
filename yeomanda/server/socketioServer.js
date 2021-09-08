@@ -24,7 +24,7 @@ io.on('connection', function(socket){
         
 
 		// Send received chat message to all connected clients
-		io.sockets.emit('updateMessage', "newUser1이 접속하였습니다.");
+		io.sockets.emit('newUser1', "newUser1이 접속하였습니다.");
 	});
 
     socket.on('disconnect', () => {
