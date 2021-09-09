@@ -4,7 +4,7 @@ const verifyToken = require('../middlewares/verifyToken');
 
 router.use('/user', require('./user'));
 router.use('/travelers', verifyToken.checkToken, require('./travelers'));
-router.use('/markup', require('./markup'));
+router.use('/markup', verifyToken.checkToken, require('./markup'));
 
 router.get('/', function(req, res, next) {
     res.render('index', { title: ' yeomanda start !!! ' });

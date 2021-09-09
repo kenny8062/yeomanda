@@ -61,6 +61,9 @@ module.exports = {
     NO_BODY : '조건에 부합하는 결과 없음',
     ADD_FAVORITE : '즐겨찾기 추가 완료',
     ACCUMULATE_FAVORITE : '즐겨찾기 누적 완료',
+    DELETE_FAVORITE : '즐겨찾기 삭제 완료',
+    ALREADY_ADDED : '이미 추가 완료',
+
 
     /* s3 */
     NO_FILES_IN_S3 : 'no file in s3'
