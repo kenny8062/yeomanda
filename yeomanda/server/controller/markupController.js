@@ -222,11 +222,58 @@ const deleteFavorite = async(req, res) => {
 }
 
 /**
- * 즐겨찾기 리스트 보여주기 
+ * 즐겨찾기했던 팀들 보여주기
+ * @param {*} req token
+ * @param {*} res return
+ * @returns like travelers/showTravlers?
  */
 const showFavorites = async(req, res) => {
     try{
+        const userEmail = req.decoded.email
+        AWS.config.update(favoriteConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
 
+        /**
+         * 1. find email in FAVORITES table 
+         */
+
+         const params_find_favorites = {
+            TableName : favoriteConfig.aws_table_name,
+            KeyConditionExpression: 'email = :i',
+            ExpressionAttributeValues: {
+                ':i' : userEmail
+            }   
+        };
+        const checkEmail_from_favorite = await docClient.query(params_find_favorites).promise()
+        const Favorites = checkEmail_from_favorite.Items[0].favorite_team_no 
+
+        /**
+         * 2. get user's email from favorites list
+         * 2-1. store team_no and email in list -> [(1, [a,b,c]), (2, [d,e,f]), ... ]
+         */
+        var team_no_emails_list = {} // 팀번호와 그에 해당되는 여행객들의 이메일을 같이 저장할 리스트.
+        console.log(Favorites)
+        for(var i in Favorites){
+            const sql = `select email from travel_with where team_no = '${Favorites[i]}';`
+            conn.query(sql, async function(err, emails){
+                if(err){
+                    return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
+                        "fail to select email from travel_with where team_no = ?"))
+                }else{
+                    /**
+                     * filter 로 이메일 데이터만 뽑아서 따로 저장
+                     * async 하는 동안 for 문 다 돌았어 -> 그래서 마지막 팀이 계속 배열로 들어간다...
+                     */
+                    const emailList = []
+                    emails.filter( e => {
+                        emailList.push(e.email)
+                    })
+                    console.log(Favorites[i])
+                    team_no_emails_list[Favorites[i]] = emailList
+                    console.log(team_no_emails_list)
+                }
+            })
+        }
     }catch(err){
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
@@ -234,6 +281,6 @@ const showFavorites = async(req, res) => {
 module.exports = {
     favorite,
     userDetail,
-    showFavorites,
-    deleteFavorite
+    deleteFavorite,
+    showFavorites
 }
