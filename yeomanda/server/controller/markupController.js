@@ -31,10 +31,13 @@ const sleep = (ms) => {
     })
 }
 
-
+/**
+ * 즐겨찾기 추가하기 (1.신규추가, 2.누적추가)
+ */
 const favorite = async (req, res) => {
     try{
-        const { email, favorite_team_no } = req.body
+        const adder = req.decoded.email
+        const favorite_team_no  = req.params.team_no
         AWS.config.update(favoriteConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
     
@@ -42,7 +45,7 @@ const favorite = async (req, res) => {
             TableName : favoriteConfig.aws_table_name,
             KeyConditionExpression: 'email = :i',
             ExpressionAttributeValues: {
-                ':i' : email
+                ':i' : adder
             }   
         };
         const checkEmail_from_favorite = await docClient.query(params_findFromUser).promise()
@@ -54,7 +57,7 @@ const favorite = async (req, res) => {
             const params_to_push_favorite = {
                 TableName : favoriteConfig.aws_table_name,
                 Item : {
-                    email : email,
+                    email : adder,
                     favorite_team_no : accumulate_favorite_list
                 }
             };
@@ -82,7 +85,7 @@ const favorite = async (req, res) => {
             const params_to_accumulate_favorite = {
                 TableName : favoriteConfig.aws_table_name,
                 Item : {
-                    email : email,
+                    email : adder,
                     favorite_team_no : accumulate_favorite_list
                 }
             };
@@ -106,7 +109,7 @@ const favorite = async (req, res) => {
  */
 const userDetail = async (req, res) => {
     try{
-        const { email } = req.body
+        const email = req.decoded.email
         AWS.config.update(userConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
         const params_to_find_userDetail = {
@@ -149,19 +152,20 @@ const userDetail = async (req, res) => {
     
 }
 
+/**
+ * 즐겨찾기 취소하기
+ */
 const deleteFavorite = async(req, res) => {
     try{
-        /**
-         * 1. find email in FAVORITES table
-         * 2. get list of favorites from given email
-         * 3. get rid of deletedteam number from the list
-         */
         const deletedTeam = req.params.team_no
         const deleter = req.decoded.email
         AWS.config.update(favoriteConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
-    
-        const params_findFromUser = {
+
+        /**
+         * 1. find email in FAVORITES table and delete favorite team_no
+         */
+         const params_findFromUser = {
             TableName : favoriteConfig.aws_table_name,
             KeyConditionExpression: 'email = :i',
             ExpressionAttributeValues: {
@@ -174,21 +178,52 @@ const deleteFavorite = async(req, res) => {
         for(var i in newFavorites){
             if(newFavorites[i].toString() === deletedTeam){
                 if (i > -1) {
-                    newFavorites.splice(i, 1); //   i 번째 위치하는 원소를 삭제함 -> 계속 삭제 하고 삭제 하다보면 배열의 상황이 다르기 때문에 이상한거를 삭제할 수도,...
+                    newFavorites.splice(i, 1); 
                 }               
             }
         }
         /**
-         * get list from db and remove all and replace to new list
+         * 2. delete row of user email
          */
-        console.log(newFavorites)
-        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.DELETE_FAVORITE, newFavorites))
+        const params_to_delete_favorite = { 
+            TableName : favoriteConfig.aws_table_name, 
+            Key: {
+                "email" : deleter 
+            },
+        };
+
+        docClient.delete(params_to_delete_favorite, function(err, data){
+            if(err){
+                return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR))
+            } else {
+                /**
+                 * 3. delete success & push new favorite list that deleted a team_no
+                 */
+                const params_to_push_favorite = {
+                    TableName : favoriteConfig.aws_table_name,
+                    Item : {
+                        email : deleter,
+                        favorite_team_no : newFavorites
+                    }
+                };  
+                docClient.put(params_to_push_favorite, function(err, data){
+                    if(err){
+                        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR))
+                    } else {
+                        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.DELETE_FAVORITE))
+                    }
+                })
+            }
+        })
     }catch(err){
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
     
 }
 
+/**
+ * 즐겨찾기 리스트 보여주기 
+ */
 const showFavorites = async(req, res) => {
     try{
 
