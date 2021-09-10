@@ -181,7 +181,8 @@ const registerPlan = async(req, res) => {
                             team_no : new_team_no+1,
                             travelDate : jsonPlan[i]["travelDate"].toString(),
                             isfinished : 0,
-                            region_info : country
+                            region_info : country,
+                            team_name : jsonPlan[i]["teamName"].toString()
                         }
                         // add new plan
                         const sql = 'insert into travel_with set ?;'
@@ -208,42 +209,8 @@ const registerPlan = async(req, res) => {
     }
 }
 
-const finishTravel = async(req, res) => {
-    try{
-        const finishTraveler = req.decoded.email
-        /**
-         * 1. find email in database that field 'isfinished=0' 
-         * 2. change isfinished filed to 1
-         */
-         const sql = `select team_no from travel_with where email='${finishTraveler}' and isfinished = '0';` 
-         conn.query(sql, async function(err, data){
-             if(err){
-                 console.log(err)
-                 return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
-                    "fail to select team_no hopped to finish travel"))
-             }else{
-                const finishTeam = data[0].team_no
-                const sql_to_finish = `update travel_with set isfinished = '1' where team_no = '${finishTeam}'`
-                conn.query(sql_to_finish, async function(err, data){
-                    if(err){
-                        console.log(err)
-                        return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
-                            "fail to update isfinished to 1"))
-                    }else{
-                        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
-                            "success to update isfinished to 1")) 
-                    }
-                })
-             }
-         })
-
-    }catch(err){
-        return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
-    }
-}
 
 module.exports = {
     showTravelers,
-    registerPlan,
-    finishTravel
+    registerPlan
 };
