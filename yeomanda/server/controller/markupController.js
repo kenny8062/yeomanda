@@ -109,7 +109,7 @@ const favorite = async (req, res) => {
  */
 const userDetail = async (req, res) => {
     try{
-        const email = req.body
+        const { email } = req.body
         AWS.config.update(userConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
         const params_to_find_userDetail = {

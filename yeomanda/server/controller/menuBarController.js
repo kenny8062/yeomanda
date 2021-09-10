@@ -32,7 +32,7 @@ const s3 = new AWS.S3({
  */
 
 
- const showFavorites = async(req, res) => {
+ const showFavoriteTeamName = async(req, res) => {
     try{
         const userEmail = req.decoded.email
         AWS.config.update(favoriteConfig.aws_iam_info);
@@ -50,18 +50,22 @@ const s3 = new AWS.S3({
             }   
         };
         const checkEmail_from_favorite = await docClient.query(params_find_favorites).promise()
-        const Favorites = checkEmail_from_favorite.Items[0].favorite_team_no 
-
+        const Favorites = checkEmail_from_favorite.Items[0].favorite_team_no  // 이용자가 즐겨찾기 한 팀들의 번호 리스트
+        
+        // 1. 즐겨찾기 한 팀들이 없을 경우
+        if(Favorites.length === 0){
+            return res.status(statusCode.OK).send(util.success(statusCode.fail, responseMessage.READ_USER_FAIL, "즐겨찾기 한 팀이 없습니다. " ))                                        
+        }
         /**
-         * 2. get user's email from favorites list
-         * 2-1. store team_no and email in list -> [(1, [a,b,c]), (2, [d,e,f]), ... ]
+         * 2. 즐겨찾기 한 팀들이 있을 경우
+         * 즐겨찾기 한 팀들의 번호 리스트를 가지고 travel_with 테이블에서 팀 이름들을 보내준다.
          */
-        var team_no_emails_list = {} // 팀번호와 그에 해당되는 여행객들의 이메일을 같이 저장할 리스트.
-        const emailList = []
-
+        const userList = {}
+        const result = []  //  최종 결과
+        console.log(Favorites)
         for(var i in Favorites){
-            const sql = `select email from travel_with where team_no = '${Favorites[i]}';`
-            conn.query(sql, async function(err, emails){
+            const sql = `select * from travel_with where team_no = '${Favorites[i]}';`
+            conn.query(sql, async function(err, data){
                 if(err){
                     return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
                         "fail to select email from travel_with where team_no = ?"))
@@ -70,13 +74,17 @@ const s3 = new AWS.S3({
                      * filter 로 이메일 데이터만 뽑아서 따로 저장
                      * async 하는 동안 for 문 다 돌았어 -> 그래서 마지막 팀이 계속 배열로 들어간다...
                      */
-                    emails.filter( e => {
-                        emailList.push(e.email)
+                    
+                    const teamNameList = []
+                    
+                    data.filter( e => { // data 에는 하나의 팀에 해당하는 여러 여행객들의 정보가 담겨져 있다. 
+                        teamNameList.push(e.team_name)
                     })
-                    console.log(emailList)
-                    // console.log(Favorites[i])
-                    // team_no_emails_list[Favorites[i]] = emailList
-                    // console.log(team_no_emails_list)
+                    result.push(teamNameList[0])
+                    console.log(i, Favorites.length)
+                    if(result.length === Favorites.length){
+                        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
+                    }
                 }
             })
         }
@@ -190,7 +198,7 @@ const finishTravel = async(req, res) => {
 }
 
 module.exports = {
-    showFavorites,
+    showFavoriteTeamName,
     deleteFavorite,
     finishTravel
 }

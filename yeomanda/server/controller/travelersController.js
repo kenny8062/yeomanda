@@ -123,7 +123,7 @@ const showTravelers = async(req, res) => {
                     "name" : nameList
                 })
             }
-            console.log(travelers)
+            //console.log(travelers)
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, travelers))
         }
     })
@@ -175,6 +175,10 @@ const registerPlan = async(req, res) => {
                     }
                     // 게시판에 등록한 여행객이 회원일 경우
                     else{
+                        /**
+                         * 이미 여행에 등록된 사람일 경우는 등록하지 못하게 해야함.
+                         */
+
                         const params = {
                             email : jsonPlan[i]["travelMate"].toString(),
                             location_gps : location_gps,
@@ -189,7 +193,7 @@ const registerPlan = async(req, res) => {
                         conn.query(sql, params, function(err, data){
                             if(err){
                                 console.log(err)
-                                return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, 
+                                return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, 
                                     "failed to store new plan (existed user in travel_with table)"))
                             }else{
                                 // just for sending response only one time

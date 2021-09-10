@@ -64,6 +64,8 @@ module.exports = {
     DELETE_FAVORITE : '즐겨찾기 삭제 완료',
     ALREADY_ADDED : '이미 추가 완료',
 
+    /* 즐겨찾기 */
+    NO_FAVORITES: '즐겨찾기한 팀이 없습니다',
 
     /* s3 */
     NO_FILES_IN_S3 : 'no file in s3'
