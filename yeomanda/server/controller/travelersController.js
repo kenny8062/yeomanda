@@ -136,7 +136,10 @@ const registerPlan = async(req, res) => {
         var new_team_no = 0
         var success_count = 0
         /**
-         * search how many team has registered 
+         * 1. 가장 먼저 팀 갯수를 확인하고
+         * 2. 새롭게 팀을 등록하고자 하는데, 먼저 회원인지 아닌지 확인하고,
+         * 3. 만약에 이미 등록한 적이 있다면 (디비에서 쿼리문으로 인해서 결과가 확인되면), 등록 못하게 해야한다. 
+         * 4. 등록한 적이 없다면 (디비에서 확인 안된다면), 등록하자. 
          */
         conn.query(sql_team_no, async function(err, data){
             if(err){
@@ -159,55 +162,75 @@ const registerPlan = async(req, res) => {
                 
                 for(var i=0; i<Object.keys(jsonPlan).length; i++){
 
-                    const params_to_find_from_user = {
+                    const travelerEmail = jsonPlan[i]["travelMate"].toString()
+                    const params_to_find_from_email = {
                         TableName : userConfig.aws_table_name,
                         KeyConditionExpression: 'email = :i',
                         ExpressionAttributeValues: {
-                            ':i' : jsonPlan[i]["travelMate"].toString()
+                            ':i' : travelerEmail
                         }
                         
                     };
-                    const checkEmail = await docClient.query(params_to_find_from_user).promise()
-                    // 게시판에 등록한 여행객이 회원이 아닐 경우
+                    const checkEmail = await docClient.query(params_to_find_from_email).promise()
+                    
+                    // 게시판에 등록하려고 하는 여행객이 회원이 아닐 경우
                     if(checkEmail.Items.length === 0){
                         return res.status(statusCode.OK).
                             send(util.fail(statusCode.BAD_REQUEST, responseMessage.READ_USER_FAIL, "회원 아닌 여행객이 있습니다.")) 
                     }
-                    // 게시판에 등록한 여행객이 회원일 경우
-                    else{
-                        /**
-                         * 이미 여행에 등록된 사람일 경우는 등록하지 못하게 해야함.
-                         */
 
-                        const params = {
-                            email : jsonPlan[i]["travelMate"].toString(),
-                            location_gps : location_gps,
-                            team_no : new_team_no+1,
-                            travelDate : jsonPlan[i]["travelDate"].toString(),
-                            isfinished : 0,
-                            region_info : country,
-                            team_name : jsonPlan[i]["teamName"].toString()
-                        }
-                        // add new plan
-                        const sql = 'insert into travel_with set ?;'
-                        conn.query(sql, params, function(err, data){
-                            if(err){
-                                console.log(err)
-                                return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, 
-                                    "failed to store new plan (existed user in travel_with table)"))
-                            }else{
-                                // just for sending response only one time
-                                success_count = success_count + 1
-                                if (success_count === Object.keys(jsonPlan).length){
-                                    return res.status(statusCode.OK).
-                                        send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "success to store new plan!!")) 
-                                }
-                            }
-                        })
+                    // // 게시판에 등록한 여행객이 회원일 경우
+                    // else{
+                        /**
+                         * todo : 이미 여행에 등록된 사람일 경우는 등록하지 못하게 해야함.
+                         */
+                        // const sql = `select * from travel_with where email = ${travelerEmail};` 
+                        // conn.query(sql, async function(err, data){
+                        //     if(err){
+                        //         return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.QUERY_ERROR, 
+                        //             "fail to select travelers from travel_with where email = ?"))
+                        //     }
+                        //     else{
+                        //         // 디비에서 찾은 결과가 없다? 여행을 등록한 적이 없다 -> ok
+                        //         if(data.length === 0){
+                    const params = {
+                        email : travelerEmail,
+                        location_gps : location_gps,
+                        team_no : new_team_no+1,
+                        travelDate : jsonPlan[i]["travelDate"].toString(),
+                        isfinished : 0,
+                        region_info : country,
+                        team_name : jsonPlan[i]["teamName"].toString()
                     }
-                }
-            }
-        })
+                    // add new plan
+                    const sql = 'insert into travel_with set ?;'
+                    
+                    conn.query(sql, params, function(err, data){
+                        if(err){
+                            /**
+                             * 여기서 걸릴꺼 같은데????
+                             */
+                            
+                            throw err
+                            //res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR, 
+                            //    "failed to store new plan (existed user in travel_with table)"))
+                        }
+                        // just for sending response only one time
+                        success_count = success_count + 1
+                        if (success_count === Object.keys(jsonPlan).length){
+                            return res.status(statusCode.OK).
+                                send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "success to store new plan!!")) 
+                        }
+                        
+                    })       
+
+                                // 디비에서 찾은 결과가 았다? 여행을 등록한 적이 있다 -> no
+                                // else{
+                                //     return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.ALREADY_ADDED_TRAVEL, 
+                                //         "이미 여행을 등록했습니다."))
+                }                // }                     
+            }           
+        })        
     }catch(err){
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }

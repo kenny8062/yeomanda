@@ -63,6 +63,7 @@ module.exports = {
     ACCUMULATE_FAVORITE : '즐겨찾기 누적 완료',
     DELETE_FAVORITE : '즐겨찾기 삭제 완료',
     ALREADY_ADDED : '이미 추가 완료',
+    ALREADY_ADDED_TRAVEL : '이미 여행 계획 추가',
 
     /* 즐겨찾기 */
     NO_FAVORITES: '즐겨찾기한 팀이 없습니다',
