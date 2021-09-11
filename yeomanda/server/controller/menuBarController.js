@@ -25,14 +25,9 @@ const s3 = new AWS.S3({
 });
 
 /**
- * 즐겨찾기했던 팀들 보여주기
- * @param {*} req token
- * @param {*} res return
- * @returns like travelers/showTravlers?
+ * 즐겨찾기한 팀들의 팀 이름들을 보여줌.
  */
-
-
- const showFavoriteTeamName = async(req, res) => {
+const showFavoriteTeamName = async(req, res) => {
     try{
         const userEmail = req.decoded.email
         AWS.config.update(favoriteConfig.aws_iam_info);
@@ -60,9 +55,8 @@ const s3 = new AWS.S3({
          * 2. 즐겨찾기 한 팀들이 있을 경우
          * 즐겨찾기 한 팀들의 번호 리스트를 가지고 travel_with 테이블에서 팀 이름들을 보내준다.
          */
-        const userList = {}
         const result = []  //  최종 결과
-        console.log(Favorites)
+
         for(var i in Favorites){
             const sql = `select * from travel_with where team_no = '${Favorites[i]}';`
             conn.query(sql, async function(err, data){
@@ -94,9 +88,9 @@ const s3 = new AWS.S3({
 }
 
 /**
- * 즐겨찾기 취소하기
+ * 즐겨찾기 취소하기 - 즐겨찾기 리스트 보고 나서 취소할 수 있어.
  */
- const deleteFavorite = async(req, res) => {
+const deleteFavorite = async(req, res) => {
     try{
         const deletedTeam = req.params.team_no
         const deleter = req.decoded.email
@@ -106,7 +100,7 @@ const s3 = new AWS.S3({
         /**
          * 1. find email in FAVORITES table and delete favorite team_no
          */
-         const params_findFromUser = {
+        const params_findFromUser = {
             TableName : favoriteConfig.aws_table_name,
             KeyConditionExpression: 'email = :i',
             ExpressionAttributeValues: {
@@ -162,7 +156,9 @@ const s3 = new AWS.S3({
     
 }
 
-
+/**
+ * 여행 취소하기
+ */
 const finishTravel = async(req, res) => {
     try{
         const finishTraveler = req.decoded.email
@@ -197,8 +193,51 @@ const finishTravel = async(req, res) => {
     }
 }
 
+
+const showFavoritesDetail = async(req, res) => {
+    const teamName = req.params.teamName
+    const sql = `select email from travel_with where team_name = '${teamName}';`
+    conn.query(sql, async function(err, data){
+        if(err){
+            return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
+                "fail to select email from travel_with where team_name = ?"))
+        }else{
+            const result = []
+            data.filter( async(d) => {
+                const user = d.email
+                AWS.config.update(userConfig.aws_iam_info);
+                const docClient = new AWS.DynamoDB.DocumentClient();
+
+                /**
+                 * 1. find email in FAVORITES table and delete favorite team_no
+                 */
+                const params_findFromUser = {
+                    TableName : userConfig.aws_table_name,
+                    KeyConditionExpression: 'email = :i',
+                    ExpressionAttributeValues: {
+                        ':i' : user
+                    }   
+                };
+                const checkEmail = await docClient.query(params_findFromUser).promise()
+                const userInfo = {
+                    'name' : checkEmail.Items[0].name,
+                    'sex' : checkEmail.Items[0].sex,
+                    'birth' : checkEmail.Items[0].birth,
+                    'files' : checkEmail.Items[0].files
+                }
+                result.push(userInfo)
+                if(result.length === data.length){
+                    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
+                        result)) 
+                }
+            })
+        }
+    })
+}
+
 module.exports = {
     showFavoriteTeamName,
     deleteFavorite,
-    finishTravel
+    finishTravel,
+    showFavoritesDetail
 }
