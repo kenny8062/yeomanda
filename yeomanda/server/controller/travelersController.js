@@ -116,8 +116,7 @@ const showTravelers = async(req, res) => {
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, travelers))
             
     }catch(err){
-        
-        return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "주위에 여행객이 없습니다."))
+        return res.status(statusCode.OK).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, err))
     }
     
     
