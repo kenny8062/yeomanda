@@ -78,7 +78,6 @@ jobs:
             cd ./repo/yeomanda
             git pull origin main
             cd yeomanda/server
-            npm install
             pm2 start ./bin/www
           '
            
