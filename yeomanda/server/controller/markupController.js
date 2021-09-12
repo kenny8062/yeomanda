@@ -13,9 +13,9 @@ const userConfig = require('../config/aws/User')
 
 
 // rds mysql
-const mysql_config = require('../config/aws/Travelers'); 
-const conn = mysql_config.init()
-mysql_config.connect(conn)
+const mysql = require("mysql2/promise");
+const conn = require('../config/aws/Travelers');
+
 
 // s3 getObject
 const s3 = new AWS.S3({

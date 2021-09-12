@@ -13,9 +13,8 @@ const userConfig = require('../config/aws/User')
 
 
 // rds mysql
-const mysql_config = require('../config/aws/Travelers'); 
-const conn = mysql_config.init()
-mysql_config.connect(conn)
+const mysql = require("mysql2/promise");
+const conn = require('../config/aws/Travelers');
 
 // s3 getObject
 const s3 = new AWS.S3({
@@ -29,6 +28,7 @@ const s3 = new AWS.S3({
  */
 const showFavoriteTeamName = async(req, res) => {
     try{
+        const connection = await mysql.createConnection(conn.db_info);
         const userEmail = req.decoded.email
         AWS.config.update(favoriteConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
@@ -59,30 +59,26 @@ const showFavoriteTeamName = async(req, res) => {
 
         for(var i in Favorites){
             const sql = `select * from travel_with where team_no = '${Favorites[i]}';`
-            conn.query(sql, async function(err, data){
-                if(err){
-                    return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
-                        "fail to select email from travel_with where team_no = ?"))
-                }else{
-                    /**
-                     * filter 로 이메일 데이터만 뽑아서 따로 저장
-                     * async 하는 동안 for 문 다 돌았어 -> 그래서 마지막 팀이 계속 배열로 들어간다...
-                     */
-                    
-                    const teamNameList = []
-                    
-                    data.filter( e => { // data 에는 하나의 팀에 해당하는 여러 여행객들의 정보가 담겨져 있다. 
-                        teamNameList.push(e.team_name)
-                    })
-                    result.push(teamNameList[0])
-                    console.log(i, Favorites.length)
-                    if(result.length === Favorites.length){
-                        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
-                    }
-                }
+            const data = await connection.query(sql)
+                
+            /**
+             * filter 로 이메일 데이터만 뽑아서 따로 저장
+             * async 하는 동안 for 문 다 돌았어 -> 그래서 마지막 팀이 계속 배열로 들어간다...
+             */
+            
+            const teamNameList = []
+            
+            data[0].filter( e => { // data 에는 하나의 팀에 해당하는 여러 여행객들의 정보가 담겨져 있다. 
+                teamNameList.push(e.team_name)
             })
+            result.push(teamNameList[0])
+            console.log(i, Favorites.length)
+            if(result.length === Favorites.length){
+                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
+            }
         }
     }catch(err){
+        console.log(err)
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
 }
@@ -92,6 +88,8 @@ const showFavoriteTeamName = async(req, res) => {
  */
 const deleteFavorite = async(req, res) => {
     try{
+        const connection = await mysql.createConnection(conn.db_info);
+
         const deletedTeam = req.params.team_no
         const deleter = req.decoded.email
         AWS.config.update(favoriteConfig.aws_iam_info);
@@ -161,76 +159,65 @@ const deleteFavorite = async(req, res) => {
  */
 const finishTravel = async(req, res) => {
     try{
+        const connection = await mysql.createConnection(conn.db_info);
+
         const finishTraveler = req.decoded.email
         /**
          * 1. find email in database that field 'isfinished=0' 
          * 2. change isfinished filed to 1
          */
-         const sql = `select team_no from travel_with where email='${finishTraveler}' and isfinished = '0';` 
-         conn.query(sql, async function(err, data){
-             if(err){
-                 console.log(err)
-                 return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
-                    "fail to select team_no hopped to finish travel"))
-             }else{
-                const finishTeam = data[0].team_no
-                const sql_to_finish = `update travel_with set isfinished = '1' where team_no = '${finishTeam}'`
-                conn.query(sql_to_finish, async function(err, data){
-                    if(err){
-                        console.log(err)
-                        return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
-                            "fail to update isfinished to 1"))
-                    }else{
-                        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
-                            "success to update isfinished to 1")) 
-                    }
-                })
-             }
-         })
+        const sql = `select team_no from travel_with where email='${finishTraveler}' and isfinished = '0';` 
+        const result = await connection.query(sql)
+             
+        
+        const finishTeam = result[0][0].team_no
+        const sql_to_finish = `update travel_with set isfinished = '1' where team_no = '${finishTeam}'`
+        const data = await connection.query(sql_to_finish)   
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
+            "success to update isfinished to 1")) 
 
     }catch(err){
+        console.log(err)
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
 }
 
 
 const showFavoritesDetail = async(req, res) => {
+    const connection = await mysql.createConnection(conn.db_info);
+
     const teamName = req.params.teamName
     const sql = `select email from travel_with where team_name = '${teamName}';`
-    conn.query(sql, async function(err, data){
-        if(err){
-            return res.status(statusCode.BAD_REQUEST).send(util.success(statusCode.OK, responseMessage.QUERY_ERROR, 
-                "fail to select email from travel_with where team_name = ?"))
-        }else{
-            const result = []
-            data.filter( async(d) => {
-                const user = d.email
-                AWS.config.update(userConfig.aws_iam_info);
-                const docClient = new AWS.DynamoDB.DocumentClient();
+    const data = await connection.query(sql)
+       
+    const result = []
+    data[0].filter( async(d) => {
+        const user = d.email
+        AWS.config.update(userConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
 
-                /**
-                 * 1. find email in FAVORITES table and delete favorite team_no
-                 */
-                const params_findFromUser = {
-                    TableName : userConfig.aws_table_name,
-                    KeyConditionExpression: 'email = :i',
-                    ExpressionAttributeValues: {
-                        ':i' : user
-                    }   
-                };
-                const checkEmail = await docClient.query(params_findFromUser).promise()
-                const userInfo = {
-                    'name' : checkEmail.Items[0].name,
-                    'sex' : checkEmail.Items[0].sex,
-                    'birth' : checkEmail.Items[0].birth,
-                    'files' : checkEmail.Items[0].files
-                }
-                result.push(userInfo)
-                if(result.length === data.length){
-                    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
-                        result)) 
-                }
-            })
+        /**
+         * 1. find email in FAVORITES table and delete favorite team_no
+         */
+        const params_findFromUser = {
+            TableName : userConfig.aws_table_name,
+            KeyConditionExpression: 'email = :i',
+            ExpressionAttributeValues: {
+                ':i' : user
+            }   
+        };
+        const checkEmail = await docClient.query(params_findFromUser).promise()
+        const userInfo = {
+            'email' : checkEmail.Items[0].email,
+            'name' : checkEmail.Items[0].name,
+            'sex' : checkEmail.Items[0].sex,
+            'birth' : checkEmail.Items[0].birth,
+            'files' : checkEmail.Items[0].files
+        }
+        result.push(userInfo)
+        if(result.length === data[0].length){
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
+                result)) 
         }
     })
 }

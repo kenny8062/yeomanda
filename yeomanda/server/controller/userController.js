@@ -52,6 +52,7 @@ const signup = async(req, res) => {
                 files : fileKey
             }
         };
+        // 회원가입할 때 이메일 인증을 거치기 때문에 해당 이메일은 고유성을 갖는다 -> 중복 체크 필요 x 
         docClient.put(params, function(err, data){
             if (err) {
                 return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
