@@ -72,8 +72,8 @@ jobs:
           echo "$PRIVATE_KEY" > private_key
           chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
-            pm2 stop www
-            pm2 delete www
+            pm2 stop default
+            pm2 delete default
             pm2 kill
             cd ./repo/yeomanda
             git pull origin main
