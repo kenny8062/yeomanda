@@ -9,7 +9,7 @@ router.use('/menuBar', verifyToken.checkToken, require('./menuBar'));
 
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: ' yeomanda start !!! ' });
+    res.render('index', { title: ' yeomanda start again !!! ' });
 })
 
 

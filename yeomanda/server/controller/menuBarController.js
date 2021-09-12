@@ -5,12 +5,10 @@ const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
 const stream = require('stream')
 
-
 // dynamodb
 const AWS = require('aws-sdk')
 const favoriteConfig = require('../config/aws/Favorite')
 const userConfig = require('../config/aws/User')
-
 
 // rds mysql
 const mysql = require("mysql2/promise");
