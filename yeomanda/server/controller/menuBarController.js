@@ -205,12 +205,17 @@ const showFavoritesDetail = async(req, res) => {
             }   
         };
         const checkEmail = await docClient.query(params_findFromUser).promise()
+        const file_root = 'https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/'
+        const fileList = []
+        for(var i in checkEmail.Items[0].files){
+            fileList.push(file_root + checkEmail.Items[0].files[i])
+        }
         const userInfo = {
             'email' : checkEmail.Items[0].email,
             'name' : checkEmail.Items[0].name,
             'sex' : checkEmail.Items[0].sex,
             'birth' : checkEmail.Items[0].birth,
-            'files' : checkEmail.Items[0].files
+            'files' : fileList
         }
         result.push(userInfo)
         if(result.length === data[0].length){
