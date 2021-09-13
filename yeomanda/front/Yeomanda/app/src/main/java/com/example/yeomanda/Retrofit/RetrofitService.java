@@ -6,9 +6,12 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 public interface RetrofitService {
 
@@ -38,7 +41,26 @@ public interface RetrofitService {
     );
 
     @POST("markup/userDetail")
-    Call<ProfileResponseDto> showProfile(
+    Call<ProfileResponseDto> showProfile(@Header("Authorization") String userToken,
             @Body EmailDto emailDto
     );
+
+    @GET("markup/favorite/{team_no}")
+    Call<CreateOrDeleteFavoriteTeamResponseDto> postFavoriteTeam(@Header("Authorization") String userToken,
+                                                                 @Path("team_no") Integer team_no
+    );
+
+    @GET("menuBar/deleteFavorite/{team_no}")
+    Call<CreateOrDeleteFavoriteTeamResponseDto> deleteFavoriteTeam(@Header("Authorization") String userToken,
+                                                                   @Path("team_no") Integer team_no
+    );
+
+    @GET("menuBar/showFavoriteTeamName")
+    Call<MyFavoriteListResponseDto> showMyFavoriteTeam(@Header("Authorization") String userToken
+
+    );
+
+    @GET("menuBar/showFavoritesDetail/{teamName}")
+    Call<MyFavoriteTeamProfileResponseDto> showMyFavriteTeamProfile(@Header("Authorization") String userToken,
+                                                                    @Path("teamName") String teamName);
 }

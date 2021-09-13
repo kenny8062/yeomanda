@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(loginResponseDto.getSuccess()==true) {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("token",loginResponseDto.getData().getToken());
+                    intent.putExtra("email",emailEdt.getText().toString());
                     startActivity(intent);
                 }else{
                     Toast.makeText(getApplicationContext(),"로그인정보가 틀립니다.",Toast.LENGTH_LONG).show();

@@ -12,12 +12,20 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/MyPlanDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Date" />
+
+        <EditText
+            android:id="@+id/MyTeamName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +34,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/MyTeamEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
