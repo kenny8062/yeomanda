@@ -9,7 +9,7 @@ router.use('/menuBar', verifyToken.checkToken, require('./menuBar'));
 
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: ' want to reset ' });
+    res.render('index', { title: ' New setting ' });
 })
 
 
