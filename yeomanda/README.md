@@ -116,6 +116,12 @@ test code should be really simple so that, do not need to require gitignore file
 - `global_code` is a 4 character area code and 6 character or longer local code (849VCWC8+R9)
 - `compound_code` is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
 
+##### socketio
+> version issue
+nodejs - 4.2.0
+android - 2.0.0
+
+
 
 ### CI/CD
 ##### github action
