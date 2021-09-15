@@ -224,10 +224,20 @@ const showFavoritesDetail = async(req, res) => {
         }
     })
 }
+const getMyProfile = async(req, res) => {
+    const userEmail = req.decoded.email
+
+
+}
+const updateProfile = async(req, res) => {
+    const userEmail = req.decoded.email
+}
 
 module.exports = {
     showFavoriteTeamName,
     deleteFavorite,
     finishTravel,
-    showFavoritesDetail
+    showFavoritesDetail,
+    updateProfile,
+    getMyProfile
 }
