@@ -9,13 +9,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.example.yeomanda.Retrofit.MyFavoriteListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.MyFavoriteListResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 
 public class MyFavoriteList extends AppCompatActivity {
     ListView myFavoriteTeamListView;

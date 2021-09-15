@@ -1,9 +1,11 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.ResponseDto;
 
+import java.util.ArrayList;
+
+import com.example.yeomanda.Retrofit.RequestDto.TeamInfoDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-public class CreateOrDeleteFavoriteTeamResponseDto {
+public class LocationResponseDto {
 
     @SerializedName("status")
     @Expose
@@ -14,6 +16,9 @@ public class CreateOrDeleteFavoriteTeamResponseDto {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("data")
+    @Expose
+    private ArrayList<TeamInfoDto> data = null;
 
     public Integer getStatus() {
         return status;
@@ -39,5 +44,12 @@ public class CreateOrDeleteFavoriteTeamResponseDto {
         this.message = message;
     }
 
+    public ArrayList<TeamInfoDto> getData() {
+        return data;
+    }
+
+    public void setData(ArrayList<TeamInfoDto> data) {
+        this.data = data;
+    }
 
 }

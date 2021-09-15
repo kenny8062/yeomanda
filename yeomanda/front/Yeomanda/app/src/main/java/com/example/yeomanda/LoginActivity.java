@@ -13,8 +13,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.yeomanda.Retrofit.LoginDto;
-import com.example.yeomanda.Retrofit.LoginResponseDto;
+import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.LoginResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 import com.example.yeomanda.joinActivity.JoinActivity1;
 

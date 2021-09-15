@@ -1,4 +1,4 @@
-package com.example.yeomanda;
+package com.example.yeomanda.ListView;
 
 public class TeamInfoListViewItem {
     private String favoriteTeamPersonImage;

@@ -1,5 +1,6 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.ResponseDto;
 
+import com.example.yeomanda.Retrofit.RequestDto.MyFavoriteTeamProfileDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

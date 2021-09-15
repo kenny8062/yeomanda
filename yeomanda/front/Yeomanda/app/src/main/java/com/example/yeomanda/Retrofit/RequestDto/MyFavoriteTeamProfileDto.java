@@ -1,26 +1,26 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.RequestDto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class ProfileDto {
+public class MyFavoriteTeamProfileDto {
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("birth")
-    @Expose
-    private String birth;
-    @SerializedName("sex")
-    @Expose
-    private String sex;
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("sex")
+    @Expose
+    private String sex;
+    @SerializedName("birth")
+    @Expose
+    private String birth;
     @SerializedName("files")
     @Expose
-    private ArrayList<String> files = null;
+    private List<String> files = null;
 
     public String getEmail() {
         return email;
@@ -28,22 +28,6 @@ public class ProfileDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getBirth() {
-        return birth;
-    }
-
-    public void setBirth(String birth) {
-        this.birth = birth;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
     }
 
     public String getName() {
@@ -54,11 +38,27 @@ public class ProfileDto {
         this.name = name;
     }
 
-    public ArrayList<String> getFiles() {
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getBirth() {
+        return birth;
+    }
+
+    public void setBirth(String birth) {
+        this.birth = birth;
+    }
+
+    public List<String> getFiles() {
         return files;
     }
 
-    public void setFiles(ArrayList<String> files) {
+    public void setFiles(List<String> files) {
         this.files = files;
     }
 }

@@ -9,6 +9,19 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.loader.content.CursorLoader;
 
+import com.example.yeomanda.Retrofit.RequestDto.CreateBoardDto;
+import com.example.yeomanda.Retrofit.RequestDto.EmailDto;
+import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
+import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
+import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.JoinResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.LocationResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.LoginResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.MyFavoriteListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.MyFavoriteTeamProfileResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ProfileResponseDto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -29,13 +42,14 @@ public class RetrofitClient {
     private static CreateBoardResponseDto createBoardResponseDto=null;
     private static LocationResponseDto locationResponseDto=null;
     private static ProfileResponseDto profileResponseDto= null;
-    private static CreateOrDeleteFavoriteTeamResponseDto createOrDeleteFavoriteTeamResponseDto =null;
+    private static WithoutDataResponseDto withoutDataResponseDto =null;
     private static MyFavoriteListResponseDto myFavoriteListResponseDto=null;
     private static MyFavoriteTeamProfileResponseDto myFavoriteTeamProfileResponseDto=null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
+                .baseUrl("http://172.30.1.48:3000")
+                //.baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
@@ -123,6 +137,30 @@ public class RetrofitClient {
             return null;
         }
     }
+
+
+    public WithoutDataResponseDto deleteBoard(String userToken){
+        Thread thread = new Thread(){
+            @Override
+            public  void run() {
+                try {
+                    withoutDataResponseDto = retrofitService.deleteBoard(userToken).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+
+        try {
+            thread.join();
+            return withoutDataResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public LocationResponseDto sendLocation(LocationDto locationDto){
         Thread thread = new Thread(){
             @Override
@@ -173,12 +211,12 @@ public class RetrofitClient {
         }
     }
 
-    public CreateOrDeleteFavoriteTeamResponseDto postFavoriteTeam(String userToken, Integer teamNum){
+    public WithoutDataResponseDto postFavoriteTeam(String userToken, Integer teamNum){
         Thread thread = new Thread(){
             @Override
             public  void run() {
                 try {
-                    createOrDeleteFavoriteTeamResponseDto = retrofitService.postFavoriteTeam(userToken, teamNum).execute().body();
+                    withoutDataResponseDto = retrofitService.postFavoriteTeam(userToken, teamNum).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -188,19 +226,19 @@ public class RetrofitClient {
 
         try {
             thread.join();
-            return createOrDeleteFavoriteTeamResponseDto;
+            return withoutDataResponseDto;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public CreateOrDeleteFavoriteTeamResponseDto deleteFavoriteTeam(String userToken, Integer teamNum){
+    public WithoutDataResponseDto deleteFavoriteTeam(String userToken, Integer teamNum){
         Thread thread = new Thread(){
             @Override
             public  void run() {
                 try {
-                    createOrDeleteFavoriteTeamResponseDto = retrofitService.postFavoriteTeam(userToken, teamNum).execute().body();
+                    withoutDataResponseDto = retrofitService.postFavoriteTeam(userToken, teamNum).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -210,7 +248,7 @@ public class RetrofitClient {
 
         try {
             thread.join();
-            return createOrDeleteFavoriteTeamResponseDto;
+            return withoutDataResponseDto;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;

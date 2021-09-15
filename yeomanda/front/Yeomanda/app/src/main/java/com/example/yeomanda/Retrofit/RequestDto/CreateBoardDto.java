@@ -1,4 +1,4 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.RequestDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

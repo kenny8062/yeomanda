@@ -1,5 +1,18 @@
 package com.example.yeomanda.Retrofit;
 
+import com.example.yeomanda.Retrofit.RequestDto.CreateBoardDto;
+import com.example.yeomanda.Retrofit.RequestDto.EmailDto;
+import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
+import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.JoinResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.LocationResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.LoginResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.MyFavoriteListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.MyFavoriteTeamProfileResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ProfileResponseDto;
+
 import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
@@ -35,6 +48,11 @@ public interface RetrofitService {
       @Body ArrayList<CreateBoardDto> createBoardDto
     );
 
+    @GET("menuBar/finishTravel")
+    Call<WithoutDataResponseDto> deleteBoard(
+            @Header("Authorization") String userToken
+    );
+
     @POST("travelers/showTravelers")
     Call<LocationResponseDto> sendLocation(
             @Body LocationDto locationDto
@@ -42,17 +60,17 @@ public interface RetrofitService {
 
     @POST("markup/userDetail")
     Call<ProfileResponseDto> showProfile(@Header("Authorization") String userToken,
-            @Body EmailDto emailDto
+                                         @Body EmailDto emailDto
     );
 
     @GET("markup/favorite/{team_no}")
-    Call<CreateOrDeleteFavoriteTeamResponseDto> postFavoriteTeam(@Header("Authorization") String userToken,
-                                                                 @Path("team_no") Integer team_no
+    Call<WithoutDataResponseDto> postFavoriteTeam(@Header("Authorization") String userToken,
+                                                  @Path("team_no") Integer team_no
     );
 
     @GET("menuBar/deleteFavorite/{team_no}")
-    Call<CreateOrDeleteFavoriteTeamResponseDto> deleteFavoriteTeam(@Header("Authorization") String userToken,
-                                                                   @Path("team_no") Integer team_no
+    Call<WithoutDataResponseDto> deleteFavoriteTeam(@Header("Authorization") String userToken,
+                                                    @Path("team_no") Integer team_no
     );
 
     @GET("menuBar/showFavoriteTeamName")

@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.yeomanda.Retrofit.CreateBoardDto;
-import com.example.yeomanda.Retrofit.CreateBoardResponseDto;
+import com.example.yeomanda.Retrofit.RequestDto.CreateBoardDto;
+import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;

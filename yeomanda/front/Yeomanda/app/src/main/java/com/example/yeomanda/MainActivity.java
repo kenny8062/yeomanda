@@ -28,11 +28,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.yeomanda.Retrofit.CreateOrDeleteFavoriteTeamResponseDto;
-import com.example.yeomanda.Retrofit.LocationDto;
-import com.example.yeomanda.Retrofit.LocationResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
+import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
+import com.example.yeomanda.Retrofit.ResponseDto.LocationResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
-import com.example.yeomanda.Retrofit.TeamInfoDto;
+import com.example.yeomanda.Retrofit.RequestDto.TeamInfoDto;
+import com.example.yeomanda.chatPkg.ChatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -174,13 +175,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
-                        /*
-                        CreateOrDeleteFavoriteTeamResponseDto createOrDeleteFavoriteTeamResponseDto =retrofitClient.postFavoriteTeam(token,);
-                        while(createOrDeleteFavoriteTeamResponseDto ==null){
-                            Log.d("error", " createOrDeleteFavoriteTeamResponseDto is null");
+                        retrofitClient=new RetrofitClient();
+                        WithoutDataResponseDto withoutDataResponseDto =retrofitClient.deleteBoard(token);
+                        while(withoutDataResponseDto ==null){
+                            Log.d("error", " withoutDataResponseDto is null");
                         }
-                        Toast.makeText(getApplicationContext(), createOrDeleteFavoriteTeamResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
-                         */
+                        if(withoutDataResponseDto.getSuccess()) {
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                        Toast.makeText(getApplicationContext(), withoutDataResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -202,11 +207,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
             case R.id.favoriteTeam:
-                Intent intent=new Intent(getApplicationContext(),MyFavoriteList.class);
-                intent.putExtra("token",token);
-                startActivity(intent);
+                Intent favoriteIntent=new Intent(getApplicationContext(),MyFavoriteList.class);
+                favoriteIntent.putExtra("token",token);
+                startActivity(favoriteIntent);
                 Toast.makeText(this, "즐겨찾기", Toast.LENGTH_SHORT).show();
+                break;
 
+            case R.id.chatRoom:
+                Intent chatIntent=new Intent(getApplicationContext(), ChatActivity.class);
+                chatIntent.putExtra("token",token);
+                startActivity(chatIntent);
+                Toast.makeText(this, "채팅방", Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -315,9 +326,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     while(locationResponseDto == null) {
                         Log.d("error", "locationResponse is null");
                     }
-                    for (int i=0;i<locationResponseDto.getData().size();i++){
-                            System.out.println(locationResponseDto.getData().get(i).getTeamNo());
-                    }
                     ArrayList<TeamInfoDto> teamArr = new ArrayList<>();
                     boolean isOverlap = false;
                     if (locationResponseDto.getData().size() != 0){
@@ -339,7 +347,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
 
                         for(int i=0;i<sameLocationTeams.size();i++) {
-                            Log.d("tag",sameLocationTeams.get(i).get(0).getEmail().get(0));
                             locationArr=sameLocationTeams.get(i).get(0).getLocationGps().split(",");
                             lat=Double.parseDouble(locationArr[0]);
                             lon=Double.parseDouble(locationArr[1]);
@@ -520,12 +527,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(DialogInterface dialog, int id)
             {
-
-                CreateOrDeleteFavoriteTeamResponseDto createOrDeleteFavoriteTeamResponseDto =retrofitClient.postFavoriteTeam(token,teamInfoDto.get(teamNumCount).getTeamNo());
-                while(createOrDeleteFavoriteTeamResponseDto ==null){
-                    Log.d("error", " createOrDeleteFavoriteTeamResponseDto is null");
+                retrofitClient=new RetrofitClient();
+                WithoutDataResponseDto withoutDataResponseDto =retrofitClient.postFavoriteTeam(token,teamInfoDto.get(teamNumCount).getTeamNo());
+                while(withoutDataResponseDto ==null){
+                    Log.d("error", " withoutDataResponseDto is null");
                 }
-                Toast.makeText(getApplicationContext(), createOrDeleteFavoriteTeamResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), withoutDataResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -566,7 +573,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onClick(View v) {
                     teamNumCount++;
-                    Log.d("Tag입니다",teamInfoDto.get(teamNumCount).getNameList().get(0));
                     backTeamBtn.setVisibility(View.VISIBLE);
                     items.clear();
                     items.addAll(teamInfoDto.get(teamNumCount).getNameList());
@@ -584,7 +590,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onClick(View v) {
                     teamNumCount--;
-                    Log.d("Tag입니다",teamInfoDto.get(teamNumCount).getNameList().get(0));
                     nextTeamBtn.setVisibility(View.VISIBLE);
                     items.clear();
                     //첫번째 팀

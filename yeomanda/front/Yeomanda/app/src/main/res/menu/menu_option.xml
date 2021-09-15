@@ -30,4 +30,15 @@
         app:showAsAction="never">
 
     </item>
+
+
+    <item
+
+        android:id="@+id/chatRoom"
+
+        android:title="채팅"
+
+        app:showAsAction="never">
+
+    </item>
 </menu>
