@@ -70,7 +70,6 @@ const showFavoriteTeamName = async(req, res) => {
                 teamNameList.push(e.team_name)
             })
             result.push(teamNameList[0])
-            console.log(i, Favorites.length)
             if(result.length === Favorites.length){
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
             }

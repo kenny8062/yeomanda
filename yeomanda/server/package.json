@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "assert": "^2.0.0",
+    "atob": "^2.1.2",
     "axios": "^0.21.1",
     "chai": "^4.3.4",
     "email-validator": "^2.0.4",
