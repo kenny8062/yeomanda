@@ -13,3 +13,7 @@ Call<ProfileResponseDto> showProfile(
 );
 
 로 보낼 경우에는 리퀘스트가 잘 간다.
+
+SocketIO 오류
+처음 소켓연결이 안되어서 구글링을 하여
+버전 문제라는 것을 알았다. 그래서 1.0.0 version -> 2.0.0 version으로 바꿔서 해결을 했다.
