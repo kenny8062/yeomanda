@@ -6,6 +6,8 @@ router.use('/user', require('./user'));
 router.use('/travelers', require('./travelers'));
 router.use('/markup', verifyToken.checkToken, require('./markup'));
 router.use('/menuBar', verifyToken.checkToken, require('./menuBar'));
+router.use('/chatting', verifyToken.checkToken, require('./chatting'));
+
 
 
 router.get('/', function(req, res, next) {
