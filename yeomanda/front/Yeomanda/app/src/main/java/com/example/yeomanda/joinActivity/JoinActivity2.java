@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.yeomanda.R;
-import com.example.yeomanda.Retrofit.JoinDto;
+import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
 
 public class JoinActivity2 extends AppCompatActivity {
     JoinDto joinDto;

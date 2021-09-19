@@ -1,9 +1,10 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.ResponseDto;
+
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ProfileResponseDto {
+public class JoinResponseDto {
 
     @SerializedName("status")
     @Expose
@@ -14,9 +15,6 @@ public class ProfileResponseDto {
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("data")
-    @Expose
-    private ProfileDto data;
 
     public Integer getStatus() {
         return status;
@@ -42,11 +40,4 @@ public class ProfileResponseDto {
         this.message = message;
     }
 
-    public ProfileDto getData() {
-        return data;
-    }
-
-    public void setData(ProfileDto data) {
-        this.data = data;
-    }
 }

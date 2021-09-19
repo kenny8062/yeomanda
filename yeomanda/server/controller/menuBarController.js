@@ -70,7 +70,6 @@ const showFavoriteTeamName = async(req, res) => {
                 teamNameList.push(e.team_name)
             })
             result.push(teamNameList[0])
-            console.log(i, Favorites.length)
             if(result.length === Favorites.length){
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
             }
@@ -224,10 +223,20 @@ const showFavoritesDetail = async(req, res) => {
         }
     })
 }
+const getMyProfile = async(req, res) => {
+    const userEmail = req.decoded.email
+
+
+}
+const updateProfile = async(req, res) => {
+    const userEmail = req.decoded.email
+}
 
 module.exports = {
     showFavoriteTeamName,
     deleteFavorite,
     finishTravel,
-    showFavoritesDetail
+    showFavoritesDetail,
+    updateProfile,
+    getMyProfile
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "202145906201",
+    "project_id": "yeomanda-project",
+    "storage_bucket": "yeomanda-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202145906201:android:3384d8fe83b15cc3acb488",
+        "android_client_info": {
+          "package_name": "com.example.yeomanda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "202145906201-8iir7nbr1mvq5jui4m073099dgs4gbtj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSvlAjqpSSBQtfWQpjWQEo-BiRIb-lhuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "202145906201-8iir7nbr1mvq5jui4m073099dgs4gbtj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

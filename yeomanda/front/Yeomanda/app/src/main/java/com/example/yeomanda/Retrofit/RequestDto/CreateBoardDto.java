@@ -1,4 +1,4 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.RequestDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,6 +16,9 @@ public class CreateBoardDto {
     @SerializedName("travelDate")
     @Expose
     private String travelDate;
+    @SerializedName("teamName")
+    @Expose
+    private String teamName;
 
     public String getLatitude() {
         return latitude;
@@ -48,6 +51,15 @@ public class CreateBoardDto {
 
     public void setTravelDate(String travelDate) {
         this.travelDate = travelDate;
+    }
+
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
 }

@@ -1,7 +1,8 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.ResponseDto;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import com.example.yeomanda.Retrofit.RequestDto.TeamInfoDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 public class LocationResponseDto {

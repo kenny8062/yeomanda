@@ -12,15 +12,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.yeomanda.Retrofit.CreateBoardDto;
-import com.example.yeomanda.Retrofit.CreateBoardResponseDto;
+import com.example.yeomanda.Retrofit.RequestDto.CreateBoardDto;
+import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;
 
 public class CreateBoard extends AppCompatActivity {
     Double lat,lon;
-    EditText edt1,edt2 , edt = null;
+    EditText teamDateEdt, teamEmailEdt, addEdt, teamNameEdt = null;
     ArrayList<EditText> edts;
     Button createBtn ,plusBtn,cancleBtn;
     LinearLayout ll;
@@ -40,23 +40,24 @@ public class CreateBoard extends AppCompatActivity {
     }
     public void init(){
         createBtn=findViewById(R.id.createBtn);
-        edt1=findViewById(R.id.editTextTextPersonName);
-        edt2=findViewById(R.id.editTextTextPersonName2);
+        teamDateEdt =findViewById(R.id.MyPlanDate);
+        teamNameEdt=findViewById(R.id.MyTeamName);
+        teamEmailEdt =findViewById(R.id.MyTeamEmail);
         plusBtn=findViewById(R.id.plusBtn);
         cancleBtn=findViewById(R.id.cancelBtn);
         ll = findViewById(R.id.ll);
         edts =new ArrayList<>();
-        edts.add(edt2);
+        edts.add(teamEmailEdt);
         plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                edt = new EditText(getApplicationContext());
+                addEdt = new EditText(getApplicationContext());
                 LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                edt.setLayoutParams(p);
-                edt.setText("");
-                edt.setId(count++);
-                edts.add(edt);
-                ll.addView(edt);
+                addEdt.setLayoutParams(p);
+                addEdt.setText("");
+                addEdt.setId(count++);
+                edts.add(addEdt);
+                ll.addView(addEdt);
             }
         });
 
@@ -77,16 +78,19 @@ public class CreateBoard extends AppCompatActivity {
                     createBoardDto=new CreateBoardDto();
                     createBoardDto.setLatitude(Double.toString(lat));
                     createBoardDto.setLongitude(Double.toString(lon));
-                    createBoardDto.setTravelDate(edt1.getText().toString());
+                    createBoardDto.setTravelDate(teamDateEdt.getText().toString());
                     createBoardDto.setTravelMate(edts.get(i).getText().toString());
+                    createBoardDto.setTeamName(teamNameEdt.getText().toString());
                     createBoardDtos.add(createBoardDto);
                 }
                 RetrofitClient retrofitClient=new RetrofitClient();
                 CreateBoardResponseDto createBoardResponseDto= retrofitClient.createboard(createBoardDtos);
                 if(createBoardResponseDto.getSuccess()) {
+                    Toast.makeText(getApplicationContext(),createBoardResponseDto.getMessage(),Toast.LENGTH_LONG).show();
                     finish();
                 }else{
-                    Toast.makeText(getApplicationContext(),"이메일을 다시 확인해주세요",Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(getApplicationContext(),createBoardResponseDto.getMessage(),Toast.LENGTH_LONG).show();
                 }
             }
         });

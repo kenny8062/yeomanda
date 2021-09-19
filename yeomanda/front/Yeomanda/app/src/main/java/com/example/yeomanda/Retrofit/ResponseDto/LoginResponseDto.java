@@ -1,8 +1,11 @@
-package com.example.yeomanda.Retrofit;
+package com.example.yeomanda.Retrofit.ResponseDto;
+
+
+import com.example.yeomanda.Retrofit.RequestDto.Data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CreateBoardResponseDto {
+public class LoginResponseDto {
 
     @SerializedName("status")
     @Expose
@@ -15,7 +18,7 @@ public class CreateBoardResponseDto {
     private String message;
     @SerializedName("data")
     @Expose
-    private String data;
+    private Data data;
 
     public Integer getStatus() {
         return status;
@@ -41,11 +44,11 @@ public class CreateBoardResponseDto {
         this.message = message;
     }
 
-    public String getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Data data) {
         this.data = data;
     }
 

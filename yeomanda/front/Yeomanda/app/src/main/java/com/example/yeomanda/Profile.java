@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.yeomanda.Retrofit.ProfileResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ProfileResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 public class Profile extends AppCompatActivity {
@@ -33,8 +33,8 @@ public class Profile extends AppCompatActivity {
         personName=findViewById(R.id.personName);
         personBirth=findViewById(R.id.personBirth);
         retrofitClient=new RetrofitClient();
-        profileResponseDto=retrofitClient.showProfile(intent.getStringExtra("이메일"));
-        System.out.println(intent.getStringExtra("이메일"));
+        profileResponseDto=retrofitClient.showProfile(intent.getStringExtra("token"),intent.getStringExtra("email"));
+        System.out.println(intent.getStringExtra("email"));
         while(profileResponseDto==null){
             System.out.println("ProfileResponseDto is null");
         }

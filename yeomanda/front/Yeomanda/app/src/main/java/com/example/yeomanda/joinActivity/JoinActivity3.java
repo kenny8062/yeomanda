@@ -21,7 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.yeomanda.LoginActivity;
 import com.example.yeomanda.R;
-import com.example.yeomanda.Retrofit.JoinDto;
+import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 import okhttp3.MultipartBody;
