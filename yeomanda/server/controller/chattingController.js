@@ -91,17 +91,58 @@ const inToChatRoom = async(req, res) => {
                 Item : {
                     room_id : chatRoomId,
                     members : chatterList,
-                    teams : uniqueArr
+                    teams : uniqueArr,
+                    chatMessages : [
+                        {
+                            createdAt : Date.now(),
+                            content : "채팅방을 개설하였습니다."
+                        }
+                    ]
                 }
             };  
             const result = await docClient.put(params_to_new_chat).promise()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MAKE_NEW_ROOM, 
-                {room_id : chatRoomId,
+                {
+                    room_id : chatRoomId,
                     members : chatterList,
-                    teams : uniqueArr}))
+                    teams : uniqueArr,
+                    chatMessages : [
+                        {
+                            createdAt : Date.now(),
+                            content : "채팅방을 개설하였습니다."
+                        }
+                    ]  
+                }              
+            ))
         }
         // 기존에 채팅방이 개설 되었을 경우.
         else{
+            // const newChat = {
+            //     "createdAt" : Date.now(),
+            //     "sender" : "testput1",
+            //     "content" : "new content!!!"
+            // }
+            // const newMessage = []
+            // chatRoom.Items[0].chatMessages.filter( m => {
+            //     newMessage.push(m)
+            // })
+            // newMessage.push(newChat)
+            // const params_to_put_message = {
+            //     TableName : chatConfig.aws_table_name,
+            //     Item : {
+            //         "room_id" : "1_2",
+            //         "members" : [
+            //             "testput",
+            //             "testput2"
+            //         ],
+            //         "teams" : [
+            //             "testput",
+            //             "testput2"
+            //         ],
+            //         "chatMessages" : newMessage
+            //     } 
+            // };
+            // const resultChat = await docClient.put(params_to_put_message).promise()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ALREADY_ROOM, chatRoom.Items[0]))
         }
     }catch(err){
@@ -150,17 +191,7 @@ const getAllMyChatList = async(req, res) => {
                     chatInfo.push({"otherTeamName" : t}) // 3)
                 }
             })
-            console.log(c.messages.slice(-1).pop())
-            console.log(c.messages)
-
-            // 만약에 아예 대화를 한적이 없어서 null 인 경우...?
-            if(c.messages === undefined){
-                console.log('yyyy')
-                chatInfo.push({"message" : null})
-                //return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_MESSAGES))
-            }else{
-                chatInfo.push({"messages" : c.messages.slice(-1).pop()})
-            }
+            chatInfo.push({"chatMessages" : c.chatMessages})
         })
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, chatInfo))
     }catch(err){
