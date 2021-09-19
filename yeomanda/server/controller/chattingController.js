@@ -96,11 +96,13 @@ const inToChatRoom = async(req, res) => {
             };  
             const result = await docClient.put(params_to_new_chat).promise()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MAKE_NEW_ROOM, 
-                chatRoomId))
+                {room_id : chatRoomId,
+                    members : chatterList,
+                    teams : uniqueArr}))
         }
         // 기존에 채팅방이 개설 되었을 경우.
         else{
-            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ALREADY_ROOM, chatRoom))
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ALREADY_ROOM, chatRoom.Items[0]))
         }
     }catch(err){
         console.log(err)
