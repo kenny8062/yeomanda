@@ -191,7 +191,7 @@ const getAllMyChatList = async(req, res) => {
                     chatInfo.push({"otherTeamName" : t}) // 3)
                 }
             })
-            chatInfo.push({"chatMessages" : c.chatMessages})
+            chatInfo.push({"chatMessages" : c.chatMessages.pop()})
         })
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, chatInfo))
     }catch(err){
