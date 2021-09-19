@@ -66,6 +66,25 @@ function parseJwt (token) {
   return JSON.parse(jsonPayload);
 };
 
+
+const AWS = require('aws-sdk')
+const chatConfig = require('./config/aws/Chat')
+
+// 클라이언트에서 받는 메세지를 디비에 저장하는 함수
+const storeMessage = async(data) => {
+  AWS.config.update(chatConfig.aws_iam_info);
+  const docClient = new AWS.DynamoDB.DocumentClient();
+  const params_to_new_chat = {
+    TableName : chatConfig.aws_table_name,
+    Item : {
+        room_id : chatRoomId,
+        members : chatterList,
+        teams : uniqueArr
+    }
+  };  
+  const result = await docClient.put(params_to_new_chat).promise()
+}
+
 app.io.on('connection', function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
 

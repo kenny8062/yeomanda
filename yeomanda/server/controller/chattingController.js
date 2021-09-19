@@ -83,7 +83,6 @@ const inToChatRoom = async(req, res) => {
                 chatterList.push(r.email)
                 teamList.push(r.team_name)
             })
-            console.log(teamList)
             const set = new Set(teamList);
             const uniqueArr = [...set];
 
@@ -97,7 +96,7 @@ const inToChatRoom = async(req, res) => {
             };  
             const result = await docClient.put(params_to_new_chat).promise()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MAKE_NEW_ROOM, 
-                "새로운 채팅 시작"))
+                chatRoomId))
         }
         // 기존에 채팅방이 개설 되었을 경우.
         else{
