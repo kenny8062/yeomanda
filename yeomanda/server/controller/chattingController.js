@@ -94,6 +94,7 @@ const inToChatRoom = async(req, res) => {
                     teams : uniqueArr,
                     chatMessages : [
                         {
+                            sender : "root",
                             createdAt : Date.now(),
                             content : "채팅방을 개설하였습니다."
                         }
@@ -108,6 +109,7 @@ const inToChatRoom = async(req, res) => {
                     teams : uniqueArr,
                     chatMessages : [
                         {
+                            sender : "root",
                             createdAt : Date.now(),
                             content : "채팅방을 개설하였습니다."
                         }
