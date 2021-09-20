@@ -11,25 +11,19 @@ const AWS = require('aws-sdk')
 const userConfig = require('../config/aws/User')
 
 AWS.config.update(userConfig.aws_iam_info);
-        const docClient = new AWS.DynamoDB.DocumentClient();
-        const params = {
-            TableName : userConfig.aws_table_name,
-            Item : {
-                email : email,
-                password : saltedPassword,
-                name : name,
-                birth : birth,
-                sex : sex,
-                files : fileKey
-            }
-        };
-        docClient.put(params, function(err, data){
-            if (err) {
-                return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
-            } else {
-                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS))
-            }
-        })
+const docClient = new AWS.DynamoDB.DocumentClient();
+const params = {
+    TableName : userConfig.aws_table_name,
+    Item : {
+        email : email,
+        password : saltedPassword,
+        name : name,
+        birth : birth,
+        sex : sex,
+        files : fileKey
+    }
+};
+const result = await docClient.put(params).promise()
 ```
 
 ../config/aws/User
@@ -63,6 +57,80 @@ module.exports = {
 |---|---|
 |temp0@temp0.com|[1,2,3]|
 |temp1@temp1.com|[10,11,12]|
+
+- "chatroom" TABLE
+|room_id(PK)|teams|messages|members|
+
+```js
+{
+  "room_id": {
+    "S": "1_5"
+  },
+  "teams": {
+    "L": [
+      {
+        "S": "sexy"
+      },
+      {
+        "S": "party"
+      }
+    ]
+  },
+  "messages": {
+    "L": [
+      {
+        "M": {
+          "creates_at": {
+            "S": "2109181526"
+          },
+          "sender": {
+            "S": "aaa0@aaa0.com"
+          },
+          "content": {
+            "S": "hi hello"
+          }
+        }
+      },
+      {
+        "M": {
+          "creates_at": {
+            "S": "2109181530"
+          },
+          "sender": {
+            "S": "aaa1@aaa1.com"
+          },
+          "content": {
+            "S": "nice to meet you"
+          }
+        }
+      }
+    ]
+  },
+  "members": {
+    "L": [
+      {
+        "S": "aaa0@aaa0.com"
+      },
+      {
+        "S": "aaa1@aaa1.com"
+      },
+      {
+        "S": "aaa2@aaa2.com"
+      },
+      {
+        "S": "woals4@woals4.com"
+      },
+      {
+        "S": "woals5@woals5.com"
+      },
+      {
+        "S": "woals6@woals6.com"
+      }
+    ]
+  }
+}
+```
+
 
 2. <strong>AWS RDS - mysql</strong>
 - for storing traveler's information to show to other travelers who is located closely
