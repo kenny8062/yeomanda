@@ -113,7 +113,7 @@ app.io.on('connection', async function(socket){
 		app.io.emit('chatRoom', res);
 	});
 
-  socket.on(room_id.toString(), async function(data){
+  socket.on('chatRoom2', async function(data){
     console.log(data)
     /**
      * data - content
