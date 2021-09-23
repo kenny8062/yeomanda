@@ -105,6 +105,8 @@ app.io.on('connection', async function(socket){
 		console.log('-----------------')
     console.log(parseJwt(token))
 
+    console.log(room_id)
+    console.log(room_id.toString())
     // 클라이언트에게 보낼 메세지
     const res = {'res' : "success to enter the chat room"} // json 형태로 보내야 한다. 
 		app.io.emit('chatRoom', res);
