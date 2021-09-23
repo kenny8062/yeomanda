@@ -185,15 +185,16 @@ const getAllMyChatList = async(req, res) => {
             }   
         };
         const chatRoom = await docClient.scan(params_to_find_chatroom).promise() // chatting tabled에서 현재 이용자가 속해 있는 모든 row들
-        const roomList = []
         chatRoom.Items.filter(c => {
-            chatInfo.push({"room_id" : c.room_id}) // 1)
+            //const temp = [] // response의 구조를 맞추기 위한 수단.
+            //temp.push({"room_id" : c.room_id}) // 1)
             c.teams.filter(t => {
                 if(t !== myTeam){
-                    chatInfo.push({"otherTeamName" : t}) // 3)
+                    chatInfo.push({"rooom_id" : c.room_id, "otherTeamName" : t, "chatMessages" : c.chatMessages.pop()}) // 3)
                 }
             })
-            chatInfo.push({"chatMessages" : c.chatMessages.pop()})
+            //temp.push({"chatMessages" : c.chatMessages.pop()})
+            //chatInfo.push(temp)
         })
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, chatInfo))
     }catch(err){
