@@ -190,7 +190,7 @@ const getAllMyChatList = async(req, res) => {
             //temp.push({"room_id" : c.room_id}) // 1)
             c.teams.filter(t => {
                 if(t !== myTeam){
-                    chatInfo.push({"rooom_id" : c.room_id, "otherTeamName" : t, "chatMessages" : c.chatMessages.pop()}) // 3)
+                    chatInfo.push({"room_id" : c.room_id, "otherTeamName" : t, "chatMessages" : c.chatMessages.pop()}) // 3)
                 }
             })
             //temp.push({"chatMessages" : c.chatMessages.pop()})
