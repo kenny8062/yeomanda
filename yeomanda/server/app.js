@@ -107,7 +107,7 @@ app.io.on('connection', async function(socket){
 
     // 클라이언트에게 보낼 메세지
     const res = {'res' : "success to enter the chat room"} // json 형태로 보내야 한다. 
-		app.io.emit('charRoom', res);
+		app.io.emit('chatRoom', res);
 	});
 
   socket.on('message', async function(data){
@@ -159,7 +159,7 @@ app.io.on('connection', async function(socket){
 
     // 클라이언트에게 보낼 메세지
     const temp = {'res' : "success to send message"} // json 형태로 보내야 한다. 
-		app.io.emit('charRoom', temp);
+		app.io.emit('chatRoom', temp);
   })
 
 
