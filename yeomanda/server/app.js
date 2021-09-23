@@ -87,9 +87,9 @@ const storeMessage = async(data) => {
 
 app.io.on('connection', async function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
-  var room_id = 0
-  var token = 0
-  var sender = 0
+  let room_id = 0
+  let token = 0
+  let sender = 0
   global.room_id = room_id
   global.token = token
   global.sender = sender
