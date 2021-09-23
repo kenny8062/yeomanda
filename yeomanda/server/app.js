@@ -90,6 +90,9 @@ app.io.on('connection', async function(socket){
   var room_id = 0
   var token = 0
   var sender = 0
+  global.room_id = room_id
+  global.token = token
+  global.sender = sender
   // newUser1 이라는 이벤트를 통해 데이터를 주고 받을 수 있다.
   // receive: on / send: emit
 	socket.on('chatRoom', function(data){
@@ -105,9 +108,6 @@ app.io.on('connection', async function(socket){
 		console.log('-----------------')
     console.log(parseJwt(token))
 
-    console.log(room_id)
-    console.log(room_id.toString())
-    console.log(`${room_id}`)
     // 클라이언트에게 보낼 메세지
     const res = {'res' : "success to enter the chat room"} // json 형태로 보내야 한다. 
 		app.io.emit('chatRoom', res);
@@ -115,6 +115,7 @@ app.io.on('connection', async function(socket){
 
   const temp = room_id.toString()
   console.log(temp)
+
   socket.on(temp, async function(data){
     console.log(data)
     /**
