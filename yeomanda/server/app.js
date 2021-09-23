@@ -87,9 +87,9 @@ const storeMessage = async(data) => {
 
 app.io.on('connection', async function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
-  var room_id = null
-  var token = null
-  var sender = null
+  var room_id = 0
+  var token = 0
+  var sender = 0
   // newUser1 이라는 이벤트를 통해 데이터를 주고 받을 수 있다.
   // receive: on / send: emit
 	socket.on('chatRoom', function(data){
@@ -114,6 +114,7 @@ app.io.on('connection', async function(socket){
 	});
 
   const temp = room_id.toString()
+  console.log(temp)
   socket.on(temp, async function(data){
     console.log(data)
     /**
