@@ -113,7 +113,8 @@ app.io.on('connection', async function(socket){
 		app.io.emit('chatRoom', res);
 	});
 
-  socket.on('chatRoom2', async function(data){
+  const temp = 'chatRoom2'
+  socket.on(temp, async function(data){
     console.log(data)
     /**
      * data - content
@@ -133,7 +134,6 @@ app.io.on('connection', async function(socket){
         }   
     };
     const chatRoom = await docClient.query(params_to_find_chatroom).promise()
-    console.log(chatRoom)
 
     const newChat = {
         "createdAt" : Date.now(),
