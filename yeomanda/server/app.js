@@ -85,21 +85,83 @@ const storeMessage = async(data) => {
   const result = await docClient.put(params_to_new_chat).promise()
 }
 
-app.io.on('connection', function(socket){
+app.io.on('connection', async function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
-
+  var room_id = 0
+  var token = 0
+  var sender = 0
   // newUser1 이라는 이벤트를 통해 데이터를 주고 받을 수 있다.
   // receive: on / send: emit
 	socket.on('chatRoom', function(data){
+    /**
+     * data - room_id, token
+     */
+    room_id = data.room_id
+    token = data.token
+    sender = parseJwt(token).email
+
+
+    console.log({room_id, token})
 		console.log('-----------------')
-		console.log(data)
-    console.log(parseJwt(data))
-        
+    console.log(parseJwt(token))
 
     // 클라이언트에게 보낼 메세지
-    const temp = {'name' : "ttt"} // json 형태로 보내야 한다. 
-		app.io.emit('charRoom', temp);
+    const res = {'res' : "success to enter the chat room"} // json 형태로 보내야 한다. 
+		app.io.emit('charRoom', res);
 	});
+
+  socket.on('message', async function(data){
+    console.log(data)
+    /**
+     * data - content
+     */
+    const content = data
+    AWS.config.update(chatConfig.aws_iam_info);
+    const docClient = new AWS.DynamoDB.DocumentClient();
+
+    /**
+     * 1. find email in FAVORITES table and delete favorite team_no
+     */
+    const params_to_find_chatroom = {
+        TableName : chatConfig.aws_table_name,
+        KeyConditionExpression: 'room_id = :i',
+        ExpressionAttributeValues: {
+            ':i' : room_id
+        }   
+    };
+    const chatRoom = await docClient.query(params_to_find_chatroom).promise()
+    console.log(chatRoom)
+
+    const newChat = {
+        "createdAt" : Date.now(),
+        "sender" : sender,
+        "content" : content
+    }
+
+    /**
+     * 여기서 부터 이제 기존에 있던 메세지들 읽어와서 새로 업데이트 하고 저장하는 과정
+     */
+    const newMessage = []
+    chatRoom.Items[0].chatMessages.filter( m => {
+        newMessage.push(m)
+    })
+    newMessage.push(newChat)
+    const params_to_put_message = {
+        TableName : chatConfig.aws_table_name,
+        Item : {
+            "room_id" : room_id,
+            "members" : chatRoom.Items[0].members,
+            "teams" : chatRoom.Items[0].teams,
+            "chatMessages" : newMessage
+        } 
+    };
+    const resultChat = await docClient.put(params_to_put_message).promise()
+
+    // 클라이언트에게 보낼 메세지
+    const temp = {'res' : "success to send message"} // json 형태로 보내야 한다. 
+		app.io.emit('charRoom', temp);
+  })
+
 
   // 클라이언트와 연결 해제
   socket.on('disconnect', () => {
