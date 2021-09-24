@@ -56,6 +56,9 @@ app.use(function(err, req, res, next) {
 // 콜백함수의 파라미터 socket은 현재 서버와 연결된 대상을 가리킨다.
 // socket.id는 접속할 때 마다 계속 변함 -> 고유 값으로 사용하기 어려울 듯.
 const atob = require('atob')
+const AWS = require('aws-sdk')
+const chatConfig = require('./config/aws/Chat')
+
 function parseJwt (token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -66,24 +69,6 @@ function parseJwt (token) {
   return JSON.parse(jsonPayload);
 };
 
-
-const AWS = require('aws-sdk')
-const chatConfig = require('./config/aws/Chat')
-
-// 클라이언트에서 받는 메세지를 디비에 저장하는 함수
-const storeMessage = async(data) => {
-  AWS.config.update(chatConfig.aws_iam_info);
-  const docClient = new AWS.DynamoDB.DocumentClient();
-  const params_to_new_chat = {
-    TableName : chatConfig.aws_table_name,
-    Item : {
-        room_id : chatRoomId,
-        members : chatterList,
-        teams : uniqueArr
-    }
-  };  
-  const result = await docClient.put(params_to_new_chat).promise()
-}
 
 app.io.on('connection', async function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
@@ -119,7 +104,7 @@ app.io.on('connection', async function(socket){
       const docClient = new AWS.DynamoDB.DocumentClient();
   
       /**
-       * 1. find email in FAVORITES table and delete favorite team_no
+       * find email in FAVORITES table and delete favorite team_no
        */
       const params_to_find_chatroom = {
           TableName : chatConfig.aws_table_name,
@@ -160,59 +145,10 @@ app.io.on('connection', async function(socket){
 
     const res = {'message' : content}
     app.io.to(room_id).emit('message', res)
-    /**
-     * data - content
-     */
-    // const content = data
-    // AWS.config.update(chatConfig.aws_iam_info);
-    // const docClient = new AWS.DynamoDB.DocumentClient();
-
-    // /**
-    //  * 1. find email in FAVORITES table and delete favorite team_no
-    //  */
-    // const params_to_find_chatroom = {
-    //     TableName : chatConfig.aws_table_name,
-    //     KeyConditionExpression: 'room_id = :i',
-    //     ExpressionAttributeValues: {
-    //         ':i' : room_id
-    //     }   
-    // };
-    // const chatRoom = await docClient.query(params_to_find_chatroom).promise()
-
-    // const newChat = {
-    //     "createdAt" : Date.now(),
-    //     "sender" : sender,
-    //     "content" : content
-    // }
-
-    // /**
-    //  * 여기서 부터 이제 기존에 있던 메세지들 읽어와서 새로 업데이트 하고 저장하는 과정
-    //  */
-    // const newMessage = []
-    // chatRoom.Items[0].chatMessages.filter( m => {
-    //     newMessage.push(m)
-    // })
-    // newMessage.push(newChat)
-    // const params_to_put_message = {
-    //     TableName : chatConfig.aws_table_name,
-    //     Item : {
-    //         "room_id" : room_id,
-    //         "members" : chatRoom.Items[0].members,
-    //         "teams" : chatRoom.Items[0].teams,
-    //         "chatMessages" : newMessage
-    //     } 
-    // };
-    // const resultChat = await docClient.put(params_to_put_message).promise()
-
-    // // 클라이언트에게 보낼 메세지
-    // const messages = {content : content} // json 형태로 보내야 한다. 
-		// app.io.emit(`${room_id}`, messages);
   })
-
-
   // 클라이언트와 연결 해제
   socket.on('disconnect', () => {
-      app.io.emit('updateMessage', "newUser1이 나갔습니다. ");
+      app.io.emit('updateMessage', "연결이 끊어졌습니다.");
       console.log(`made socket disconnected !!! : ${socket.id}`)
   })
 });
