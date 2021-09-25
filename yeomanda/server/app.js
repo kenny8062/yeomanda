@@ -94,6 +94,7 @@ app.io.on('connection', async function(socket){
     const content = socket.content = data.content
     const room_id = socket.room_id = data.room_id
     const sender = parseJwt(token).email
+    const sendTime = Date.now()
     socket.join(room_id) 
 
     /**
@@ -114,9 +115,9 @@ app.io.on('connection', async function(socket){
           }   
       };
       const chatRoom = await docClient.query(params_to_find_chatroom).promise()
-  
+      
       const newChat = {
-          "createdAt" : Date.now(),
+          "createdAt" : sendTime,
           "sender" : sender,
           "content" : content
       }
@@ -143,7 +144,12 @@ app.io.on('connection', async function(socket){
       console.log(err)
     }
 
-    const res = {'message' : content}
+    const res = {
+      'message' : content,
+      'sender' : sender,
+      'time' : sendTime
+    }
+    console.log(res)
     app.io.to(room_id).emit('message', res)
   })
   // 클라이언트와 연결 해제

@@ -240,6 +240,8 @@ shell scripts do not operate cd, git command, So.
 test code에서 gitignore file 을 열람한다면, CI 과정의 테스트에서 오류를 범한다.(github action이 gitignore file을 열람하지 못하기 때문.)<br>
 그렇기 때문에 테스트 코드는 최대한 심플해야 한다. <br>
 
+2. 가끔 nodemon이 실행되지 않을 때가 있다. 
+node_version issue -> `nvm use 12.22.6`
 
 
 
