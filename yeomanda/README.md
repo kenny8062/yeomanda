@@ -135,7 +135,7 @@
 - done()을 실행해주지 않으면 2000ms 이후에 타임아웃 실패로 간주한다. 
 
 <br><br>
-<strong>notice!!<strong>
+<strong>notice!!</strong>
 
 test code should be really simple so that, do not need to require gitignore file.
 
