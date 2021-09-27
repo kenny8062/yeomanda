@@ -7,10 +7,6 @@ const AWS = require('aws-sdk')
 const userConfig = require('../config/aws/User')
 const emailValidator = require("email-validator");
 
-const testing = async(req, res) => {
-    const { email, password } = req.body
-    return res.status(200).send('yes')
-}
 
 const signup = async(req, res) => {
     try{
@@ -53,18 +49,13 @@ const signup = async(req, res) => {
             }
         };
         // 회원가입할 때 이메일 인증을 거치기 때문에 해당 이메일은 고유성을 갖는다 -> 중복 체크 필요 x 
-        docClient.put(params, function(err, data){
-            if (err) {
-                return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
-            } else {
-                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS))
-            }
-        })
-
+        const result = await docClient.put(params).promise()
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS))
+        
     } catch (err) {
         console.log(err);
         return res
-            .status(statusCode.INTERNAL_SERVER_ERROR)
+            .status(statusCode.OK)
             .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR));
 
     }
@@ -111,6 +102,5 @@ const login = async (req, res) => {
 
 module.exports = {
     signup,
-    login,
-    testing
+    login
 };
