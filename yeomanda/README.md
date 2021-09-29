@@ -1,53 +1,17 @@
 ### STACK
 
-##### database 
+> #### express server
+
+<br><br>
+
+> #### database 
+
 1. <strong>AWS dynamodb</strong>
 - to connect aws remotely, accesskey, secretkey and region should involved in configuration data.
 - dynamodb does not support validator.
 - <strong>hased password is not longer than 50 in dynamodb</strong>
 
-``` javascript
-const AWS = require('aws-sdk')
-const userConfig = require('../config/aws/User')
-
-AWS.config.update(userConfig.aws_iam_info);
-        const docClient = new AWS.DynamoDB.DocumentClient();
-        const params = {
-            TableName : userConfig.aws_table_name,
-            Item : {
-                email : email,
-                password : saltedPassword,
-                name : name,
-                birth : birth,
-                sex : sex,
-                files : fileKey
-            }
-        };
-        docClient.put(params, function(err, data){
-            if (err) {
-                return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.SIGN_UP_FAIL))
-            } else {
-                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS))
-            }
-        })
-```
-
-../config/aws/User
-
-```javascript
-module.exports = {
-    aws_table_name : 'USER',
-    aws_local : {
-        region : 'ap-northeast-2',
-        endpoint : 'http://localhost:8000'  
-    },
-    aws_iam_info : {
-        accessKeyId : '~~~~~',
-        secretAccessKey : '~~~~~',
-        region : 'ap-northeast-2'
-    },
-}
-```
+<br><br>
 
 - "USER" TABLE
 
@@ -64,16 +28,82 @@ module.exports = {
 |temp0@temp0.com|[1,2,3]|
 |temp1@temp1.com|[10,11,12]|
 
+- "chatroom" TABLE
+
+|room_id(PK)|teams|messages|members|
+
+```js
+{
+  "room_id": {
+    "S": "1_5"
+  },
+  "teams": {
+    "L": [
+      {
+        "S": "sexy"
+      },
+      {
+        "S": "party"
+      }
+    ]
+  },
+  "messages": {
+    "L": [
+      {
+        "M": {
+          "creates_at": {
+            "S": "2109181526"
+          },
+          "sender": {
+            "S": "aaa0@aaa0.com"
+          },
+          "content": {
+            "S": "hi hello"
+          }
+        }
+      },
+      {
+        "M": {
+          "creates_at": {
+            "S": "2109181530"
+          },
+          "sender": {
+            "S": "aaa1@aaa1.com"
+          },
+          "content": {
+            "S": "nice to meet you"
+          }
+        }
+      }
+    ]
+  },
+  "members": {
+    "L": [
+      {
+        "S": "aaa0@aaa0.com"
+      },
+      {
+        "S": "aaa1@aaa1.com"
+      },
+      {
+        "S": "aaa2@aaa2.com"
+      }
+    ]
+  }
+}
+```
+
+
 2. <strong>AWS RDS - mysql</strong>
 - for storing traveler's information to show to other travelers who is located closely
 - It is supported for free tier
 - designed table for each traveler
 - database ide : "tableplus"
-- `sudo mysql -h database-yeomanda.cqriqomipg3n.ap-northeast-2.rds.amazonaws.com -p travelers -u jaymee -p`
+- `sudo mysql -h [rds database endpoint] -p travelers -u jaymee -p`
 - jaymeedev
 
 
-
+<br><br>
 
 - "travel_with" TABLE
 
@@ -86,45 +116,61 @@ module.exports = {
 게시글은 다른 사람들에게 알리기 위해 작성하기 때문에 여행 동반자 중에 한명만 작성한다. 또한 작성할 때, 낯선이와 놀기를 희망하는 사람들의 email을 함께 작성하여 그 인원들은 같은 team_no로 처리한다. 위와 같이 team_no 0번으로 처리된 동반자들이 이번 여행에 함께 온 사람들인 것을 알 수 있다. 
 
 
-##### image store : s3 
+<br><br>
+
+> #### image store : s3 
+
 - dynamdb cannot store file bigger than 400KB
 - store user image in s3 that connected with user's email
 - store image by middleware
 - <https://github.com/jjmmll0727/yeomanda/blob/main/yeomanda/server/middlewares/uploadS3.js>
 
+<br><br>
 
-##### test code : mocha
+> #### test code : mocha
+
 - testcode directory
 - <https://github.com/jjmmll0727/yeomanda/blob/main/yeomanda/server/testcode/user/index.spec.js>
 - function(done) -> 해당 함수를 비동기 테스트로 인지하고, 비동기 로직이 완료되면 done() 을 실행함으로써, 테스트가 완료된다. 
 - done()을 실행해주지 않으면 2000ms 이후에 타임아웃 실패로 간주한다. 
 
-> notice!!
+<br><br>
+<strong>notice!!</strong>
 
 test code should be really simple so that, do not need to require gitignore file.
 
+<br><br>
 
 ### SKILL
-##### jwt token
+> #### jwt token
+
 - payload 를 잘 맞춰야 한다. 
 - jwt sign 함수로 들어오는 파라미터를 잘 파악해야 한다. 
 
+<br><br>
 
-##### reverse geocoding api
+> #### reverse geocoding api
 - get location informatin from latitude & logitude 
 - use google api
 - `global_code` is a 4 character area code and 6 character or longer local code (849VCWC8+R9)
 - `compound_code` is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
 
-##### socketio
-> version issue
-nodejs - 4.2.0
-android - 2.0.0
+<br><br>
+
+> #### socketio
+
+version issue
+- nodejs - 4.2.0
+- android - 2.0.0
+
+<br><br>
+
 
 
 
 ### CI/CD
-##### github action
+> #### github action
+
 - .github/workflows
 - to connect to ec2 instance `✘ ijaemin@ijaemins-MBP  ~/Desktop  ssh -i "yeo.pem" ubuntu@ec2-3-34-187-47.ap-northeast-2.compute.amazonaws.com`
 - to get private ssh key --> `vi path_to_key_pair/[ssh_key].pem` at local --> secrets --> used to connect to ec2 instance
@@ -151,27 +197,19 @@ npm run start
 ```
 
 ***
-***
-
-shell scripts do not operate cd, git command, So.
->ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
-            pm2 stop www
-            pm2 delete www
-            pm2 kill
-            cd ./repo/yeomanda
-            git pull origin main
-            cd yeomanda/server
-            pm2 start ./bin/www
-          '
 
 
+<br><br>
 
 > ISSUE
+
 1. test code should be simple
 test code에서 gitignore file 을 열람한다면, CI 과정의 테스트에서 오류를 범한다.(github action이 gitignore file을 열람하지 못하기 때문.)<br>
 그렇기 때문에 테스트 코드는 최대한 심플해야 한다. <br>
 
+2. 가끔 nodemon이 실행되지 않을 때가 있다. 
+node_version issue -> `nvm use 12.22.6`
 
-
+<br><br>
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]

@@ -68,6 +68,12 @@ module.exports = {
     /* 즐겨찾기 */
     NO_FAVORITES: '즐겨찾기한 팀이 없습니다',
 
+    /* 채팅 */
+    MAKE_NEW_ROOM: '새로운 채팅방 개설 완료',
+    ALREADY_ROOM: '이미 있는 방입니다.',
+    UPDATE_MESSAGE: '대화 내용 저장 완료',
+    NO_MESSAGES: '대화 기록 없음',
+
     /* s3 */
     NO_FILES_IN_S3 : 'no file in s3'
   };

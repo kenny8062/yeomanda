@@ -61,13 +61,9 @@ const favorite = async (req, res) => {
                     favorite_team_no : accumulate_favorite_list
                 }
             };
-            docClient.put(params_to_push_favorite, function(err, data){
-                if(err){
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR))
-                } else {
-                    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ADD_FAVORITE))
-                }
-            })
+            const result = await docClient.put(params_to_push_favorite).promise()
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ADD_FAVORITE))
+             
         }
         // case2 : favorite table에 이메일이 있는 경우 -> 누적 추가 
         // 9/8 but, 이미 추가한 팀을 추가할 경우에는 예외 처리 해줘야 해 
@@ -89,16 +85,11 @@ const favorite = async (req, res) => {
                     favorite_team_no : accumulate_favorite_list
                 }
             };
-            docClient.put(params_to_accumulate_favorite, function(err, data){
-                if(err){
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.QUERY_ERROR))
-                } else {
-                    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ACCUMULATE_FAVORITE))
-                }
-            })
-        
+            const result = await docClient.put(params_to_accumulate_favorite).promise()
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ACCUMULATE_FAVORITE))
         }
     }catch(err){
+        console.log(err)
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
     
