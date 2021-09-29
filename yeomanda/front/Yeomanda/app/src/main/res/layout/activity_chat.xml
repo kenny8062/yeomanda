@@ -6,10 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".chatPkg.ChatActivity">
 
+    <ListView
+        android:id="@+id/chatMsgListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/sendMsgLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/chatEdt"

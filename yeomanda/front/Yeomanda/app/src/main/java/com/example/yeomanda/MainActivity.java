@@ -28,12 +28,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
 import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
 import com.example.yeomanda.Retrofit.ResponseDto.LocationResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 import com.example.yeomanda.Retrofit.RequestDto.TeamInfoDto;
 import com.example.yeomanda.chatPkg.ChatActivity;
+import com.example.yeomanda.chatPkg.ChatListActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -141,8 +143,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-
-
                 Intent intent=new Intent(getApplicationContext(),CreateBoard.class);
                 intent.putExtra("lat",location.getLatitude());
                 intent.putExtra("lon",location.getLongitude());
@@ -214,8 +214,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
 
             case R.id.chatRoom:
-                Intent chatIntent=new Intent(getApplicationContext(), ChatActivity.class);
+                Intent chatIntent=new Intent(getApplicationContext(), ChatListActivity.class);
                 chatIntent.putExtra("token",token);
+                chatIntent.putExtra("myEmail",myEmail);
                 startActivity(chatIntent);
                 Toast.makeText(this, "채팅방", Toast.LENGTH_SHORT).show();
                 break;
@@ -506,7 +507,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ArrayList<TeamInfoDto> teamInfoDto= (ArrayList<TeamInfoDto>) marker.getTag();
 
         items=new ArrayList<>();
-
         dialogView = getLayoutInflater().inflate(R.layout.custom_show_travelers, null);
 
 
@@ -518,8 +518,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(DialogInterface dialog, int id)
             {
-                Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
 
+                RetrofitClient retrofitClient = new RetrofitClient();
+                ChatRoomResponseDto chatRoomResponseDto = retrofitClient.inToChatRoom(token, teamInfoDto.get(teamNumCount).getTeamNo().toString());
+                while (chatRoomResponseDto == null) {
+                    Log.e("error", "chatRoomResponseDto is null");
+                }
+
+                Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
+                Intent intent =new Intent(getApplicationContext(),ChatActivity.class);
+                intent.putExtra("roomId",chatRoomResponseDto.getData().getRoomId());
+                intent.putExtra("token",token);
+                intent.putExtra("myEmail",myEmail);
+                startActivity(intent);
             }
         });
 
@@ -756,6 +767,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart()");
+    }
 
 
 

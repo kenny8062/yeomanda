@@ -4,21 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyFavoriteList">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    tools:context=".chatPkg.ChatListActivity">
 
         <ListView
-            android:id="@+id/myFavoriteTeamListView"
+            android:id="@+id/chatListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:ignore="MissingConstraints" >
 
         </ListView>
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

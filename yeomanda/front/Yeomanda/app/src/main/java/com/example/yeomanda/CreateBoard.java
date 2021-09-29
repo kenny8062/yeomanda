@@ -89,7 +89,6 @@ public class CreateBoard extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),createBoardResponseDto.getMessage(),Toast.LENGTH_LONG).show();
                     finish();
                 }else{
-
                     Toast.makeText(getApplicationContext(),createBoardResponseDto.getMessage(),Toast.LENGTH_LONG).show();
                 }
             }
