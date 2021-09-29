@@ -65,7 +65,6 @@ const inToChatRoom = async(req, res) => {
             }   
         };
         const chatRoom = await docClient.query(params_to_find_chatroom).promise()
-        
         // 처음 채팅한다 -> 방을 만들어줘야 한다.
         // 방을 만들기 위해 / 1.방id 2.멤버들 이 필요해
         if(chatRoom.Items.length === 0){
@@ -201,12 +200,37 @@ const getAllMyChatList = async(req, res) => {
         console.log(err)
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
     }
-    
-    
+        
+}
+
+const getAllMyChats = async(req, res) => {
+    try{
+        const { chatRoomId }= req.body;
+        
+        AWS.config.update(chatConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        const params_to_find_chatroom = {
+            TableName : chatConfig.aws_table_name,
+            KeyConditionExpression: 'room_id = :i',
+            ExpressionAttributeValues: {
+                ':i' : chatRoomId
+            }   
+        };
+        const chats = await docClient.query(params_to_find_chatroom).promise()
+        if(chats.Items.length === 0){
+            return res.status(statusCode.OK).send(statusCode.NO_CONTENT, responseMessage.NO_MESSAGES, "대화 기록이 없습니다.")
+        }
+        const messages = chats.Items[0].chatMessages
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, messages))
+    }catch(err){
+        console.log(err)
+        return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))  
+    }
 }
 
 
 module.exports = {
     inToChatRoom,
-    getAllMyChatList
+    getAllMyChatList,
+    getAllMyChats
 }

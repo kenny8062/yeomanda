@@ -78,7 +78,7 @@ app.io.on('connection', async function(socket){
      * data - room_id
      */
     const room_id = data.room_id // room name
-  
+    socket.join(room_id) 
     // 클라이언트에게 보낼 메세지
     const res = {'res' : "success to enter the chat room"} // json 형태로 보내야 한다. 
 		app.io.emit('chatRoom', res);
@@ -90,13 +90,22 @@ app.io.on('connection', async function(socket){
     /**
      * data - room_id, token, content
      */
+    const nowDate = new Date();
     const token = socket.token = data.token
     const content = socket.content = data.content
     const room_id = socket.room_id = data.room_id
     const sender = parseJwt(token).email
-    const sendTime = Date.now()
-    socket.join(room_id) 
+    const name = parseJwt(token).name
+    const sendTime = nowDate.toString()
 
+    const res = {
+      'message' : content,
+      'senderEmail' : sender,
+      'time' : sendTime,
+      'senderName' : name
+    }
+    console.log(res)
+    app.io.to(room_id).emit('message', res)
     /**
      * store message to db
      */
@@ -118,8 +127,9 @@ app.io.on('connection', async function(socket){
       
       const newChat = {
           "createdAt" : sendTime,
-          "sender" : sender,
-          "content" : content
+          "senderEmail" : sender,
+          "content" : content,
+          "senderName" : name
       }
   
       /**
@@ -144,13 +154,7 @@ app.io.on('connection', async function(socket){
       console.log(err)
     }
 
-    const res = {
-      'message' : content,
-      'sender' : sender,
-      'time' : sendTime
-    }
-    console.log(res)
-    app.io.to(room_id).emit('message', res)
+    
   })
   // 클라이언트와 연결 해제
   socket.on('disconnect', () => {
