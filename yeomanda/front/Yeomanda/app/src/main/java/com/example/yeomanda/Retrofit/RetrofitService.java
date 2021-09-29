@@ -4,6 +4,8 @@ import com.example.yeomanda.Retrofit.RequestDto.CreateBoardDto;
 import com.example.yeomanda.Retrofit.RequestDto.EmailDto;
 import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
 import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ChatListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.JoinResponseDto;
@@ -81,4 +83,11 @@ public interface RetrofitService {
     @GET("menuBar/showFavoritesDetail/{teamName}")
     Call<MyFavoriteTeamProfileResponseDto> showMyFavriteTeamProfile(@Header("Authorization") String userToken,
                                                                     @Path("teamName") String teamName);
+
+    @GET("chatting/InToChatRoom/{otherTeamNum}")
+    Call<ChatRoomResponseDto> markerToChat(@Header("Authorization") String userToken,
+                                           @Path("otherTeamNum") String otherTeamNum);
+    @GET("chatting/getAllMyChatList")
+    Call<ChatListResponseDto> getChatList(@Header("Authorization") String userToken
+    );
 }

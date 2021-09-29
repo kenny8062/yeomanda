@@ -14,6 +14,8 @@ import com.example.yeomanda.Retrofit.RequestDto.EmailDto;
 import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
 import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
 import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ChatListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.JoinResponseDto;
@@ -45,10 +47,12 @@ public class RetrofitClient {
     private static WithoutDataResponseDto withoutDataResponseDto =null;
     private static MyFavoriteListResponseDto myFavoriteListResponseDto=null;
     private static MyFavoriteTeamProfileResponseDto myFavoriteTeamProfileResponseDto=null;
+    private static ChatRoomResponseDto chatRoomResponseDto=null;
+    private static ChatListResponseDto chatListResponseDto=null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.30.1.48:3000")
+                .baseUrl("http://172.30.1.28:3000")
                 //.baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -296,6 +300,53 @@ public class RetrofitClient {
             thread.join();
             Log.d("tag",myFavoriteTeamProfileResponseDto.getMessage());
             return myFavoriteTeamProfileResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ChatRoomResponseDto inToChatRoom(String token,String teamNum){
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    chatRoomResponseDto=retrofitService.markerToChat(token,teamNum).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        try {
+            thread.join();
+            Log.d("tag",chatRoomResponseDto.getMessage());
+            return chatRoomResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+    public ChatListResponseDto showMyChatList(String userToken){
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    chatListResponseDto=retrofitService.getChatList(userToken).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        try {
+            thread.join();
+            Log.d("chatListResponseDto",chatListResponseDto.getMessage());
+            return chatListResponseDto;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;

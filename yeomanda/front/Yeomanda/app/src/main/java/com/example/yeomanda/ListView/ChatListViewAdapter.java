@@ -13,12 +13,12 @@ import com.example.yeomanda.R;
 
 import java.util.ArrayList;
 
-public class TeamInfoListViewAdapter extends BaseAdapter {
+public class ChatListViewAdapter extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<TeamInfoListViewItem> listViewItemList = new ArrayList<TeamInfoListViewItem>() ;
+    private ArrayList<ChatListViewItem> listViewItemList = new ArrayList<ChatListViewItem>() ;
 
     // ListViewAdapter의 생성자
-    public TeamInfoListViewAdapter() {
+    public ChatListViewAdapter() {
 
     }
 
@@ -37,25 +37,21 @@ public class TeamInfoListViewAdapter extends BaseAdapter {
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.favorite_team_item, parent, false);
+            convertView = inflater.inflate(R.layout.chat_list_item, parent, false);
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        ImageView imageView =  convertView.findViewById(R.id.favoriteTeamPersonImage) ;
-        TextView nameTextView =  convertView.findViewById(R.id.favoriteTeamPersonName) ;
-        TextView sexTextView = convertView.findViewById(R.id.favoriteTeamPersonSex);
-        TextView birthTextView =  convertView.findViewById(R.id.favoriteTeamPersonBirth) ;
+        TextView nameTextView =  convertView.findViewById(R.id.chatListTeamName) ;
+        TextView contentTextView = convertView.findViewById(R.id.chatListContent);
+        TextView timeTextView =  convertView.findViewById(R.id.chatListTime) ;
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        TeamInfoListViewItem listViewItem = listViewItemList.get(position);
+        ChatListViewItem listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
-        Glide.with(context)
-                .load(listViewItem.getFavoriteTeamPersonImage())
-                .into(imageView);
-        nameTextView.setText(listViewItem.getFavoriteTeamPersonName());
-        sexTextView.setText(listViewItem.getFavoriteTeamPersonSex());
-        birthTextView.setText(listViewItem.getFavoriteTeamPersonBirth());
+        nameTextView.setText(listViewItem.getChatListTeamName());
+        contentTextView.setText(listViewItem.getChatListContent());
+        timeTextView.setText(listViewItem.getChatListTime());
 
         return convertView;
     }
@@ -73,14 +69,12 @@ public class TeamInfoListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(String image, String name, String sex,String birth) {
-        TeamInfoListViewItem item = new TeamInfoListViewItem();
+    public void addItem(String name, String content,String time) {
+        ChatListViewItem item = new ChatListViewItem();
 
-        item.setFavoriteTeamPersonImage(image);
-        item.setFavoriteTeamPersonName(name);
-        item.setFavoriteTeamPersonSex(sex);
-        item.setFavoriteTeamPersonBirth(birth);
+        item.setChatListTeamName(name);
+        item.setChatListContent(content);
+        item.setChatListTime(time);
         listViewItemList.add(item);
     }
-
 }

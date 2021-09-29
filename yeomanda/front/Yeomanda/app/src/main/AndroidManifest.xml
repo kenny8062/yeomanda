@@ -21,7 +21,8 @@
         android:theme="@style/Theme.Yeomanda"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".MyProfile"></activity>
+        <activity android:name=".chatPkg.ChatListActivity"></activity>
+        <activity android:name=".MyProfile" />
         <activity android:name=".chatPkg.ChatActivity" />
         <activity android:name=".MyFavoriteTeamProfile" />
         <activity android:name=".MyFavoriteList" />
@@ -44,7 +45,7 @@
             android:value="AIzaSyCSvlAjqpSSBQtfWQpjWQEo-BiRIb-lhuk" />
 
         <service
-            android:name=".java.MyFirebaseMessagingService"
+            android:name=".MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
