@@ -200,6 +200,7 @@ module.exports = {
 - how to start and stop redis server
 - [https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html](https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html)
 - 캐시를 사용하여 메세지들을 저장하고 한꺼번에 디비에 저장할 수 있다. 
+- 리눅스에서 돌렸을 때는 하나의 프로세스만 사용하더라... 잘 안되는건가...
 ***
 
 <br>
