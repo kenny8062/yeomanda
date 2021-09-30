@@ -24,7 +24,7 @@ public class ChatMessageItem {
 
     public String getMsgTime() {return msgTime;}
 
-    public void setMsgTime(String MsgTime) {
+    public void setMsgTime(String msgTime) {
         this.msgTime=msgTime;
     }
 

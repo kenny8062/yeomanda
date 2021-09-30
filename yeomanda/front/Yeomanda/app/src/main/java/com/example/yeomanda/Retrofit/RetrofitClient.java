@@ -14,6 +14,7 @@ import com.example.yeomanda.Retrofit.RequestDto.EmailDto;
 import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
 import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
 import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.AllMyChatsResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.ChatListResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
@@ -49,11 +50,12 @@ public class RetrofitClient {
     private static MyFavoriteTeamProfileResponseDto myFavoriteTeamProfileResponseDto=null;
     private static ChatRoomResponseDto chatRoomResponseDto=null;
     private static ChatListResponseDto chatListResponseDto=null;
+    private static AllMyChatsResponseDto allMyChatsResponseDto=null;
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.30.1.28:3000")
-                //.baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
+                //.baseUrl("http://172.30.1.28:3000")
+                .baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
@@ -352,4 +354,28 @@ public class RetrofitClient {
             return null;
         }
     }
+
+
+    public AllMyChatsResponseDto getAllMyChats(String token,String roomId){
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    allMyChatsResponseDto=retrofitService.getAllMyChats(token,roomId).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        try {
+            thread.join();
+            Log.d("tag",allMyChatsResponseDto.getMessage());
+            return allMyChatsResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

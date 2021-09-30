@@ -4,7 +4,9 @@ import com.example.yeomanda.Retrofit.RequestDto.CreateBoardDto;
 import com.example.yeomanda.Retrofit.RequestDto.EmailDto;
 import com.example.yeomanda.Retrofit.RequestDto.LocationDto;
 import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
+import com.example.yeomanda.Retrofit.ResponseDto.AllMyChatsResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.ChatListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ChatMessages;
 import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.CreateBoardResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
@@ -21,6 +23,8 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -90,4 +94,9 @@ public interface RetrofitService {
     @GET("chatting/getAllMyChatList")
     Call<ChatListResponseDto> getChatList(@Header("Authorization") String userToken
     );
+
+    @FormUrlEncoded
+    @POST("chatting/getAllMyChats")
+    Call<AllMyChatsResponseDto> getAllMyChats(@Header("Authorization") String userToken,
+                                              @Field("chatRoomId") String chatRoomId);
 }

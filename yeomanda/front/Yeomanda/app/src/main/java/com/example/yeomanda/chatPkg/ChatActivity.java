@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.example.yeomanda.ListView.ChatMessageAdapter;
 import com.example.yeomanda.ListView.ChatMessageItem;
 import com.example.yeomanda.R;
+import com.example.yeomanda.Retrofit.ResponseDto.AllMyChatsResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
@@ -59,8 +60,22 @@ public class ChatActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
+        RetrofitClient retrofitClient=new RetrofitClient();
+        AllMyChatsResponseDto allMyChatsResponseDto=retrofitClient.getAllMyChats(myToken,roomId);
+        while (allMyChatsResponseDto==null){
+            Log.e("error", "allMyChatsResponseDto is null");
+        }
+        for (int i = 0; i < allMyChatsResponseDto.getData().size(); i++) {
+            Log.d("Tag",allMyChatsResponseDto.getData().get(i).getSenderEmail());
+            if (allMyChatsResponseDto.getData().get(i).getSenderEmail().equals(myEmail)) {
+                isMyChat = true;
+            } else {
+                isMyChat = false;
+            }
+            adapter.addItem(allMyChatsResponseDto.getData().get(i).getSenderName(), allMyChatsResponseDto.getData().get(i).getContent(), allMyChatsResponseDto.getData().get(i).getCreatedAt(), isMyChat);
+        }
 
-
+        adapter.notifyDataSetChanged();
         Log.d("teamNum", roomId);
         roomInfo =new JSONObject();
 
@@ -73,8 +88,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
         try {
-            //mSocket= IO.socket("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/");
-            mSocket=IO.socket("http://172.30.1.28:3000/");
+            mSocket= IO.socket("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/");
+            //mSocket=IO.socket("http://172.30.1.28:3000/");
             //서버의 connect 이벤트 발생
             mSocket.connect();
             Log.d("connect","ok");
@@ -127,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
                 adapter.addItem(receiveData.getString("senderName"),receiveData.getString("message"),receiveData.getString("time"),isMyChat);
                 Message msg = handler.obtainMessage();
                 handler.sendMessage(msg);
-                Log.d("addMessage",receiveData.getString("message"));
+                Log.d("addMessage",receiveData.getString("time"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
