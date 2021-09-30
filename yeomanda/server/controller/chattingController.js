@@ -85,6 +85,8 @@ const inToChatRoom = async(req, res) => {
             const set = new Set(teamList);
             const uniqueArr = [...set];
 
+            const nowDate = new Date();
+            const sendTime = nowDate.toString()
             const params_to_new_chat = {
                 TableName : chatConfig.aws_table_name,
                 Item : {
@@ -93,8 +95,9 @@ const inToChatRoom = async(req, res) => {
                     teams : uniqueArr,
                     chatMessages : [
                         {
-                            sender : "root",
-                            createdAt : Date.now(),
+                            senderEmail : "root",
+                            createdAt : sendTime,
+                            senderName : "root",
                             content : "채팅방을 개설하였습니다."
                         }
                     ]
@@ -108,8 +111,9 @@ const inToChatRoom = async(req, res) => {
                     teams : uniqueArr,
                     chatMessages : [
                         {
-                            sender : "root",
-                            createdAt : Date.now(),
+                            senderEmail : "root",
+                            createdAt : sendTime,
+                            senderName : "root",
                             content : "채팅방을 개설하였습니다."
                         }
                     ]  

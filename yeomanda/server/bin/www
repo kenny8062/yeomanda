@@ -19,18 +19,50 @@ app.set('port', port);
 * Create HTTP server.
 */
 
+var cluster = require('cluster')
+var numCPUs = require('os').cpus().length;
+
+/**
+ * 이렇게 nodejs의 내장 모듈인 cluster으로 클러스터링 할 수 있지만, 실무에서는 pm2로 클러스터링한다고 한다. 
+ */
+// if(cluster.isMaster){
+//   for (var i = 0; i < numCPUs; i++) {
+//     cluster.fork();
+//   }
+//   cluster.on('exit', function(worker, code, signal) { // 워커가 종료되었을 때
+//     console.log('worker ' + worker.process.pid + ' died');
+//     console.log('code' , code , 'signal', signal)
+//     cluster.fork(); // 워커가 죽어도 다시 생성
+//   });
+// }
+// else{
+//   var server = http.createServer(app);
+//   app.io.attach(server)
+//   server.listen(port);
+//   // setTimeout(() => { //워커가 존재하는지 확인하기 위해 1초마다 강제 종료
+//   //   process.exit(1);
+//   // }, 1000);
+//   server.on('error', onError);
+//   server.on('listening', onListening);
+//   console.log(`${process.pid} 번 워커 실행중...`)
+// }
+
 var server = http.createServer(app);
+  app.io.attach(server)
+  server.listen(port);
+  // setTimeout(() => { //워커가 존재하는지 확인하기 위해 1초마다 강제 종료
+  //   process.exit(1);
+  // }, 1000);
+  server.on('error', onError);
+  server.on('listening', onListening);
 /**
 *  
 */
-app.io.attach(server)
 /**
 * Listen on provided port, on all network interfaces.
 */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+
 
 
 /**
