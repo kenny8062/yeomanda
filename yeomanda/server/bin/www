@@ -4,27 +4,27 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var {app, socketApi} = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
 
 /**
-* Get port from environment and store in Express.
-*/
+ * Get port from environment and store in Express.
+ */
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
-* Create HTTP server.
-*/
+ * Create HTTP server.
+ */
 
 var cluster = require('cluster')
 var numCPUs = require('os').cpus().length;
 
 /**
- * 이렇게 nodejs의 내장 모듈인 cluster으로 클러스터링 할 수 있지만, 실무에서는 pm2로 클러스터링한다고 한다. 
- */
+* 이렇게 nodejs의 내장 모듈인 cluster으로 클러스터링 할 수 있지만, 실무에서는 pm2로 클러스터링한다고 한다. 
+*/
 // if(cluster.isMaster){
 //   for (var i = 0; i < numCPUs; i++) {
 //     cluster.fork();
@@ -47,27 +47,31 @@ var numCPUs = require('os').cpus().length;
 //   console.log(`${process.pid} 번 워커 실행중...`)
 // }
 
+
+
 var server = http.createServer(app);
-  app.io.attach(server)
-  server.listen(port);
-  // setTimeout(() => { //워커가 존재하는지 확인하기 위해 1초마다 강제 종료
-  //   process.exit(1);
-  // }, 1000);
-  server.on('error', onError);
-  server.on('listening', onListening);
-/**
-*  
-*/
-/**
-* Listen on provided port, on all network interfaces.
-*/
-
-
+socketApi.io.attach(server);
+server.listen(port);
+// setTimeout(() => { //워커가 존재하는지 확인하기 위해 1초마다 강제 종료
+//   process.exit(1);
+// }, 1000);
+server.on('error', onError);
+server.on('listening', onListening);
 
 
 /**
-* Normalize a port into a number, string, or false.
-*/
+ *  
+ */
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -86,8 +90,8 @@ function normalizePort(val) {
 }
 
 /**
-* Event listener for HTTP server "error" event.
-*/
+ * Event listener for HTTP server "error" event.
+ */
 
 function onError(error) {
   if (error.syscall !== 'listen') {
@@ -114,8 +118,8 @@ function onError(error) {
 }
 
 /**
-* Event listener for HTTP server "listening" event.
-*/
+ * Event listener for HTTP server "listening" event.
+ */
 
 function onListening() {
   var addr = server.address();
@@ -124,4 +128,3 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
-

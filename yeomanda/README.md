@@ -163,6 +163,10 @@ version issue
 - nodejs - 4.2.0
 - android - 2.0.0
 
+- brew services start redis
+- brew services stop redis
+- [https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html](https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html)
+
 <br><br>
 
 > #### pm2
@@ -185,6 +189,7 @@ version issue
 - host name : `ec2-3-34-187-47.ap-northeast-2.compute.amazonaws.com`
 - user name : ubuntu
 - `ssh: connect to host *** port 22: Connection timed out` -> connect to ec2 instance fail
+- local에서 install Package 하면 `local`에서 `npm install` 하고 Push 하면 된다 ??? 
 
 - nohup : 리눅스에서 프로세스를 실행한 터미널의 세션 연결이 끊어지더라도 지속적으로 동작 할 수 있게 해주는 명령어
 - `nohup`[process] &
