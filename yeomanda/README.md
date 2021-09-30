@@ -1,8 +1,11 @@
-### STACK
+## STACK
+<br><br>
 
 > #### express server
 
-<br><br>
+***
+
+<br>
 
 > #### database 
 
@@ -11,7 +14,7 @@
 - dynamodb does not support validator.
 - <strong>hased password is not longer than 50 in dynamodb</strong>
 
-<br><br>
+<br>
 
 - "USER" TABLE
 
@@ -93,6 +96,7 @@
 }
 ```
 
+<br><br>
 
 2. <strong>AWS RDS - mysql</strong>
 - for storing traveler's information to show to other travelers who is located closely
@@ -103,7 +107,7 @@
 - jaymeedev
 
 
-<br><br>
+<br>
 
 - "travel_with" TABLE
 
@@ -115,8 +119,9 @@
 
 게시글은 다른 사람들에게 알리기 위해 작성하기 때문에 여행 동반자 중에 한명만 작성한다. 또한 작성할 때, 낯선이와 놀기를 희망하는 사람들의 email을 함께 작성하여 그 인원들은 같은 team_no로 처리한다. 위와 같이 team_no 0번으로 처리된 동반자들이 이번 여행에 함께 온 사람들인 것을 알 수 있다. 
 
+***
 
-<br><br>
+<br>
 
 > #### image store : s3 
 
@@ -125,7 +130,8 @@
 - store image by middleware
 - <https://github.com/jjmmll0727/yeomanda/blob/main/yeomanda/server/middlewares/uploadS3.js>
 
-<br><br>
+***
+<br>
 
 > #### test code : mocha
 
@@ -139,23 +145,24 @@
 
 test code should be really simple so that, do not need to require gitignore file.
 
-<br><br>
+<br><br><br>
 
-### SKILL
+## SKILL
 > #### jwt token
 
 - payload 를 잘 맞춰야 한다. 
 - jwt sign 함수로 들어오는 파라미터를 잘 파악해야 한다. 
-
-<br><br>
+***
+<br>
 
 > #### reverse geocoding api
+
 - get location informatin from latitude & logitude 
 - use google api
 - `global_code` is a 4 character area code and 6 character or longer local code (849VCWC8+R9)
 - `compound_code` is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
-
-<br><br>
+***
+<br>
 
 > #### socketio
 
@@ -163,16 +170,39 @@ version issue
 - nodejs - 4.2.0
 - android - 2.0.0
 
-- brew services start redis
-- brew services stop redis
-- [https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html](https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html)
 
-<br><br>
+***
+<br>
 
 > #### pm2
 
+``` js
+module.exports = {
+  apps: [{
+    name: 'www',
+    script: './bin/www',
+    instances: 0,
+    exec_mode: 'cluster'
+  }]
+}
+```
+
 무중단 서비스 및 클러스터링 
 [https://engineering.linecorp.com/ko/blog/pm2-nodejs/](https://engineering.linecorp.com/ko/blog/pm2-nodejs/)
+***
+<br>
+
+> #### redis
+
+- connect socket with clustered pm2 server
+- without it, cannot connect with various socket that distributed to varios process in single thread nodejs server
+- pm2 clustering 과 socketio를 통합하기 위해서는 `redis server`가 먼저 실행되어야 한다. 
+- how to start and stop redis server
+- [https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html](https://tableplus.com/blog/2018/10/how-to-start-stop-restart-redis.html)
+- 캐시를 사용하여 메세지들을 저장하고 한꺼번에 디비에 저장할 수 있다. 
+***
+
+<br>
 
 
 

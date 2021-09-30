@@ -23,6 +23,11 @@ function parseJwt (token) {
 };
 
 const socketApi = require('./socketApi');
+const redis = require('socket.io-redis');
+io.adapter(redis({
+    host : 'localhost',
+    port : 6379
+}))
 
 
 io.on('connection', async function(socket){
