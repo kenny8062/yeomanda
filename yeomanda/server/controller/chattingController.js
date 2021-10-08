@@ -122,32 +122,6 @@ const inToChatRoom = async(req, res) => {
         }
         // 기존에 채팅방이 개설 되었을 경우.
         else{
-            // const newChat = {
-            //     "createdAt" : Date.now(),
-            //     "sender" : "testput1",
-            //     "content" : "new content!!!"
-            // }
-            // const newMessage = []
-            // chatRoom.Items[0].chatMessages.filter( m => {
-            //     newMessage.push(m)
-            // })
-            // newMessage.push(newChat)
-            // const params_to_put_message = {
-            //     TableName : chatConfig.aws_table_name,
-            //     Item : {
-            //         "room_id" : "1_2",
-            //         "members" : [
-            //             "testput",
-            //             "testput2"
-            //         ],
-            //         "teams" : [
-            //             "testput",
-            //             "testput2"
-            //         ],
-            //         "chatMessages" : newMessage
-            //     } 
-            // };
-            // const resultChat = await docClient.put(params_to_put_message).promise()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.ALREADY_ROOM, chatRoom.Items[0]))
         }
     }catch(err){

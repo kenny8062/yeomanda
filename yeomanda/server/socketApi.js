@@ -25,10 +25,19 @@ function parseJwt (token) {
 const socketApi = require('./socketApi');
 const redis = require('socket.io-redis');
 io.adapter(redis({
-    host : 'localhost',
-    port : 6379
+  host : 'localhost',
+  port : 6379
 }))
 
+const redis_client = require('redis');
+// const rejson = require('redis-rejson');
+// rejson(redis_client)
+
+const redisPort = 6379
+const client= redis_client.createClient({
+  port:6379,
+  host:'localhost'
+});
 
 io.on('connection', async function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
@@ -45,11 +54,10 @@ io.on('connection', async function(socket){
 	});
 
 
-    socket.on('message', async function(data){
-
+  socket.on('message', async function(data){
     /**
-     * data - room_id, token, content
-     */
+    * data - room_id, token, content
+    */
     const nowDate = new Date();
     const token = socket.token = data.token
     const content = socket.content = data.content
@@ -64,62 +72,40 @@ io.on('connection', async function(socket){
       'time' : sendTime,
       'senderName' : name
     }
-    console.log(res)
     io.to(room_id).emit('message', res)
     /**
-     * store message to db
+     * try to store in redis cache
      */
     try{
-      AWS.config.update(chatConfig.aws_iam_info);
-      const docClient = new AWS.DynamoDB.DocumentClient();
-  
-      /**
-       * find email in FAVORITES table and delete favorite team_no
-       */
-      const params_to_find_chatroom = {
-          TableName : chatConfig.aws_table_name,
-          KeyConditionExpression: 'room_id = :i',
-          ExpressionAttributeValues: {
-              ':i' : room_id
-          }   
-      };
-      const chatRoom = await docClient.query(params_to_find_chatroom).promise()
-      
+      // 문제점 - 스트링으로 append해서 저장하면 나중에 split 해야 하는데 그 기준은...?
       const newChat = {
-          "createdAt" : sendTime,
-          "senderEmail" : sender,
-          "content" : content,
-          "senderName" : name
+        "createdAt" : sendTime,
+        "senderEmail" : sender,
+        "content" : content,
+        "senderName" : name
       }
-  
-      /**
-       * 여기서 부터 이제 기존에 있던 메세지들 읽어와서 새로 업데이트 하고 저장하는 과정
-       */
-      const newMessage = []
-      chatRoom.Items[0].chatMessages.filter( m => {
-          newMessage.push(m)
-      })
-      newMessage.push(newChat)
-      const params_to_put_message = {
-          TableName : chatConfig.aws_table_name,
-          Item : {
-              "room_id" : room_id,
-              "members" : chatRoom.Items[0].members,
-              "teams" : chatRoom.Items[0].teams,
-              "chatMessages" : newMessage
-          } 
-      };
-      const resultChat = await docClient.put(params_to_put_message).promise()
+      client.sadd(room_id, JSON.stringify(newChat))
+      
     }catch(err){
       console.log(err)
     }
 
-    
+  
   })
   // 클라이언트와 연결 해제
-  socket.on('disconnect', () => {
-      io.emit('updateMessage', "연결이 끊어졌습니다.");
-      console.log(`made socket disconnected !!! : ${socket.id}`)
+  socket.on('disconnect', async() => {
+    io.emit('updateMessage', "연결이 끊어졌습니다.");
+
+    // client.smembers('newChat', async(err, data) => {
+    //   data.filter(d => {
+    //     console.log(JSON.parse(d))
+    //   })
+    // })    
+    console.log(`made socket disconnected !!! : ${socket.id}`)
+    /**
+     * flush all cache
+     */
+    //client.flushall("ASYNC")
   })
 });
 
