@@ -56,7 +56,7 @@ const showTravelers = async(req, res) => {
          * travel_with table에서 찾는 데이터들에서 이메일을 추출하여, dynamodb user table 에서 pk로 접근하여 name을 뽑아낸다.
          * req에서 받는 데이터를 가지고 현재 사용자의 위치를 찾는데, global code 의 앞 4자리(국가)만을 이용하여 같은 나라에 있는 사용자의 회원정보들을 response 한다.
          */
-        const sql = `select * from travel_with where region_info like '${country}%' and isfinished = '0';` 
+        const sql = `select * from travel_plan where region_info like '${country}%' and isfinished = '0';` 
         const result = await connection.query(sql)
         AWS.config.update(userConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
@@ -127,8 +127,9 @@ const registerPlan = async(req, res) => {
     try{
         const connection = await mysql.createConnection(conn.db_info);
 
-        const sql_team_no = 'select max(team_no) as newTeam from travel_with;'
+        const sql_team_no = 'select max(uniq_no) as newUniq, max(team_no) as newTeam from travel_plan;'
         var new_team_no = 0
+        var new_uniq_no = 0
         var success_count = 0
         /**
          * 1. 가장 먼저 팀 갯수를 확인하고
@@ -138,7 +139,8 @@ const registerPlan = async(req, res) => {
          */
         const result = await connection.query(sql_team_no)
         new_team_no = result[0][0].newTeam
-
+        new_uniq_no = result[0][0].newUniq
+        console.log(new_uniq_no)
         const plan = req.body
         const jsonPlan = JSON.parse(JSON.stringify(plan));
 
@@ -171,6 +173,7 @@ const registerPlan = async(req, res) => {
 
             // // 게시판에 등록한 여행객이 회원일 경우
             const params = {
+                uniq_no : (++new_uniq_no).toString(),
                 email : travelerEmail,
                 location_gps : location_gps,
                 team_no : (new_team_no+1).toString(),
@@ -180,7 +183,7 @@ const registerPlan = async(req, res) => {
                 team_name : jsonPlan[i]["teamName"].toString()
             }
             // add new plan
-            const sql = 'insert into travel_with set ?;'  
+            const sql = 'insert into travel_plan set ?;'  
             const result = await connection.query(sql, params)
                 
             success_count = success_count + 1

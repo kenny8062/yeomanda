@@ -3,14 +3,10 @@ const socketapi = {
     io: io
 };
 
-// Add your socket.io logic here!
-// io.on( "connection", function( socket ) {
-//     console.log( "A user connected" );
-// });
-// end of socket.io logic
 const atob = require('atob')
 const AWS = require('aws-sdk')
 const chatConfig = require('./config/aws/Chat')
+const fcmConfig = require('./config/aws/FcmToken')
 
 function parseJwt (token) {
   var base64Url = token.split('.')[1];
@@ -23,21 +19,39 @@ function parseJwt (token) {
 };
 
 const socketApi = require('./socketApi');
-const redis = require('socket.io-redis');
+const redis = require('socket.io-redis'); // redis의 publish/subscribe 기능
 io.adapter(redis({
   host : 'localhost',
   port : 6379
 }))
 
+/**
+ * redis cache
+ */
 const redis_client = require('redis');
-// const rejson = require('redis-rejson');
-// rejson(redis_client)
-
 const redisPort = 6379
 const client= redis_client.createClient({
   port:6379,
   host:'localhost'
 });
+
+AWS.config.update(chatConfig.aws_iam_info);
+const docClient = new AWS.DynamoDB.DocumentClient();
+
+/**
+ * connection to aws mysql server
+ */
+const mysql = require("mysql2/promise");
+const conn = require('./config/aws/Travelers');
+
+/**
+ * fcm alarm
+ */
+const admin = require('firebase-admin')
+const serAccount = require('./config/yeomanda-project-firebase-adminsdk-fryso-e71f4fcb25.json')
+admin.initializeApp({
+  credential: admin.credential.cert(serAccount),
+})
 
 io.on('connection', async function(socket){
 	console.log(`made socket connected !!! , ${socket.id}`);
@@ -48,6 +62,12 @@ io.on('connection', async function(socket){
      */
     const room_id = data.room_id // room name
     socket.join(room_id) 
+
+    /**
+     * find tokens
+     */
+    
+    
     // 클라이언트에게 보낼 메세지
     const res = {'res' : "success to enter the chat room"} // json 형태로 보내야 한다. 
 		io.emit('chatRoom', res);
@@ -64,7 +84,7 @@ io.on('connection', async function(socket){
     const room_id = socket.room_id = data.room_id
     const sender = parseJwt(token).email
     const name = parseJwt(token).name
-    const sendTime = nowDate.toString()
+    const sendTime = nowDate.toDateString() + ' ' + nowDate.toTimeString().split(' ')[0]
 
     const res = {
       'message' : content,
@@ -74,17 +94,80 @@ io.on('connection', async function(socket){
     }
     io.to(room_id).emit('message', res)
     /**
-     * try to store in redis cache
+     * try to store in redis cache --> fail
+     * so, 디비에 바로바로 저장하고 알람보내기 
      */
+    const newChat = {
+      "createdAt" : sendTime,
+      "senderEmail" : sender,
+      "content" : content,
+      "senderName" : name
+    }
+
+    const params_to_find_chatroom = {
+        TableName : chatConfig.aws_table_name,
+        KeyConditionExpression: 'room_id = :i',
+        ExpressionAttributeValues: {
+            ':i' : room_id
+        }   
+    };
+    const chatRoom = await docClient.query(params_to_find_chatroom).promise()
+    const newMessage = chatRoom.Items[0].chatMessages
+    const users = chatRoom.Items[0].members // fcm alarm 보내기 위해서 그 방 사람들 이메일을 찾아야 해
+    
+    newMessage.push(newChat)
+    const params_to_put_message = {
+      TableName : chatConfig.aws_table_name,
+      Item : {
+          "room_id" : room_id,
+          "members" : chatRoom.Items[0].members,
+          "teams" : chatRoom.Items[0].teams,
+          "chatMessages" : newMessage
+      } 
+    };
+    
+    
     try{
-      // 문제점 - 스트링으로 append해서 저장하면 나중에 split 해야 하는데 그 기준은...?
-      const newChat = {
-        "createdAt" : sendTime,
-        "senderEmail" : sender,
-        "content" : content,
-        "senderName" : name
-      }
-      client.sadd(room_id, JSON.stringify(newChat))
+      const resultChat = await docClient.put(params_to_put_message).promise()
+      // 이제 여기서 알람을 보내야 해 
+        /**
+         * 기존에 디비에 있는 데이터 읽어오는 작업 -> 필요해.
+         */
+      users.filter( async(u) => {
+        if(u != sender){
+          console.log(u)
+          const connection = await mysql.createConnection(conn.db_info);
+          const sql = `select * from fcm_token where email = '${u}';` 
+          const result_sql = await connection.query(sql)
+          // const params_to_find_token = {
+          //   TableName : fcmConfig.aws_table_name,
+          //   KeyConditionExpression: 'email = :i',
+          //   ExpressionAttributeValues: {
+          //       ':i' : u
+          //   }   
+          // }; 
+          // const fcmToken = await docClient.query(params_to_find_token).promise()
+          const target_token = result_sql[0][0].token 
+          const message = {
+            data: {
+              title: '채팅 도착',
+              body: '새로운 메세지가 도착하였습니다.'
+            },
+            token: target_token,
+          }
+          admin
+            .messaging()
+            .send(message)
+            .then(function (response) {
+              console.log('Successfully sent message: : ', response)
+            })
+            .catch(function (err) {
+              console.log('Error Sending message!!! : ', err)
+            })
+        }
+        
+      })
+      // client.sadd(room_id, JSON.stringify(newChat))
       
     }catch(err){
       console.log(err)
@@ -96,16 +179,7 @@ io.on('connection', async function(socket){
   socket.on('disconnect', async() => {
     io.emit('updateMessage', "연결이 끊어졌습니다.");
 
-    // client.smembers('newChat', async(err, data) => {
-    //   data.filter(d => {
-    //     console.log(JSON.parse(d))
-    //   })
-    // })    
     console.log(`made socket disconnected !!! : ${socket.id}`)
-    /**
-     * flush all cache
-     */
-    //client.flushall("ASYNC")
   })
 });
 

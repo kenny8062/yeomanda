@@ -41,7 +41,7 @@ const inToChatRoom = async(req, res) => {
          */
     
         const connection = await mysql.createConnection(conn.db_info);
-        const sql = `select team_no from travel_with where email='${userEmail}' and isfinished = '0';` 
+        const sql = `select team_no from travel_plan where email='${userEmail}';` 
         const result = await connection.query(sql)
         const userTeamNum = result[0][0].team_no
     
@@ -70,13 +70,13 @@ const inToChatRoom = async(req, res) => {
         if(chatRoom.Items.length === 0){
             const chatterList = []
             const teamList = []
-            const sql_to_sender = `select email, team_name from travel_with where team_no='${userTeamNum}' and isfinished = '0';` 
+            const sql_to_sender = `select email, team_name from travel_plan where team_no='${userTeamNum}';` 
             const result_sender = await connection.query(sql_to_sender)
             result_sender[0].filter(s => {
                 chatterList.push(s.email)
                 teamList.push(s.team_name)
             })
-            const sql_to_receiver = `select email, team_name from travel_with where team_no='${otherTeamNum}' and isfinished = '0';` 
+            const sql_to_receiver = `select email, team_name from travel_plan where team_no='${otherTeamNum}';` 
             const result_receiver = await connection.query(sql_to_receiver)
             result_receiver[0].filter(r => {
                 chatterList.push(r.email)
@@ -86,7 +86,7 @@ const inToChatRoom = async(req, res) => {
             const uniqueArr = [...set];
 
             const nowDate = new Date();
-            const sendTime = nowDate.toString()
+            const sendTime = nowDate.toDateString() + ' ' + nowDate.toTimeString().split(' ')[0]
             const params_to_new_chat = {
                 TableName : chatConfig.aws_table_name,
                 Item : {
@@ -148,7 +148,7 @@ const getAllMyChatList = async(req, res) => {
          * chatroom table의 teams field에서 우리 팀 말고 다른 팀을 알아내기 위해 일단은 우리팀의 이름을 알아내야 해.
          */
         const connection = await mysql.createConnection(conn.db_info);
-        const sql_to_find_teamName = `select team_name from travel_with where email='${userEmail}' and isfinished = '0';` 
+        const sql_to_find_teamName = `select team_name from travel_plan where email='${userEmail}';` 
         const result = await connection.query(sql_to_find_teamName)
         const myTeam = result[0][0].team_name // 우리팀 이름
     

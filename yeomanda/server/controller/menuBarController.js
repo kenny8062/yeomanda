@@ -30,6 +30,7 @@ const showFavoriteTeamName = async(req, res) => {
         const userEmail = req.decoded.email
         AWS.config.update(favoriteConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
+        const result = []  //  최종 결과
 
         /**
          * 1. find email in FAVORITES table 
@@ -43,20 +44,20 @@ const showFavoriteTeamName = async(req, res) => {
             }   
         };
         const checkEmail_from_favorite = await docClient.query(params_find_favorites).promise()
-        const Favorites = checkEmail_from_favorite.Items[0].favorite_team_no  // 이용자가 즐겨찾기 한 팀들의 번호 리스트
-        
+        const Favorites_no = checkEmail_from_favorite.Items[0] // 이용자가 즐겨찾기 한 팀들의 번호 리스트
         // 1. 즐겨찾기 한 팀들이 없을 경우
-        if(Favorites.length === 0){
-            return res.status(statusCode.OK).send(util.success(statusCode.fail, responseMessage.READ_USER_FAIL, "즐겨찾기 한 팀이 없습니다. " ))                                        
+        if(!Favorites_no){
+            return res.status(statusCode.OK).send(util.success(statusCode.fail, responseMessage.READ_USER_FAIL, result))                                        
         }
         /**
          * 2. 즐겨찾기 한 팀들이 있을 경우
          * 즐겨찾기 한 팀들의 번호 리스트를 가지고 travel_with 테이블에서 팀 이름들을 보내준다.
          */
-        const result = []  //  최종 결과
+
+        const Favorites = checkEmail_from_favorite.Items[0].favorite_team_no// 이용자가 즐겨찾기 한 팀들의 번호 리스트
 
         for(var i in Favorites){
-            const sql = `select * from travel_with where team_no = '${Favorites[i]}';`
+            const sql = `select * from travel_plan where team_no = '${Favorites[i]}';`
             const data = await connection.query(sql)
                 
             /**
@@ -163,12 +164,12 @@ const finishTravel = async(req, res) => {
          * 1. find email in database that field 'isfinished=0' 
          * 2. change isfinished filed to 1
          */
-        const sql = `select team_no from travel_with where email='${finishTraveler}' and isfinished = '0';` 
+        const sql = `select team_no from travel_plan where email='${finishTraveler}' and isfinished = '0';` 
         const result = await connection.query(sql)
              
         
         const finishTeam = result[0][0].team_no
-        const sql_to_finish = `update travel_with set isfinished = '1' where team_no = '${finishTeam}'`
+        const sql_to_finish = `update travel_plan set isfinished = '1' where team_no = '${finishTeam}'`
         const data = await connection.query(sql_to_finish)   
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
             "success to update isfinished to 1")) 
@@ -184,7 +185,7 @@ const showFavoritesDetail = async(req, res) => {
     const connection = await mysql.createConnection(conn.db_info);
 
     const teamName = req.params.teamName
-    const sql = `select email from travel_with where team_name = '${teamName}';`
+    const sql = `select email from travel_plan where team_name = '${teamName}';`
     const data = await connection.query(sql)
        
     const result = []

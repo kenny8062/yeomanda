@@ -250,8 +250,12 @@ test code에서 gitignore file 을 열람한다면, CI 과정의 테스트에서
 그렇기 때문에 테스트 코드는 최대한 심플해야 한다. <br>
 
 2. 가끔 nodemon이 실행되지 않을 때가 있다. 
-node_version issue -> `nvm use 12.22.6`
+node_version issue -> `nvm use 12.22.6` <br>
 
+3. 'redis caching'을 이용하여 채팅기능을 구현하고자 하였는데, 문제 발생<br>
+fcm 으로 알람을 보내려고 하니, 디비에 저장을 하고 알람을 보내야 하는 문제가 생김. 캐시에 저장을 하고 디비에 저장하는 api요청을 받은 후에야 디비에 채팅 대화들을 한꺼번에 저장을 하는데, 애초에 채팅을 보내고 바로바로 알람을 보내야 하니, 알람을 보냄과 동시에 디비에 저장을 해야했음.
+완벽한 기능을 구현하고 싶었으나, 도저히 생각이 나지 않아 일단은 캐시를 사용하지 않고, 바로바로 저장을 하는 방법으로 구현함.
+[https://velog.io/@jaymee/redis-cache-with-fcm-alarm](https://velog.io/@jaymee/redis-cache-with-fcm-alarm)
 <br><br>
 
 ### 작업 문서화 [https://www.notion.so/api-route-ec09aa688f9e46aa8534c96ebff7370c]
