@@ -1,5 +1,6 @@
 package com.example.yeomanda;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -7,6 +8,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +19,9 @@ import com.example.yeomanda.Retrofit.RequestDto.LoginDto;
 import com.example.yeomanda.Retrofit.ResponseDto.LoginResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 import com.example.yeomanda.joinActivity.JoinActivity1;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
     Button joinBtn,loginBtn;
@@ -25,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     LoginDto loginDto;
     RetrofitClient retrofitClient;
     EditText emailEdt,passwordEdt;
+    String fcmToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,25 @@ public class LoginActivity extends AppCompatActivity {
         if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE );
         }
+        /*Intent fcm = new Intent(getApplicationContext(), MyFirebaseMessagingService.class);
+        startService(fcm);*/
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FcmTokenTag", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        fcmToken = task.getResult();
+                        Log.d("fcmtoken",fcmToken);
+                        // Log and toast
+
+                    }
+                });
+
         loginDto=new LoginDto();
         retrofitClient=new RetrofitClient();
         init();
@@ -65,11 +90,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loginDto.setEmail(emailEdt.getText().toString());
                 loginDto.setPassword(passwordEdt.getText().toString());
+                loginDto.setFcm_token(fcmToken);
                 loginResponseDto=retrofitClient.login(loginDto);
                 while(loginResponseDto==null){}
                 if(loginResponseDto.getSuccess()==true) {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("token",loginResponseDto.getData().getToken());
+                    intent.putExtra("hasPlanned",loginResponseDto.getData().getHasPlanned());
                     intent.putExtra("email",emailEdt.getText().toString());
                     startActivity(intent);
                 }else{

@@ -54,7 +54,7 @@ public class RetrofitClient {
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("http://172.30.1.28:3000")
+                //.baseUrl("http://192.168.0.29:3000")
                 .baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -378,4 +378,25 @@ public class RetrofitClient {
         }
     }
 
+    /*public WithoutDataResponseDto closeSocket(String token,String roomId){
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    withoutDataResponseDto=retrofitService.closeSocket(token,roomId).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        try {
+            thread.join();
+            Log.d("WithOutDataResponseDto",withoutDataResponseDto.getMessage());
+            return withoutDataResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }*/
 }

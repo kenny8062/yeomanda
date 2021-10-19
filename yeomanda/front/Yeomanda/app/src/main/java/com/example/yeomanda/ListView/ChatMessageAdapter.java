@@ -46,7 +46,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         TextView nameTextView = convertView.findViewById(R.id.userName);
         TextView contentTextView = convertView.findViewById(R.id.chatmessage);
         TextView timeTextView = convertView.findViewById(R.id.msgTime);
-        // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
+        // LoginResponseDataDto Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         ChatMessageItem listViewItem = listViewItemList.get(position);
 
         if (listViewItem.getIsMyChat()){

@@ -19,6 +19,7 @@ import com.example.yeomanda.ListView.ChatMessageItem;
 import com.example.yeomanda.R;
 import com.example.yeomanda.Retrofit.ResponseDto.AllMyChatsResponseDto;
 import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.WithoutDataResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 import org.json.JSONException;
@@ -40,6 +41,7 @@ public class ChatActivity extends AppCompatActivity {
     ListView listView;
     ChatMessageAdapter adapter;
     Boolean isMyChat;
+    //WithoutDataResponseDto withoutDataResponseDto=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,7 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
             mSocket= IO.socket("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/");
-            //mSocket=IO.socket("http://172.30.1.28:3000/");
+            //mSocket=IO.socket("http://192.168.0.29:3000/");
             //서버의 connect 이벤트 발생
             mSocket.connect();
             Log.d("connect","ok");
@@ -139,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
                 }else{
                     isMyChat=false;
                 }
-                adapter.addItem(receiveData.getString("senderName"),receiveData.getString("message"),receiveData.getString("time"),isMyChat);
+                adapter.addItem(receiveData.getString("senderName"),receiveData.getString("message"),receiveData.getString("time").split(" ")[4],isMyChat);
                 Message msg = handler.obtainMessage();
                 handler.sendMessage(msg);
                 Log.d("addMessage",receiveData.getString("time"));
@@ -166,8 +168,34 @@ public class ChatActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         mSocket.close();
-    }
+        Log.d("end","chatroom");
+    }/*
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d("end","chatroom111");
 
+       *//* if(withoutDataResponseDto==null) {
+            RetrofitClient retrofitClient = new RetrofitClient();
+            retrofitClient.closeSocket(myToken, roomId);
+        }*//*
+    }
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        // 기존 뒤로 가기 버튼의 기능을 막기 위해 주석 처리 또는 삭제
+
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
+        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지났으면 Toast 출력
+        // 2500 milliseconds = 2.5 seconds
+        RetrofitClient retrofitClient=new RetrofitClient();
+        withoutDataResponseDto=retrofitClient.closeSocket(myToken,roomId);
+        while(withoutDataResponseDto==null){
+            Log.e("error","withOutResponseDto is null");
+        };
+        finish();
+
+    }*/
 
     //메인쓰레드가 아닌 다른쓰레드에서 UI 변경이 불가능하므로 Handler 이용
     @SuppressLint("HandlerLeak")

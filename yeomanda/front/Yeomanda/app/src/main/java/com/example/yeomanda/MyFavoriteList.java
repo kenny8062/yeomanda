@@ -35,11 +35,11 @@ public class MyFavoriteList extends AppCompatActivity {
         while(myFavoriteListResponseDto==null){
             Log.d("error","myFavoriteListResponseDto is null");
         }
-
-        myFavoriteTeamListView=findViewById(R.id.myFavoriteTeamListView);
-        ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,myFavoriteListResponseDto.getData());
-        myFavoriteTeamListView.setAdapter(adapter);
-
+        if(myFavoriteListResponseDto.getData()!=null) {
+            myFavoriteTeamListView = findViewById(R.id.myFavoriteTeamListView);
+            ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, myFavoriteListResponseDto.getData());
+            myFavoriteTeamListView.setAdapter(adapter);
+        }
         myFavoriteTeamListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

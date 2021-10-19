@@ -99,4 +99,10 @@ public interface RetrofitService {
     @POST("chatting/getAllMyChats")
     Call<AllMyChatsResponseDto> getAllMyChats(@Header("Authorization") String userToken,
                                               @Field("chatRoomId") String chatRoomId);
+
+    /*@FormUrlEncoded
+    @POST("socket/caching")
+    Call<WithoutDataResponseDto> closeSocket(@Header("Authorization") String userToken,
+                                            @Field("room_id") String chatRoomId);
+*/
 }
