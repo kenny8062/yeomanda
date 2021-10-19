@@ -135,7 +135,7 @@ const login = async (req, res) => {
         const connection_3 = await mysql.createConnection(conn.db_info);
         const sql_team_3 = `select * from travel_plan where email = '${email}' and isfinished = 0;`
         const result_plan = await connection_3.query(sql_team_3)
-        if(result_plan[0][0]){
+        if(result_plan.length){
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {'token' : token, 'hasPlanned' : true}));
         }
         else{
