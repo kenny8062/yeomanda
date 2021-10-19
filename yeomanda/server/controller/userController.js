@@ -112,7 +112,7 @@ const login = async (req, res) => {
         const connection = await mysql.createConnection(conn.db_info);
         const sql = `select email from fcm_token where token = '${fcm_token}';` 
         const result_sql = await connection.query(sql)
-        if(!result_sql.length){
+        if(result_sql.length){
             if(email !== result_sql[0][0].email){
                 const connection_0 = await mysql.createConnection(conn.db_info);
                 const sql_0 = `update fcm_token set token = 0 where email = '${result_sql[0][0].email}';` 
