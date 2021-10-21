@@ -8,8 +8,9 @@ router.get('/showFavoriteTeamName', menuBarController.showFavoriteTeamName);
 router.get('/deleteFavorite/:team_no', menuBarController.deleteFavorite);
 router.get('/finishTravel', menuBarController.finishTravel);
 router.get('/showFavoritesDetail/:teamName', menuBarController.showFavoritesDetail);
+router.get('/getProfile', menuBarController.getProfile);
 router.post('/updateProfile', upload.array('files'), menuBarController.updateProfile);
-router.get('/getMyProfile', menuBarController.getMyProfile);
+//router.post('/updateProfile', menuBarController.updateProfile);
 
 
 module.exports = router;

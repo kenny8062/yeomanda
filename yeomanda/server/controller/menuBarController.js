@@ -13,6 +13,7 @@ const userConfig = require('../config/aws/User')
 // rds mysql
 const mysql = require("mysql2/promise");
 const conn = require('../config/aws/Travelers');
+const { constants } = require('buffer');
 
 // s3 getObject
 const s3 = new AWS.S3({
@@ -20,6 +21,7 @@ const s3 = new AWS.S3({
     secretAccessKey: userConfig.aws_iam_info.secretAccessKey,
     region : 'ap-northEast-2'
 });
+
 
 /**
  * 즐겨찾기한 팀들의 팀 이름들을 보여줌.
@@ -224,13 +226,105 @@ const showFavoritesDetail = async(req, res) => {
         }
     })
 }
-const getMyProfile = async(req, res) => {
-    const userEmail = req.decoded.email
 
+const getProfile = async(req, res) => {
+    try{
+        const userEmail = req.decoded.email
+        AWS.config.update(userConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        const params = {
+            TableName : userConfig.aws_table_name,
+            KeyConditionExpression: 'email = :i',
+            ExpressionAttributeValues: {
+                ':i' : userEmail
+            } 
+        };
+        const checkEmail_from_user = await docClient.query(params).promise()
 
+        const s3path = checkEmail_from_user.Items[0].files
+        var userfacesURLlist = []
+        for(var i=0; i<s3path.length; i++){
+            const userfaceURL = 'https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/' + s3path[i];
+            userfacesURLlist.push(userfaceURL)   
+        }
+
+        const userResult = {
+            'email' : checkEmail_from_user.Items[0].email,
+            'birth' : checkEmail_from_user.Items[0].birth,
+            'sex' : checkEmail_from_user.Items[0].sex,
+            'name' : checkEmail_from_user.Items[0].name,
+            'files' : userfacesURLlist
+        }
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, userResult))
+    }catch(err){
+        console.log(err);
+        return res
+            .status(statusCode.INTERNAL_SERVER_ERROR)
+            .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR));
+    }
 }
+
 const updateProfile = async(req, res) => {
-    const userEmail = req.decoded.email
+    try{
+        const {email, updatedURI} = req.body
+        AWS.config.update(userConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        /**
+         * 1. 새로 이미지 저장하는 것은 미들웨어로 처리됨. 
+         * 2. 삭제를 원하는 이미지를 s3에서 삭제 해야함.
+         */
+        for(const uri in  updatedURI){
+            const Key = updatedURI[uri].replace('https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/', '')
+            const params = {
+                Bucket : 'yeomanda-userface',
+                Key : `${Key}`
+            }
+            await s3.headObject(params).promise()
+            try{
+                await s3.deleteObject(params).promise()
+            }catch(err){
+                console.log("ERROR in file Deleting : " +(err))
+            }
+        }
+        
+        /**
+         * 3. user db에 변경사항 업데이트
+         */
+
+        const params_update2 = {
+            Bucket : 'yeomanda-userface',
+            Prefix : `${email}`+'/'
+        }
+        const updatedFilePath = await s3.listObjects(params_update2).promise()
+        keysList = []
+        updatedFilePath.Contents.filter(async(u) => {
+            keysList.push(u.Key)
+            if(keysList.length === updatedFilePath.Contents.length){
+                const params_update = {
+                    TableName: userConfig.aws_table_name,
+                    Key:{
+                        "email": email
+                    },
+                    UpdateExpression: "set files = :f",
+                    ExpressionAttributeValues:{
+                        ":f": keysList
+                    },
+                    ReturnValues:"UPDATED_NEW"
+                };
+                const result = await docClient.update(params_update).promise()
+            }
+        })
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.UPDATE_PROFILE_SUCCESS))
+
+    }catch(err){
+        console.log(err);
+        return res
+            .status(statusCode.INTERNAL_SERVER_ERROR)
+            .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR));
+    }
+    
+
+
 }
 
 module.exports = {
@@ -238,6 +332,6 @@ module.exports = {
     deleteFavorite,
     finishTravel,
     showFavoritesDetail,
-    updateProfile,
-    getMyProfile
+    getProfile,
+    updateProfile
 }

@@ -133,6 +133,7 @@ io.on('connection', async function(socket){
         /**
          * 기존에 디비에 있는 데이터 읽어오는 작업 -> 필요해.
          */
+      const target_token = []      
       users.filter( async(u) => {
         if(u != sender){
           console.log(u)
@@ -147,26 +148,26 @@ io.on('connection', async function(socket){
           //   }   
           // }; 
           // const fcmToken = await docClient.query(params_to_find_token).promise()
-          const target_token = result_sql[0][0].token 
-          const message = {
-            data: {
-              title: '채팅 도착',
-              body: '새로운 메세지가 도착하였습니다.'
-            },
-            token: target_token,
+          target_token.push(`${result_sql[0][0].token}`)
+          if(target_token.length === users.length-1){
+            console.log(target_token)
+            const message = {
+              data: {
+                title: '채팅 도착',
+                body: '새로운 메세지가 도착하였습니다.'
+              },
+              tokens: target_token,
+            }
+            admin
+              .messaging()
+              .sendMulticast(message)
+              .then((response) => {
+                console.log(response.successCount + ' messages were sent successfully');
+              });
           }
-          admin
-            .messaging()
-            .send(message)
-            .then(function (response) {
-              console.log('Successfully sent message: : ', response)
-            })
-            .catch(function (err) {
-              console.log('Error Sending message!!! : ', err)
-            })
         }
-        
       })
+      
       // client.sadd(room_id, JSON.stringify(newChat))
       
     }catch(err){

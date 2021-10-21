@@ -41,7 +41,7 @@ const inToChatRoom = async(req, res) => {
          */
     
         const connection = await mysql.createConnection(conn.db_info);
-        const sql = `select team_no from travel_plan where email='${userEmail}';` 
+        const sql = `select team_no from travel_plan where email='${userEmail}' and isfinished = 0;` 
         const result = await connection.query(sql)
         const userTeamNum = result[0][0].team_no
     
