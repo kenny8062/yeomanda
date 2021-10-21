@@ -92,8 +92,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Button createBoardBtn,nextTeamBtn, backTeamBtn;
     double lat,lon;
     int teamNumCount;
-    String locationArr[], myEmail;
-    String token;
+    String locationArr[];
+    String myToken, myEmail;
+    Boolean hasPlanned;
     View dialogView;
     ArrayList<String> items=new ArrayList<>();
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
@@ -108,10 +109,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         Intent intent=getIntent();
-        token=intent.getStringExtra("token");
+        myToken =intent.getStringExtra("token");
         myEmail=intent.getStringExtra("email");
+        hasPlanned=intent.getBooleanExtra("hasPlanned",false);
 
+        init();
+    }
+
+    public void init(){
         retrofitClient = new RetrofitClient();
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -134,10 +141,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SupportMapFragment mapFragment= (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        init();
-    }
-
-    public void init(){
         createBoardBtn=findViewById(R.id.createBoardBtn);
         createBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
                         retrofitClient=new RetrofitClient();
-                        WithoutDataResponseDto withoutDataResponseDto =retrofitClient.deleteBoard(token);
+                        WithoutDataResponseDto withoutDataResponseDto =retrofitClient.deleteBoard(myToken);
                         while(withoutDataResponseDto ==null){
                             Log.d("error", " withoutDataResponseDto is null");
                         }
@@ -208,14 +211,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             case R.id.favoriteTeam:
                 Intent favoriteIntent=new Intent(getApplicationContext(),MyFavoriteList.class);
-                favoriteIntent.putExtra("token",token);
+                favoriteIntent.putExtra("token", myToken);
                 startActivity(favoriteIntent);
                 Toast.makeText(this, "즐겨찾기", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.chatRoom:
                 Intent chatIntent=new Intent(getApplicationContext(), ChatListActivity.class);
-                chatIntent.putExtra("token",token);
+                chatIntent.putExtra("token", myToken);
                 chatIntent.putExtra("myEmail",myEmail);
                 startActivity(chatIntent);
                 Toast.makeText(this, "채팅방", Toast.LENGTH_SHORT).show();
@@ -302,22 +305,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (locationList.size() > 0) {
                 location = locationList.get(locationList.size() - 1);
-
-                currentPosition
-                        = new LatLng(location.getLatitude(), location.getLongitude());
-
-
-
-                String markerTitle = getCurrentAddress(currentPosition);
-                String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
-                        + " 경도:" + String.valueOf(location.getLongitude());
-
-                Log.d(TAG, "onLocationResult : " + markerSnippet);
-
-
                 if(locationResponseDto==null) {
-
-
+                    currentPosition=new LatLng(location.getLatitude(),location.getLongitude());
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPosition, 15);
+                    mMap.moveCamera(cameraUpdate);
 
                     //근처 TeamInfo 가져오기
                     LocationDto locationDto = new LocationDto();
@@ -516,21 +507,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         builder.setPositiveButton("채팅", new DialogInterface.OnClickListener(){
             @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
+            public void onClick(DialogInterface dialog, int id) {
+                if (hasPlanned) {
+                    RetrofitClient retrofitClient = new RetrofitClient();
+                    ChatRoomResponseDto chatRoomResponseDto = retrofitClient.inToChatRoom(myToken, teamInfoDto.get(teamNumCount).getTeamNo().toString());
+                    while (chatRoomResponseDto == null) {
+                        Log.e("error", "chatRoomResponseDto is null");
+                    }
 
-                RetrofitClient retrofitClient = new RetrofitClient();
-                ChatRoomResponseDto chatRoomResponseDto = retrofitClient.inToChatRoom(token, teamInfoDto.get(teamNumCount).getTeamNo().toString());
-                while (chatRoomResponseDto == null) {
-                    Log.e("error", "chatRoomResponseDto is null");
+                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    intent.putExtra("roomId", chatRoomResponseDto.getData().getRoomId());
+                    intent.putExtra("token", myToken);
+                    intent.putExtra("myEmail", myEmail);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getApplicationContext(),"게시판을 등록해주세요",Toast.LENGTH_LONG).show();
                 }
-
-                Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
-                Intent intent =new Intent(getApplicationContext(),ChatActivity.class);
-                intent.putExtra("roomId",chatRoomResponseDto.getData().getRoomId());
-                intent.putExtra("token",token);
-                intent.putExtra("myEmail",myEmail);
-                startActivity(intent);
             }
         });
 
@@ -539,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(DialogInterface dialog, int id)
             {
                 retrofitClient=new RetrofitClient();
-                WithoutDataResponseDto withoutDataResponseDto =retrofitClient.postFavoriteTeam(token,teamInfoDto.get(teamNumCount).getTeamNo());
+                WithoutDataResponseDto withoutDataResponseDto =retrofitClient.postFavoriteTeam(myToken,teamInfoDto.get(teamNumCount).getTeamNo());
                 while(withoutDataResponseDto ==null){
                     Log.d("error", " withoutDataResponseDto is null");
                 }
@@ -561,7 +553,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getApplicationContext(),items.get(position),Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(getApplicationContext(), Profile.class);
-                intent.putExtra("token",token);
+                intent.putExtra("token", myToken);
                 intent.putExtra("email",teamInfoDto.get(teamNumCount).getEmail().get(position));
                 startActivity(intent);
             }
@@ -769,8 +761,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     @Override
-    protected void onRestart() {
+    protected void onRestart(){
         super.onRestart();
+        locationResponseDto=null;
+        init();
         Log.d(TAG, "onRestart()");
     }
 

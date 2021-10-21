@@ -43,7 +43,8 @@ public class ChatListActivity extends AppCompatActivity {
             Log.d("test",chatListResponseDto.getData().get(i).getRoomId());
             Log.d("test",chatListResponseDto.getData().get(i).getOtherTeamName());
             Log.d("test",chatListResponseDto.getData().get(i).getChatMessages().getCreatedAt());
-            adapter.addItem(chatListResponseDto.getData().get(i).getOtherTeamName(),chatListResponseDto.getData().get(i).getChatMessages().getContent(),chatListResponseDto.getData().get(i).getChatMessages().getCreatedAt().toString());
+
+            adapter.addItem(chatListResponseDto.getData().get(i).getOtherTeamName(),chatListResponseDto.getData().get(i).getChatMessages().getContent(),chatListResponseDto.getData().get(i).getChatMessages().getCreatedAt().split(" ")[4]);
 
         }
 
