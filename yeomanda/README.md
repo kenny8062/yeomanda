@@ -111,13 +111,22 @@
 
 - "travel_with" TABLE
 
-|email(pk, String)|location_gps(String)|team_no(int)|travelDate(String)|isfinished(int)|
-|---|---|---|---|---|
-|temp0@temp0.com|99.911/19.99|0|2020/01/02~2020/01/30|0|
-|temp1@temp1.com|99.911/19.99|0|2020/01/02~2020/01/30|0|
-|temp2@temp2.com|99.911/19.99|0|2020/01/02~2020/01/30|0|
+|uniq_no(PK)|team_name|email|location_gps|team_no|travelDate|isfinished|
+|---|---|---|---|---|---|
+|1|exciting|temp0@temp0.com|99.911,19.99|0|2020/01/02~2020/01/30|0|
+|2|exciting|temp1@temp1.com|99.911,19.99|0|2020/01/02~2020/01/30|0|
+|3|exciting|temp2@temp2.com|99.911,19.99|0|2020/01/02~2020/01/30|0|
 
 게시글은 다른 사람들에게 알리기 위해 작성하기 때문에 여행 동반자 중에 한명만 작성한다. 또한 작성할 때, 낯선이와 놀기를 희망하는 사람들의 email을 함께 작성하여 그 인원들은 같은 team_no로 처리한다. 위와 같이 team_no 0번으로 처리된 동반자들이 이번 여행에 함께 온 사람들인 것을 알 수 있다. 
+
+<br>
+
+- "fcm_token" TABLE
+
+|email|token|
+|---|---|
+|temp0@temp0.com|fhuifhwhf72t6429388hfo2h3|
+|temp1@temp1.com|jigmimemmmm34342gff3|
 
 ***
 
