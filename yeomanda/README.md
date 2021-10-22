@@ -1,13 +1,13 @@
-## STACK
+# STACK & SKILL
 <br><br>
 
-> #### express server
 
+> ## express server
+<br><br>
 ***
-
 <br>
 
-> #### database 
+> ## database 
 
 1. <strong>AWS dynamodb</strong>
 - to connect aws remotely, accesskey, secretkey and region should involved in configuration data.
@@ -33,7 +33,6 @@
 
 - "chatroom" TABLE
 
-|room_id(PK)|teams|messages|members|
 
 ```js
 {
@@ -112,12 +111,10 @@
 - "travel_with" TABLE
 
 |uniq_no(PK)|team_name|email|location_gps|team_no|travelDate|isfinished|
-|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|
 |1|exciting|temp0@temp0.com|99.911,19.99|0|2020/01/02~2020/01/30|0|
 |2|exciting|temp1@temp1.com|99.911,19.99|0|2020/01/02~2020/01/30|0|
 |3|exciting|temp2@temp2.com|99.911,19.99|0|2020/01/02~2020/01/30|0|
-
-게시글은 다른 사람들에게 알리기 위해 작성하기 때문에 여행 동반자 중에 한명만 작성한다. 또한 작성할 때, 낯선이와 놀기를 희망하는 사람들의 email을 함께 작성하여 그 인원들은 같은 team_no로 처리한다. 위와 같이 team_no 0번으로 처리된 동반자들이 이번 여행에 함께 온 사람들인 것을 알 수 있다. 
 
 <br>
 
@@ -132,7 +129,7 @@
 
 <br>
 
-> #### image store : s3 
+> ## image store : s3 
 
 - dynamdb cannot store file bigger than 400KB
 - store user image in s3 that connected with user's email
@@ -142,7 +139,7 @@
 ***
 <br>
 
-> #### test code : mocha
+> ## test code : mocha
 
 - testcode directory
 - <https://github.com/jjmmll0727/yeomanda/blob/main/yeomanda/server/testcode/user/index.spec.js>
@@ -156,15 +153,14 @@ test code should be really simple so that, do not need to require gitignore file
 
 <br><br><br>
 
-## SKILL
-> #### jwt token
+> ## jwt token
 
 - payload 를 잘 맞춰야 한다. 
 - jwt sign 함수로 들어오는 파라미터를 잘 파악해야 한다. 
 ***
 <br>
 
-> #### reverse geocoding api
+> ## reverse geocoding api
 
 - get location informatin from latitude & logitude 
 - use google api
@@ -173,7 +169,7 @@ test code should be really simple so that, do not need to require gitignore file
 ***
 <br>
 
-> #### socketio
+> ## socketio
 
 version issue
 - nodejs - 4.2.0
@@ -183,7 +179,7 @@ version issue
 ***
 <br>
 
-> #### pm2
+> ## pm2
 
 ``` js
 module.exports = {
@@ -201,7 +197,7 @@ module.exports = {
 ***
 <br>
 
-> #### redis
+> ## redis
 
 - connect socket with clustered pm2 server
 - without it, cannot connect with various socket that distributed to varios process in single thread nodejs server
@@ -218,7 +214,7 @@ module.exports = {
 
 
 
-### CI/CD
+# CI/CD
 > #### github action
 
 - .github/workflows
