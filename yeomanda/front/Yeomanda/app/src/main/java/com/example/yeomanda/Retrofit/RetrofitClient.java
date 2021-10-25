@@ -1,9 +1,11 @@
 package com.example.yeomanda.Retrofit;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,8 @@ import java.util.ArrayList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okio.BufferedSink;
+import okio.Okio;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -54,19 +58,32 @@ public class RetrofitClient {
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("http://192.168.0.29:3000")
+                //.baseUrl("http://192.168.0.12:3000/")
                 .baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
     }
 
-    public void uploadSign_up(JoinDto joinDto, MultipartBody.Part[] selfimage){
+    public void uploadSign_up(JoinDto joinDto, MultipartBody.Part[] selfImage){
         Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
-                    joinResponseDto = retrofitService.uploadJoin(createPartFromString(joinDto.getEmail()),createPartFromString(joinDto.getPassword()),createPartFromString(joinDto.getName()),createPartFromString(joinDto.getSex()),createPartFromString(joinDto.getBirth()),selfimage).execute().body();
+                    joinResponseDto = retrofitService.uploadJoin(createPartFromString(joinDto.getEmail()),createPartFromString(joinDto.getPassword()),createPartFromString(joinDto.getName()),createPartFromString(joinDto.getSex()),createPartFromString(joinDto.getBirth()),selfImage).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
+    public void updateMyProfile(String myToken,String email,ArrayList<MultipartBody.Part> selfImage,ArrayList<MultipartBody.Part> changeUri){
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    withoutDataResponseDto = retrofitService.updateMyProfile(myToken,createPartFromString(email),changeUri,selfImage).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -217,6 +234,27 @@ public class RetrofitClient {
         }
     }
 
+    public ProfileResponseDto updateProfile(String token){
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    profileResponseDto=retrofitService.getMyProfile(token).execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+
+        try {
+            thread.join();
+            return profileResponseDto;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public WithoutDataResponseDto postFavoriteTeam(String userToken, Integer teamNum){
         Thread thread = new Thread(){
             @Override

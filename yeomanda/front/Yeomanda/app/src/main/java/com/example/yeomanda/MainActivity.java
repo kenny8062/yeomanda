@@ -203,7 +203,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
 
             case R.id.profileRetouch:
-
+                Intent intent=new Intent(getApplicationContext(),MyProfile.class);
+                intent.putExtra("token",myToken);
+                intent.putExtra("email",myEmail);
+                startActivity(intent);
                 Toast.makeText(this, "회원정보 수정", Toast.LENGTH_SHORT).show();
 
                 break;

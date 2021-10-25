@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.yeomanda.R;
 import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
-import com.example.yeomanda.SendMail;
+import com.example.yeomanda.EmailAuthentication.SendMail;
 
 public class JoinActivity1 extends AppCompatActivity {
     JoinDto joinDto;

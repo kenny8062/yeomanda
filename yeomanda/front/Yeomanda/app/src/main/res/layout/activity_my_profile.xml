@@ -19,21 +19,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/personImage1"
+                android:id="@+id/myImage1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
-                android:id="@+id/personImage2"
+                android:id="@+id/myImage2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
-                android:id="@+id/personImage3"
+                android:id="@+id/myImage3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,35 +41,35 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/personEmail"
+            android:id="@+id/myEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Email" />
 
         <TextView
-            android:id="@+id/personPassword"
+            android:id="@+id/myPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Password" />
 
         <TextView
-            android:id="@+id/personSex"
+            android:id="@+id/mySex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Sex" />
 
         <TextView
-            android:id="@+id/personName"
+            android:id="@+id/myName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/personBirth"
+            android:id="@+id/myBirth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -1,4 +1,4 @@
-package com.example.yeomanda;
+package com.example.yeomanda.EmailAuthentication;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
