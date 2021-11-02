@@ -267,14 +267,15 @@ const getProfile = async(req, res) => {
 const updateProfile = async(req, res) => {
     try{
         const {email, updatedURI} = req.body
-        AWS.config.update(userConfig.aws_iam_info);
-        const docClient = new AWS.DynamoDB.DocumentClient();
+        console.log(updatedURI)
         /**
          * 1. 새로 이미지 저장하는 것은 미들웨어로 처리됨. 
          * 2. 삭제를 원하는 이미지를 s3에서 삭제 해야함.
          */
-        for(const uri in  updatedURI){
-            const Key = updatedURI[uri].replace('https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/', '')
+        AWS.config.update(userConfig.aws_iam_info);
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        if(typeof updatedURI === 'string'){ // 하나만 수정하고자 하면 배열이 아닌 string으로 넘겨온다. 그래서 따로 처리를 해줘야 해.
+            const Key = updatedURI.replace('https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/', '')
             const params = {
                 Bucket : 'yeomanda-userface',
                 Key : `${Key}`
@@ -286,11 +287,25 @@ const updateProfile = async(req, res) => {
                 console.log("ERROR in file Deleting : " +(err))
             }
         }
-        
+        else{
+            for(const uri in  updatedURI){
+                const Key = updatedURI[uri].replace('https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/', '')
+                const params = {
+                    Bucket : 'yeomanda-userface',
+                    Key : `${Key}`
+                }
+                await s3.headObject(params).promise()
+                try{
+                    await s3.deleteObject(params).promise()
+                }catch(err){
+                    console.log("ERROR in file Deleting : " +(err))
+                }
+            }
+        }
+
         /**
          * 3. user db에 변경사항 업데이트
          */
-
         const params_update2 = {
             Bucket : 'yeomanda-userface',
             Prefix : `${email}`+'/'
