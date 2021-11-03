@@ -48,7 +48,7 @@ const conn = require('./config/aws/Travelers');
  * fcm alarm
  */
 const admin = require('firebase-admin')
-const serAccount = require('./config/yeomanda-project-firebase-adminsdk-fryso-e71f4fcb25.json')
+const serAccount = require('./config/yeomanda-project-firebase-adminsdk-fryso-4562f8de1a.json')
 admin.initializeApp({
   credential: admin.credential.cert(serAccount),
 })
@@ -136,7 +136,6 @@ io.on('connection', async function(socket){
       const target_token = []      
       users.filter( async(u) => {
         if(u != sender){
-          console.log(u)
           const connection = await mysql.createConnection(conn.db_info);
           const sql = `select * from fcm_token where email = '${u}';` 
           const result_sql = await connection.query(sql)

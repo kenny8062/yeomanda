@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "test": "node_modules/.bin/mocha testcode/**/**.js --reporter spec"
+    "test": "node_modules/.bin/mocha testcode/**/**.js --reporter spec",
+    "eco" : "pm2 start ecosystem.config.js"
   },
   "dependencies": {
     "aws-sdk": "^2.946.0",

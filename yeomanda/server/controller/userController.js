@@ -62,6 +62,8 @@ const signup = async(req, res) => {
         const sql = `insert into fcm_token(email, token) values ('${email}', 0);` 
         const result_sql = await connection.query(sql)
 
+        await connection.end()
+
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS))
         
     } catch (err) {
@@ -112,30 +114,34 @@ const login = async (req, res) => {
         const connection = await mysql.createConnection(conn.db_info);
         const sql = `select email from fcm_token where token = '${fcm_token}';` 
         const result_sql = await connection.query(sql)
-        
+        console.log(result_sql[0][0].email)
+        console.log(email)
         if(result_sql[0][0]){
             if(email !== result_sql[0][0].email){
-                const connection_0 = await mysql.createConnection(conn.db_info);
-                const sql_0 = `update fcm_token set token = 0 where email = '${result_sql[0][0].email}';` 
-                const result_sql_0 = await connection_0.query(sql_0)
+                console.log("달라 달라")
+                const sql_0 = `update fcm_token set token = '0' where email = '${result_sql[0][0].email}';` 
+                const result_sql_0 = await connection.query(sql_0)
                 
-                const connection_1 = await mysql.createConnection(conn.db_info);
                 const sql_1 = `update fcm_token set token = '${fcm_token}' where email = '${email}';` 
-                const result_sql_1 = await connection_1.query(sql_1)
+                const result_sql_1 = await connection.query(sql_1)
+                
                 
             }
         }
         else{
-            const connection_2 = await mysql.createConnection(conn.db_info);
+            console.log("같아 같아")
             const sql_2= `update fcm_token set token = '${fcm_token}' where email = '${email}';` 
-            const result_sql_2 = await connection_2.query(sql_2)
+            const result_sql_2 = await connection.query(sql_2)
+
         }
         /**
          * 여행계획 세운 사람인지 아닌지 판단 -> 세우지 않았다면 채팅 기능 막아둠
          */
-        const connection_3 = await mysql.createConnection(conn.db_info);
         const sql_team_3 = `select * from travel_plan where email = '${email}' and isfinished = 0;`
-        const result_plan = await connection_3.query(sql_team_3)
+        const result_plan = await connection.query(sql_team_3)
+
+        await connection.end()
+
         if(result_plan.length){
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {'token' : token, 'hasPlanned' : true}));
         }
