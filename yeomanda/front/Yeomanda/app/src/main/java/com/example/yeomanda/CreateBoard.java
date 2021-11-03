@@ -1,8 +1,10 @@
 package com.example.yeomanda;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +42,7 @@ public class CreateBoard extends AppCompatActivity {
     }
     public void init(){
         createBtn=findViewById(R.id.createBtn);
-        teamDateEdt =findViewById(R.id.MyPlanDate);
+        teamDateEdt =findViewById(R.id.MyPlanDateStart);
         teamNameEdt=findViewById(R.id.MyTeamName);
         teamEmailEdt =findViewById(R.id.MyTeamEmail);
         plusBtn=findViewById(R.id.plusBtn);
@@ -52,10 +54,15 @@ public class CreateBoard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addEdt = new EditText(getApplicationContext());
-                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, teamEmailEdt.getLayoutParams().height);
+                p.setMargins(0,10,0,0);
                 addEdt.setLayoutParams(p);
                 addEdt.setText("");
+
                 addEdt.setId(count++);
+                addEdt.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_yellow_rounded_rectangle));
+
+
                 edts.add(addEdt);
                 ll.addView(addEdt);
             }

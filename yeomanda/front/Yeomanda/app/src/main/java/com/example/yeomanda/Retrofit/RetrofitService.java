@@ -56,6 +56,7 @@ public interface RetrofitService {
     Call<WithoutDataResponseDto> updateMyProfile(@Header("Authorization") String userToken,
                                                  @Part("email") RequestBody email,
                                                  @Part ArrayList<MultipartBody.Part> uri,
+                                                 //@Part("updatedURI") ArrayList<RequestBody> uri,
                                                  @Part ArrayList<MultipartBody.Part> totalSelfImage);
     //로그인
     @POST("/user/login")

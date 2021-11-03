@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class MyProfile extends AppCompatActivity {
     public static Context context;
@@ -97,9 +98,14 @@ public class MyProfile extends AppCompatActivity {
                 for(int i=0;i<3;i++){
                     if(isUri[i]){
                         selfImage.add(retrofitClient.prepareFilePart("files", uri[i], context));
+                        //changeUri.add(retrofitClient.createPartFromString(profileResponseDto.getData().getFiles().get(i)));
                         changeUri.add(MultipartBody.Part.createFormData("updatedURI",profileResponseDto.getData().getFiles().get(i)));
                     }
-                }
+                }/*
+                while(selfImage.size()<3){
+                    selfImage.add(null);
+                    changeUri.add(null);
+                }*/
                 retrofitClient.updateMyProfile(myToken,profileResponseDto.getData().getEmail(),selfImage,changeUri);
                 finish();
             }

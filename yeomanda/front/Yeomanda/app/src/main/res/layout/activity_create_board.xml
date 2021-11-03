@@ -1,72 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent"
+    android:id="@+id/createBoardParentLayout"
     tools:context=".CreateBoard">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/MyPlanDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Date" />
-
-        <EditText
-            android:id="@+id/MyTeamName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+            android:id="@+id/travelDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="travelDate"
+            android:textSize="16sp"
+            android:layout_marginTop="26dp"
+            />
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            app:layout_constraintStart_toEndOf="@+id/travelDateTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_camera"
+            />
 
         <LinearLayout
+            android:id="@+id/travelDateLinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll"
-            android:orientation="vertical">
+            android:layout_height="33dp"
+            app:layout_constraintTop_toBottomOf="@+id/travelDateTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            android:weightSum="9"
+            android:orientation="horizontal" >
 
             <EditText
-                android:id="@+id/MyTeamEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="emailDto" />
-        </LinearLayout>
+                android:id="@+id/MyPlanDateStart"
+                android:layout_width="103dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_weight="4"
+                android:background="@drawable/ic_yellow_rounded_rectangle"/>
 
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="29dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_camera"
+                />
+            <EditText
+                android:id="@+id/MyPlanDateEnd"
+                android:layout_width="103dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_weight="4"
+                android:background="@drawable/ic_yellow_rounded_rectangle"/>
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            app:layout_constraintTop_toBottomOf="@+id/travelDateLinearLayout"
+            android:layout_marginTop="62dp"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/cancelBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="취소" />
 
-            <Button
-                android:id="@+id/plusBtn"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="추가" />
+                android:layout_height="19dp"
+                android:textSize="16sp"
+                android:text="teamName"/>
+
+
+            <EditText
+                android:id="@+id/MyTeamName"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:background="@drawable/ic_yellow_rounded_rectangle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:textSize="16sp"
+                android:layout_marginTop="62dp"
+                android:text="travelMate"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ll"
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/MyTeamEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="33dp"
+                        android:background="@drawable/ic_yellow_rounded_rectangle"
+                        android:text="emailDto" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/cancelBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/pale_sky_blue"
+                        android:text="취소" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <Button
+                        android:id="@+id/plusBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/pale_sky_blue"
+                        android:textSize="12sp"
+                        android:text="추가" />
+
+                </LinearLayout>
 
         </LinearLayout>
 
         <Button
             android:id="@+id/createBtn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:textSize="12sp"
+            android:text="create"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/pale_sky_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

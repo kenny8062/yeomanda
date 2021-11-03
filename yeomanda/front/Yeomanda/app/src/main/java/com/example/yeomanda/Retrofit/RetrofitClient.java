@@ -58,8 +58,8 @@ public class RetrofitClient {
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("http://192.168.0.12:3000/")
-                .baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
+                .baseUrl("http://172.30.1.53:3000/")
+                //.baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
@@ -104,7 +104,7 @@ public class RetrofitClient {
     }
 
     @NonNull
-    private RequestBody createPartFromString(String descriptionString) {
+    public RequestBody createPartFromString(String descriptionString) {
         return RequestBody.create(
                 MediaType.parse("text/plain"), descriptionString);
     }

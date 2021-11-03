@@ -19,4 +19,10 @@
     <color name="line">#e8e8f1</color>
     <color name="sub_gray">#b9bcce</color>
     <color name="main_black">#131820</color>
+    <color name="yellow">#f0e6a6</color>
+    <color name="red">#f5ab94</color>
+    <color name="pale_sky_blue">#c5eaf7</color>
+    <color name="ice_blue">#e5fbfc</color>
+
+
 </resources>
