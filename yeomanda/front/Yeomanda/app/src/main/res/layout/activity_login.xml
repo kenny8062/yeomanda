@@ -7,52 +7,90 @@
 
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:layout_width="173dp"
+        android:layout_height="173dp"
+        android:src="@drawable/ic_camera"
+        android:layout_marginTop="86dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="254dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints">
-
+        android:layout_marginBottom="53dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:text="email" />
+        
         <EditText
             android:id="@+id/id_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="bbb@bbb.com" />
+            android:background="@drawable/ic_yellow_rounded_rectangle"
+
+            android:text="aaa@aaa.com" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="27dp"
+            android:layout_gravity="center"
+            android:text="password" />
 
         <EditText
             android:id="@+id/password_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="bbb" />
+            android:background="@drawable/ic_yellow_rounded_rectangle"
+            android:text="aaa" />
 
-        <CheckBox
-            android:id="@+id/autologin_box"
-            android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="자동로그인" />
+            android:padding="2dp"
+            android:id="@+id/findPassword"
+            android:layout_gravity="right"
+            android:textStyle="normal"
+            android:textSize="10sp"
+            android:backgroundTint="@color/gray"
+            android:textColor="#000000"
+            android:text="password?" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/login_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="로그인" />
 
             <Button
                 android:id="@+id/join_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="회원가입" />
+                android:layout_gravity="left"
+                android:backgroundTint="@color/red"
+                android:text="sign up" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/login_btn"
+                android:backgroundTint="@color/red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="login" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,7 +26,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 public class LoginActivity extends AppCompatActivity {
     Button joinBtn,loginBtn;
     LoginResponseDto loginResponseDto;
-    CheckBox loginBox;
     LoginDto loginDto;
     RetrofitClient retrofitClient;
     EditText emailEdt,passwordEdt;
@@ -77,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordEdt=findViewById(R.id.password_edt);
         joinBtn=findViewById(R.id.join_btn);
         loginBtn=findViewById(R.id.login_btn);
-        loginBox=findViewById(R.id.autologin_box);
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
