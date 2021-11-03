@@ -77,6 +77,8 @@ const showFavoriteTeamName = async(req, res) => {
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
             }
         }
+        await connection.end()
+
     }catch(err){
         console.log(err)
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))
@@ -172,7 +174,10 @@ const finishTravel = async(req, res) => {
         
         const finishTeam = result[0][0].team_no
         const sql_to_finish = `update travel_plan set isfinished = '1' where team_no = '${finishTeam}'`
-        const data = await connection.query(sql_to_finish)   
+        const data = await connection.query(sql_to_finish)  
+        
+        await connection.end()
+
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, 
             "success to update isfinished to 1")) 
 
@@ -189,7 +194,9 @@ const showFavoritesDetail = async(req, res) => {
     const teamName = req.params.teamName
     const sql = `select email from travel_plan where team_name = '${teamName}';`
     const data = await connection.query(sql)
-       
+    
+    await connection.end()
+
     const result = []
     data[0].filter( async(d) => {
         const user = d.email

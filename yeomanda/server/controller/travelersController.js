@@ -58,6 +58,9 @@ const showTravelers = async(req, res) => {
          */
         const sql = `select * from travel_plan where region_info like '${country}%' and isfinished = '0';` 
         const result = await connection.query(sql)
+
+        await connection.end()
+
         AWS.config.update(userConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
     
@@ -188,6 +191,8 @@ const registerPlan = async(req, res) => {
                 
             success_count = success_count + 1
             if (success_count === Object.keys(jsonPlan).length){
+                await connection.end()
+
                 return res.status(statusCode.OK).
                     send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, "success to store new plan!!")) 
             }

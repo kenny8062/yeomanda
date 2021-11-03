@@ -125,7 +125,6 @@ const login = async (req, res) => {
                 const sql_1 = `update fcm_token set token = '${fcm_token}' where email = '${email}';` 
                 const result_sql_1 = await connection.query(sql_1)
                 
-                
             }
         }
         else{

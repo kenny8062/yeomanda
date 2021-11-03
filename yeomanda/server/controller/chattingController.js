@@ -104,6 +104,8 @@ const inToChatRoom = async(req, res) => {
                 }
             };  
             const result = await docClient.put(params_to_new_chat).promise()
+            await connection.end()
+
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MAKE_NEW_ROOM, 
                 {
                     room_id : chatRoomId,
@@ -173,6 +175,8 @@ const getAllMyChatList = async(req, res) => {
             //temp.push({"chatMessages" : c.chatMessages.pop()})
             //chatInfo.push(temp)
         })
+        await connection.end()
+
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, chatInfo))
     }catch(err){
         console.log(err)
