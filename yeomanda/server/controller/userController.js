@@ -114,8 +114,7 @@ const login = async (req, res) => {
         const connection = await mysql.createConnection(conn.db_info);
         const sql = `select email from fcm_token where token = '${fcm_token}';` 
         const result_sql = await connection.query(sql)
-        console.log(result_sql[0][0].email)
-        console.log(email)
+        
         if(result_sql[0][0]){
             if(email !== result_sql[0][0].email){
                 console.log("달라 달라")
