@@ -117,7 +117,6 @@ const login = async (req, res) => {
         
         if(result_sql[0][0]){
             if(email !== result_sql[0][0].email){
-                console.log("달라 달라")
                 const sql_0 = `update fcm_token set token = '0' where email = '${result_sql[0][0].email}';` 
                 const result_sql_0 = await connection.query(sql_0)
                 
@@ -127,7 +126,6 @@ const login = async (req, res) => {
             }
         }
         else{
-            console.log("같아 같아")
             const sql_2= `update fcm_token set token = '${fcm_token}' where email = '${email}';` 
             const result_sql_2 = await connection.query(sql_2)
 
