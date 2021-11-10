@@ -28,7 +28,6 @@
         <activity android:name=".MyFavoriteList" />
         <activity android:name=".Profile" />
         <activity android:name=".CreateBoard" />
-        <activity android:name=".joinActivity.JoinActivity3" />
         <activity android:name=".joinActivity.JoinActivity2" />
         <activity android:name=".joinActivity.JoinActivity1" />
         <activity android:name=".LoginActivity">

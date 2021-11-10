@@ -8,9 +8,9 @@
     tools:context=".LoginActivity">
 
     <ImageView
-        android:layout_width="173dp"
-        android:layout_height="173dp"
-        android:src="@drawable/ic_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_icon"
         android:layout_marginTop="86dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

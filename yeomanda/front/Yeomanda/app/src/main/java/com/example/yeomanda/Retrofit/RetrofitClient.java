@@ -58,7 +58,7 @@ public class RetrofitClient {
     public RetrofitClient() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.30.1.53:3000/")
+                .baseUrl("http://172.30.1.7:3000/")
                 //.baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

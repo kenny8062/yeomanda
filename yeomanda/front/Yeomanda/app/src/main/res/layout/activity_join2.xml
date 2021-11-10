@@ -4,54 +4,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/spacing_xl"
+    android:layout_marginEnd="@dimen/spacing_xl"
     tools:context=".joinActivity.JoinActivity2">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <ImageView
+        android:id="@+id/selfimage1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_gallery" />
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintStart_toEndOf="@+id/selfimage1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_xl"
+        android:text="메인 사진"
+        android:textColor="@color/black"/>
 
-        <EditText
-            android:id="@+id/nameEdt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+    <ImageView
+        android:id="@+id/selfimage2"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@+id/selfimage1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_gallery" />
 
-        <EditText
-            android:id="@+id/birthEdt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="birth" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/selfimage2"
+        app:layout_constraintTop_toBottomOf="@id/selfimage1"
+        android:layout_marginTop="@dimen/spacing_xl"
+        android:layout_marginEnd="@dimen/spacing_xl"
+        android:text="2번째 사진"
+        android:textColor="@color/black"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/mBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="남" />
+    <ImageView
+        android:id="@+id/selfimage3"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@+id/selfimage2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_gallery" />
 
-            <Button
-                android:id="@+id/wBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="여" />
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/nextBtn2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="다음" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/selfimage3"
+        app:layout_constraintTop_toBottomOf="@id/selfimage2"
+        android:layout_marginTop="@dimen/spacing_xl"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:text="3번째 사진"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/nextBtn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_disabled_button"
+        android:textColor="@color/sub_gray"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="완료" />
 </androidx.constraintlayout.widget.ConstraintLayout>
