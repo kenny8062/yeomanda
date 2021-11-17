@@ -51,9 +51,11 @@ public class ChatMessageAdapter extends BaseAdapter {
 
         if (listViewItem.getIsMyChat()){
             linearLayout.setGravity(Gravity.RIGHT);
+            contentTextView.setBackgroundResource(R.drawable.ic_pale_sky_blue_rounded_rectangle);
             nameTextView.setText("");
         }else{
             linearLayout.setGravity(Gravity.LEFT);
+            contentTextView.setBackgroundResource(R.drawable.ic_light_yellow_rounded_rectangle);
             nameTextView.setText(listViewItem.getUserName());
         }
         // 아이템 내 각 위젯에 데이터 반영

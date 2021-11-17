@@ -71,7 +71,6 @@ public class JoinActivity1 extends AppCompatActivity {
         });
 
         mBtn.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
                 if(isWoman){

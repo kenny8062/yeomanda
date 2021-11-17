@@ -6,8 +6,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,12 +23,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yeomanda.Retrofit.ResponseDto.ChatRoomResponseDto;
@@ -61,7 +66,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener{
     private GoogleMap mMap;
-
+    private Context context=this;
     private Marker currentMarker = null;
 
     private static final String TAG = "googlemap_example";
@@ -90,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private Location location;
     private LocationResponseDto locationResponseDto=null;
-    Button createBoardBtn,nextTeamBtn, backTeamBtn;
+    Button createBoardBtn,nextTeamBtn, backTeamBtn, favoriteBtn, chatBtn;
     double lat,lon;
     int teamNumCount;
     String locationArr[];
@@ -99,9 +104,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     View dialogView;
     ArrayList<String> items=new ArrayList<>();
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-
+    TextView customDLTitle,favoriteTeam,profileRetouch,cancelTravel,chatRoom;
     ArrayList<ArrayList<TeamInfoDto>> sameLocationTeams=new ArrayList<>();
 
+    ImageView menuBtn;
+
+    private DrawerLayout drawerLayout;
+    private View drawerView;
 
 
     @Override
@@ -143,6 +152,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment= (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         createBoardBtn=findViewById(R.id.createBoardBtn);
+        menuBtn=findViewById(R.id.menuIcon);
+        favoriteTeam=findViewById(R.id.favoriteTeam);
+        profileRetouch=findViewById(R.id.profileRetouch);
+        cancelTravel = findViewById(R.id.cancelTravel);
+        chatRoom = findViewById(R.id.chatRoom);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerView = findViewById(R.id.drawer);
+
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(drawerView);
+            }
+        });
+
         createBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,9 +179,65 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         });
+        favoriteTeam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent favoriteIntent=new Intent(getApplicationContext(),MyFavoriteList.class);
+                favoriteIntent.putExtra("token", myToken);
+                startActivity(favoriteIntent);
+            }
+        });
+        cancelTravel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                builder.setMessage("게시판 등록을 취소하시겠습니까?");
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        retrofitClient=new RetrofitClient();
+                        WithoutDataResponseDto withoutDataResponseDto =retrofitClient.deleteBoard(myToken);
+                        while(withoutDataResponseDto ==null){
+                            Log.d("error", " withoutDataResponseDto is null");
+                        }
+                        if(withoutDataResponseDto.getSuccess()) {
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                        Toast.makeText(getApplicationContext(), withoutDataResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+        profileRetouch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(),MyProfile.class);
+                intent.putExtra("token",myToken);
+                intent.putExtra("email",myEmail);
+                startActivity(intent);
+            }
+        });
+        chatRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent chatIntent=new Intent(getApplicationContext(), ChatListActivity.class);
+                chatIntent.putExtra("token", myToken);
+                chatIntent.putExtra("myEmail",myEmail);
+                startActivity(chatIntent);
+            }
+        });
     }
-
-
+/*
     @Override
     public  boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -233,6 +313,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
+ */
 
 
     @Override
@@ -506,12 +588,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("20201010~20201012");
         builder.setView(dialogView);
 
-        builder.setPositiveButton("채팅", new DialogInterface.OnClickListener(){
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+
+        backTeamBtn=alertDialog.findViewById(R.id.backTeamBtn);
+        nextTeamBtn=alertDialog.findViewById(R.id.nextTeamBtn);
+        favoriteBtn=alertDialog.findViewById(R.id.favoriteBtn);
+        chatBtn=alertDialog.findViewById(R.id.chatBtn);
+        customDLTitle=alertDialog.findViewById(R.id.customDLTitle);
+        favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
+            public void onClick(View v) {
+                retrofitClient=new RetrofitClient();
+                WithoutDataResponseDto withoutDataResponseDto =retrofitClient.postFavoriteTeam(myToken,teamInfoDto.get(teamNumCount).getTeamNo());
+                while(withoutDataResponseDto ==null){
+                    Log.d("error", " withoutDataResponseDto is null");
+                }
+                Toast.makeText(getApplicationContext(), withoutDataResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (hasPlanned) {
                     RetrofitClient retrofitClient = new RetrofitClient();
                     ChatRoomResponseDto chatRoomResponseDto = retrofitClient.inToChatRoom(myToken, teamInfoDto.get(teamNumCount).getTeamNo().toString());
@@ -529,28 +631,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
-        builder.setNeutralButton("즐겨찾기", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                retrofitClient=new RetrofitClient();
-                WithoutDataResponseDto withoutDataResponseDto =retrofitClient.postFavoriteTeam(myToken,teamInfoDto.get(teamNumCount).getTeamNo());
-                while(withoutDataResponseDto ==null){
-                    Log.d("error", " withoutDataResponseDto is null");
-                }
-                Toast.makeText(getApplicationContext(), withoutDataResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
-
-        backTeamBtn=alertDialog.findViewById(R.id.backTeamBtn);
-        nextTeamBtn=alertDialog.findViewById(R.id.nextTeamBtn);
-
-
         listView=alertDialog.findViewById(R.id.personList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -567,6 +647,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //같은 위치에 한 팀만 있을 경우
         if(teamInfoDto.size()==1){
             items.addAll(teamInfoDto.get(teamNumCount).getNameList());
+            customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
             adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
             listView.setAdapter(adapter);
         }
@@ -574,6 +655,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         else{
             nextTeamBtn.setVisibility(View.VISIBLE);
             items.addAll(teamInfoDto.get(teamNumCount).getNameList());
+            customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
             adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
             listView.setAdapter(adapter);
             nextTeamBtn.setOnClickListener(new View.OnClickListener() {
@@ -583,6 +665,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     backTeamBtn.setVisibility(View.VISIBLE);
                     items.clear();
                     items.addAll(teamInfoDto.get(teamNumCount).getNameList());
+                    customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
                     adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
                     listView.setAdapter(adapter);
                     //마지막 팀(다음버튼 없애기)
@@ -601,6 +684,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     items.clear();
                     //첫번째 팀
                     items.addAll(teamInfoDto.get(teamNumCount).getNameList());
+                    customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
                     adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
                     listView.setAdapter(adapter);
                     if (teamNumCount==0)
@@ -612,8 +696,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return false;
     }
-
-
 
 
 

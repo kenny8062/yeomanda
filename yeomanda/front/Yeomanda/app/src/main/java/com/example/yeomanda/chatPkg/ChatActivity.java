@@ -90,8 +90,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
         try {
-            //mSocket= IO.socket("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/");
-            mSocket=IO.socket("http://172.30.1.7:3000/");
+            mSocket= IO.socket("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/");
+            //mSocket=IO.socket("http://172.30.1.7:3000/");
             //서버의 connect 이벤트 발생
             mSocket.connect();
             Log.d("connect","ok");

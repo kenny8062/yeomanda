@@ -1,44 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
 
-        android:id="@+id/favoriteTeam"
-
-        android:title="즐겨찾기"
-
-        app:showAsAction="never">
-
-    </item>
-
-    <item
-
-        android:id="@+id/profileRetouch"
-
-        android:title="프로필 수정"
-
-        app:showAsAction="never">
-
-    </item>
-
-    <item
-
-        android:id="@+id/cancelTravel"
-
-        android:title="여행 취소"
-
-        app:showAsAction="never">
-
-    </item>
-
-
-    <item
-
-        android:id="@+id/chatRoom"
-
-        android:title="채팅"
-
-        app:showAsAction="never">
-
-    </item>
 </menu>

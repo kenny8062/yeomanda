@@ -45,66 +45,72 @@
 
             <EditText
                 android:id="@+id/MyPlanYearStart"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:layout_weight="4"
                 android:inputType="date"
-                android:hint="yyyy"
+                android:hint="YYYY"
                 android:background="@drawable/ic_yellow_rounded_rectangle"/>
 
             <EditText
                 android:id="@+id/MyPlanMonthStart"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:layout_weight="2"
+                android:layout_marginStart="@dimen/spacing_xxs"
                 android:inputType="date"
                 android:hint="MM"
                 android:background="@drawable/ic_yellow_rounded_rectangle"/>
             <EditText
                 android:id="@+id/MyPlanDayStart"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:layout_weight="2"
+                android:layout_marginStart="@dimen/spacing_xxs"
                 android:inputType="date"
                 android:hint="DD"
                 android:background="@drawable/ic_yellow_rounded_rectangle"/>
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="29dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:src="@drawable/ic_camera"
+                android:layout_marginStart="@dimen/spacing_xxs"
+                android:src="@drawable/wave"
                 />
             <EditText
                 android:id="@+id/MyPlanYearEnd"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_weight="4"
                 android:inputType="date"
-                android:hint="yyyy"
+                android:layout_marginStart="@dimen/spacing_xxs"
+                android:hint="YYYY"
                 android:background="@drawable/ic_yellow_rounded_rectangle"/>
 
             <EditText
                 android:id="@+id/MyPlanMonthEnd"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_weight="2"
+                android:layout_marginStart="@dimen/spacing_xxs"
                 android:inputType="date"
-                android:hint="mm"
+                android:hint="MM"
                 android:background="@drawable/ic_yellow_rounded_rectangle"/>
 
             <EditText
                 android:id="@+id/MyPlanDayEnd"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_weight="2"
                 android:inputType="date"
-                android:hint="dd"
+                android:layout_marginStart="@dimen/spacing_xxs"
+                android:hint="DD"
                 android:background="@drawable/ic_yellow_rounded_rectangle"/>
 
         </LinearLayout>

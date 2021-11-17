@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,38 +8,82 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/showTravelersLayout"
-        tools:ignore="MissingConstraints">
+        android:id="@+id/customDLNextandBackLayout"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <Button
+            android:id="@+id/backTeamBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_gravity="left"
+            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
+            android:text="이전"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/backTeamBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="invisible"
-                android:text="이전" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/nextTeamBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="invisible"
-                android:text="다음" />
+        <Button
+            android:id="@+id/nextTeamBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_gravity="right"
+            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
+            android:text="다음"
+            android:visibility="invisible" />
 
-        </LinearLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customDLItemLayout"
+        app:layout_constraintBottom_toTopOf="@id/customDLChatandFavoriteBtnLayout"
+        app:layout_constraintTop_toBottomOf="@+id/customDLNextandBackLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/customDLTitle"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="TravelDate"/>
         <ListView
             android:id="@+id/personList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/customDLChatandFavoriteBtnLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/favoriteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_gravity="left"
+            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
+            android:text="즐겨찾기" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/chatBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_gravity="right"
+            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
+            android:text="채팅" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,9 @@
             android:id="@+id/chatListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:ignore="MissingConstraints" >
+            tools:ignore="MissingConstraints"
+            android:divider="@null"
+            android:dividerHeight="0dp">
 
         </ListView>
 
