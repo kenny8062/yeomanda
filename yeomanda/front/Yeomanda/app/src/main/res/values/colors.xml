@@ -25,6 +25,7 @@
     <color name="pale_sky_blue">#c5eaf7</color>
     <color name="ice_blue">#e5fbfc</color>
     <color name="dark_yellow">#B9A314</color>
-
-
+    <color name="sky_blue">#79ABF1</color>
+    <color name="light_orange">#F37E14</color>
+    <color name="dark_orange">#F8752C</color>
 </resources>

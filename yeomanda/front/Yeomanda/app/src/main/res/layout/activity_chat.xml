@@ -9,30 +9,34 @@
     <ListView
         android:id="@+id/chatMsgListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginBottom="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/sendMsgLayout"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/spacing_xl"
         android:id="@+id/sendMsgLayout"
+        android:weightSum="10"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/chatEdt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
             android:text="Test" />
 
         <Button
             android:id="@+id/sendChatBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="Send" />
     </LinearLayout>
 

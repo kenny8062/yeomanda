@@ -28,29 +28,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:text="email" />
         
         <EditText
             android:id="@+id/id_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_yellow_rounded_rectangle"
-
             android:text="aaa@aaa.com" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_marginTop="27dp"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:text="password" />
 
         <EditText
             android:id="@+id/password_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_yellow_rounded_rectangle"
             android:text="aaa" />
 
         <Button
@@ -75,7 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:backgroundTint="@color/red"
+                android:backgroundTint="#BEB1AF"
+                android:textColor="@color/white"
                 android:text="sign up" />
 
             <View
@@ -85,10 +83,11 @@
 
             <Button
                 android:id="@+id/login_btn"
-                android:backgroundTint="@color/red"
+                android:backgroundTint="#BEB1AF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:textColor="@color/white"
                 android:text="login" />
 
         </LinearLayout>

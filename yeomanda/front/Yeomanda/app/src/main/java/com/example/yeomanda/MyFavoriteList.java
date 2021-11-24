@@ -1,16 +1,22 @@
 package com.example.yeomanda;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.yeomanda.Retrofit.ResponseDto.MyFavoriteListResponseDto;
+import com.example.yeomanda.Retrofit.ResponseDto.ProfileResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
 
 public class MyFavoriteList extends AppCompatActivity {
@@ -43,13 +49,12 @@ public class MyFavoriteList extends AppCompatActivity {
         myFavoriteTeamListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(getApplicationContext(),MyFavoriteTeamProfile.class);
+                Intent intent = new Intent(getApplicationContext(), MyFavoriteTeamProfile.class);
                 intent.putExtra("teamName", myFavoriteListResponseDto.getData().get(position));
-                intent.putExtra("token",myToken);
+                intent.putExtra("token", myToken);
                 startActivity(intent);
             }
         });
-
 
     }
 }

@@ -61,7 +61,6 @@ public class ChatActivity extends AppCompatActivity {
         adapter=new ChatMessageAdapter();
         listView.setAdapter(adapter);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-
         RetrofitClient retrofitClient=new RetrofitClient();
         AllMyChatsResponseDto allMyChatsResponseDto=retrofitClient.getAllMyChats(myToken,roomId);
         while (allMyChatsResponseDto==null){
@@ -78,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+        listView.setSelection(adapter.getCount() - 1);
         Log.d("teamNum", roomId);
         roomInfo =new JSONObject();
 
@@ -203,6 +203,7 @@ public class ChatActivity extends AppCompatActivity {
         public void handleMessage(Message msg){
             // 원래 하려던 동작 (UI변경 작업 등)
             adapter.notifyDataSetChanged();
+            listView.setSelection(adapter.getCount() - 1);
         }
     };
 }

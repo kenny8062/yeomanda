@@ -64,7 +64,7 @@ public class CreateBoard extends AppCompatActivity {
                 addEdt.setLayoutParams(p);
                 addEdt.setInputType(TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 addEdt.setId(count++);
-                addEdt.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_yellow_rounded_rectangle));
+                //addEdt.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_yellow_rounded_rectangle));
                 edts.add(addEdt);
                 ll.addView(addEdt);
             }
