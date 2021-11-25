@@ -153,14 +153,8 @@ io.on('connection', async function(socket){
             console.log(target_token)
             const message = {
               data: {
-                title: '채팅 도착',
-                body: '새로운 메세지가 도착하였습니다.'
-              },
-              android: {
-                notification: {
-                  icon: 'stock_ticker_update',
-                  color: '#7e55c3'
-                }
+                title: '새로운 메세지가 도착하였습니다',
+                body: content
               },
               tokens: target_token,
             }

@@ -219,6 +219,7 @@ const showFavoritesDetail = async(req, res) => {
         for(var i in checkEmail.Items[0].files){
             fileList.push(file_root + checkEmail.Items[0].files[i])
         }
+        console.log(checkEmail.Items[0].birth)
         const userInfo = {
             'email' : checkEmail.Items[0].email,
             'name' : checkEmail.Items[0].name,
