@@ -208,10 +208,13 @@ const getAllMyChats = async(req, res) => {
         messages.filter(async(m)=>{
             const dateSplit = m.createdAt.split(' ')
             if( (dateSplit[1] != date.toLocaleString('default', { month: 'short'})) || (dateSplit[2] != date.getDate()) || (dateSplit[3] != date.getFullYear()) ){
+                // 오늘이 아닌 경우 - 월,일 만 나오게
+                m.createdAt = dateSplit[1] + " " + dateSplit[2]
                 messages_beta.push(m)
             }
             else{
-                m.createdAt = dateSplit[4]
+                // 오늘인 경우 - 시간, 분 만 나오게
+                m.createdAt = dateSplit[4].split(":")[0] + ":" + dateSplit[4].split(":")[1]
                 messages_beta.push(m)
             }
         })
