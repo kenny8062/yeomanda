@@ -188,7 +188,7 @@ const getAllMyChatList = async(req, res) => {
 const getAllMyChats = async(req, res) => {
     try{
         const { chatRoomId }= req.body;
-        
+        const date = new Date();
         AWS.config.update(chatConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
         const params_to_find_chatroom = {
@@ -203,7 +203,19 @@ const getAllMyChats = async(req, res) => {
             return res.status(statusCode.OK).send(statusCode.NO_CONTENT, responseMessage.NO_MESSAGES, "대화 기록이 없습니다.")
         }
         const messages = chats.Items[0].chatMessages
-        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, messages))
+        const messages_beta = []
+
+        messages.filter(async(m)=>{
+            const dateSplit = m.createdAt.split(' ')
+            if( (dateSplit[1] != date.toLocaleString('default', { month: 'short'})) || (dateSplit[2] != date.getDate()) || (dateSplit[3] != date.getFullYear()) ){
+                messages_beta.push(m)
+            }
+            else{
+                m.createdAt = dateSplit[4]
+                messages_beta.push(m)
+            }
+        })
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, messages_beta))
     }catch(err){
         console.log(err)
         return res.send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.TRY_CATCH_ERROR, "tryCatchError"))  

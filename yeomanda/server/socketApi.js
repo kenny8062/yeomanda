@@ -85,7 +85,8 @@ io.on('connection', async function(socket){
     const sender = parseJwt(token).email
     const name = parseJwt(token).name
     const sendTime = nowDate.toDateString() + ' ' + nowDate.toTimeString().split(' ')[0]
-
+    //const sendTime = nowDate.toString()
+    console.log(sendTime)
     const res = {
       'message' : content,
       'senderEmail' : sender,
@@ -154,6 +155,12 @@ io.on('connection', async function(socket){
               data: {
                 title: '채팅 도착',
                 body: '새로운 메세지가 도착하였습니다.'
+              },
+              android: {
+                notification: {
+                  icon: 'stock_ticker_update',
+                  color: '#7e55c3'
+                }
               },
               tokens: target_token,
             }
