@@ -112,7 +112,7 @@ const showTravelers = async(req, res) => {
                 "location_gps" : grouped.get(teamListNoOverlap[i])[0].location_gps,
                 "travelDate" : grouped.get(teamListNoOverlap[i])[0].travelDate,
                 "isfinished" : grouped.get(teamListNoOverlap[i])[0].isfinished,
-                "region_info" : grouped.get(teamListNoOverlap[i])[0].region_info,
+                "team_name" : grouped.get(teamListNoOverlap[i])[0].team_name,
                 "name" : nameList
             })
         }
