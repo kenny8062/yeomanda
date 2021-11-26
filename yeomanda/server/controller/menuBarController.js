@@ -195,6 +195,7 @@ const showFavoritesDetail = async(req, res) => {
     
     await connection.end()
 
+    const date = new Date()    
     const result = []
     data[0].filter( async(d) => {
         const user = d.email
@@ -218,11 +219,12 @@ const showFavoritesDetail = async(req, res) => {
             fileList.push(file_root + checkEmail.Items[0].files[i])
         }
         console.log(checkEmail.Items[0].birth)
+        const nowYear = date.getFullYear()
         const userInfo = {
             'email' : checkEmail.Items[0].email,
             'name' : checkEmail.Items[0].name,
             'sex' : checkEmail.Items[0].sex,
-            'birth' : checkEmail.Items[0].birth,
+            'birth' : nowYear - checkEmail.Items[0].birth.substring(0,4) + 1,
             'files' : fileList
         }
         result.push(userInfo)

@@ -101,6 +101,7 @@ const favorite = async (req, res) => {
 const userDetail = async (req, res) => {
     try{
         const { email } = req.body
+        const date = new Date()
         AWS.config.update(userConfig.aws_iam_info);
         const docClient = new AWS.DynamoDB.DocumentClient();
         const params_to_find_userDetail = {
@@ -127,10 +128,10 @@ const userDetail = async (req, res) => {
                 const userfaceURL = 'https://yeomanda-userface.s3.ap-northeast-2.amazonaws.com/' + s3path[i];
                 userfacesURLlist.push(userfaceURL)   
             }
-    
+            const nowYear = date.getFullYear()
             const userResult = {
                 'email' : checkEmail_from_user.Items[0].email,
-                'birth' : checkEmail_from_user.Items[0].birth,
+                'birth' : nowYear - checkEmail_from_user.Items[0].birth.substring(0,4) + 1,
                 'sex' : checkEmail_from_user.Items[0].sex,
                 'name' : checkEmail_from_user.Items[0].name,
                 'files' : userfacesURLlist

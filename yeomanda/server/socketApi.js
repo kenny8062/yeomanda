@@ -150,8 +150,6 @@ io.on('connection', async function(socket){
           // const fcmToken = await docClient.query(params_to_find_token).promise()
           target_token.push(`${result_sql[0][0].token}`)
           if(target_token.length === users.length-1){
-            console.log(target_token)
-            console.log(name, content)
             const message = {
               notification: {
                 title: `${name} 으로 부터 메세지가 왔습니다`,
