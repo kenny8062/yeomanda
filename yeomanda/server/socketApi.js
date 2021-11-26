@@ -151,6 +151,7 @@ io.on('connection', async function(socket){
           target_token.push(`${result_sql[0][0].token}`)
           if(target_token.length === users.length-1){
             console.log(target_token)
+            console.log(name, content)
             const message = {
               data: {
                 title: name,
