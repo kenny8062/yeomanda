@@ -153,7 +153,7 @@ io.on('connection', async function(socket){
             console.log(target_token)
             const message = {
               data: {
-                title: '새로운 메세지가 도착하였습니다',
+                title: name,
                 body: content
               },
               tokens: target_token,
