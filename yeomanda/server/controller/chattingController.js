@@ -157,7 +157,7 @@ const getAllMyChatList = async(req, res) => {
         const sql_to_find_teamName = `select team_name from travel_plan where email='${userEmail}';` 
         const result = await connection.query(sql_to_find_teamName)
         if(!result[0][0]){
-            return res.status(statusCode.OK).send(util.fail(statusCode.NO_CONTENT, responseMessage.QUERY_ERROR, {"yourTeam" : "notExisted"}))
+            return res.status(statusCode.OK).send(util.fail(statusCode.NO_CONTENT, responseMessage.QUERY_ERROR, [{"yourTeam" : "notExisted"}]))
         }
         const myTeam = result[0][0].team_name // 우리팀 이름
     
