@@ -68,11 +68,10 @@ const showFavoriteTeamName = async(req, res) => {
              */
             
             const teamNameList = []
-            
             data[0].filter( e => { // data 에는 하나의 팀에 해당하는 여러 여행객들의 정보가 담겨져 있다. 
                 teamNameList.push(e.team_name)
             })
-            result.push(teamNameList[0])
+            result.push({"team_name" : teamNameList[0], "member" : data[0].length})
             if(result.length === Favorites.length){
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
             }
