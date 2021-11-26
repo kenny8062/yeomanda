@@ -43,6 +43,10 @@ const inToChatRoom = async(req, res) => {
         const connection = await mysql.createConnection(conn.db_info);
         const sql = `select team_no from travel_plan where email='${userEmail}' and isfinished = 0;` 
         const result = await connection.query(sql)
+        if(!result[0][0]){
+            return res.status(statusCode.OK).send(util.fail(statusCode.NO_CONTENT, responseMessage.QUERY_ERROR, "no team user"))
+        }
+
         const userTeamNum = result[0][0].team_no
     
         // 3_7 (o) , 7_3 (x)
@@ -152,6 +156,9 @@ const getAllMyChatList = async(req, res) => {
         const connection = await mysql.createConnection(conn.db_info);
         const sql_to_find_teamName = `select team_name from travel_plan where email='${userEmail}';` 
         const result = await connection.query(sql_to_find_teamName)
+        if(!result[0][0]){
+            return res.status(statusCode.OK).send(util.fail(statusCode.NO_CONTENT, responseMessage.QUERY_ERROR, "no team user"))
+        }
         const myTeam = result[0][0].team_name // 우리팀 이름
     
         AWS.config.update(chatConfig.aws_iam_info);
