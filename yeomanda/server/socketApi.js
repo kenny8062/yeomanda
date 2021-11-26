@@ -157,6 +157,10 @@ io.on('connection', async function(socket){
                 title: `${name} 으로 부터 메세지가 왔습니다`,
                 body: content
               },
+              data: {
+                title: `${name} 으로 부터 메세지가 왔습니다`,
+                body: content
+              },
               tokens: target_token,
             }
             admin
