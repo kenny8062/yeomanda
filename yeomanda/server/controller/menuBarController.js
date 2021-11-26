@@ -62,16 +62,14 @@ const showFavoriteTeamName = async(req, res) => {
             const sql = `select * from travel_plan where team_no = '${Favorites[i]}';`
             const data = await connection.query(sql)
                 
-            /**
-             * filter 로 이메일 데이터만 뽑아서 따로 저장
-             * async 하는 동안 for 문 다 돌았어 -> 그래서 마지막 팀이 계속 배열로 들어간다...
-             */
-            
+            console.log(data[0])
             const teamNameList = []
+            const teamNoList = []
             data[0].filter( e => { // data 에는 하나의 팀에 해당하는 여러 여행객들의 정보가 담겨져 있다. 
                 teamNameList.push(e.team_name)
+                teamNoList.push(e.team_no)
             })
-            result.push({"team_name" : teamNameList[0], "member" : data[0].length})
+            result.push({"team_name" : teamNameList[0], "member" : data[0].length, "team_no" : teamNoList[0]})
             if(result.length === Favorites.length){
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
             }
