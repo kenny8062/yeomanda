@@ -171,6 +171,8 @@ const getAllMyChatList = async(req, res) => {
             }   
         };
         const chatRoom = await docClient.scan(params_to_find_chatroom).promise() // chatting tabled에서 현재 이용자가 속해 있는 모든 row들
+        console.log(chatRoom)
+
         chatRoom.Items.filter(c => {
             //const temp = [] // response의 구조를 맞추기 위한 수단.
             //temp.push({"room_id" : c.room_id}) // 1)
