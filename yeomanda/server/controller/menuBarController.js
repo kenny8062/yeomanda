@@ -47,8 +47,9 @@ const showFavoriteTeamName = async(req, res) => {
         };
         const checkEmail_from_favorite = await docClient.query(params_find_favorites).promise()
         const Favorites_no = checkEmail_from_favorite.Items[0] // 이용자가 즐겨찾기 한 팀들의 번호 리스트
+        console.log(Favorites_no.favorite_team_no)
         // 1. 즐겨찾기 한 팀들이 없을 경우
-        if(!Favorites_no){
+        if(!Favorites_no || Favorites_no.favorite_team_no.length == 0){
             return res.status(statusCode.OK).send(util.success(statusCode.fail, responseMessage.READ_USER_FAIL, result))                                        
         }
         /**
