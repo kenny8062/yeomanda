@@ -136,12 +136,12 @@ const login = async (req, res) => {
         const sql_team_3 = `select * from travel_plan where email = '${email}' and isfinished = 0;`
         const result_plan = await connection.query(sql_team_3)
 
-        await connection.end()
-
-        if(result_plan.length){
+        if(result_plan[0].length){
+            await connection.end()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {'token' : token, 'hasPlanned' : true}));
         }
         else{
+            await connection.end()
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {'token' : token, 'hasPlanned' : false}));
         }
     } catch (err) {
