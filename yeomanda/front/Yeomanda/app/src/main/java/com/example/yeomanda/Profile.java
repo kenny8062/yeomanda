@@ -25,9 +25,9 @@ public class Profile extends AppCompatActivity {
 
     public void init(){
         Intent intent=getIntent();
-        selfImage1=findViewById(R.id.personImage1);
-        selfImage2=findViewById(R.id.personImage2);
-        selfImage3=findViewById(R.id.personImage3);
+        selfImage1=findViewById(R.id.personSubImage1);
+        selfImage2=findViewById(R.id.personMainImage);
+        selfImage3=findViewById(R.id.personsubImage2);
         personEmail=findViewById(R.id.personEmail);
         personSex=findViewById(R.id.personSex);
         personName=findViewById(R.id.personName);

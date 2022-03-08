@@ -20,21 +20,16 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.yeomanda.Retrofit.RequestDto.JoinDto;
 import com.example.yeomanda.Retrofit.ResponseDto.ProfileResponseDto;
 import com.example.yeomanda.Retrofit.RetrofitClient;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class MyProfile extends AppCompatActivity {
     public static Context context;
-    ImageView myImage1,myImage2,myImage3;
+    ImageView mySubImage1, myMainImage, mySubImage2;
     TextView myEmail, mySex, myName, myBirth;
     ArrayList<MultipartBody.Part> selfImage=new ArrayList<>();
     ArrayList<MultipartBody.Part> changeUri=new ArrayList<>();
@@ -59,9 +54,9 @@ public class MyProfile extends AppCompatActivity {
     public void init(){
         Intent intent=getIntent();
         myToken=intent.getStringExtra("token");
-        myImage1 =findViewById(R.id.myImage1);
-        myImage2 =findViewById(R.id.myImage2);
-        myImage3 =findViewById(R.id.myImage3);
+        mySubImage1 =findViewById(R.id.myImage1);
+        myMainImage =findViewById(R.id.myMainImage);
+        mySubImage2 =findViewById(R.id.myImage2);
         myEmail =findViewById(R.id.myEmail);
         mySex =findViewById(R.id.mySex);
         myName =findViewById(R.id.myName);
@@ -81,15 +76,15 @@ public class MyProfile extends AppCompatActivity {
 
         Glide.with(this)
                 .load(profileResponseDto.getData().getFiles().get(0))
-                .into(myImage1);
+                .into(myMainImage);
 
         Glide.with(this)
                 .load(profileResponseDto.getData().getFiles().get(1))
-                .into(myImage2);
+                .into(mySubImage1);
 
         Glide.with(this)
                 .load(profileResponseDto.getData().getFiles().get(2))
-                .into(myImage3);
+                .into(mySubImage2);
 
 
         editMyProfileBtn.setOnClickListener(new View.OnClickListener() {
@@ -113,23 +108,21 @@ public class MyProfile extends AppCompatActivity {
 
         });
 
-        myImage1.setOnClickListener(new View.OnClickListener() {
-            @Override
+        myMainImage.setOnClickListener(new View.OnClickListener() {      @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, GET_IMAGE_FOR_PICTURE1);
             }
         });
-        myImage2.setOnClickListener(new View.OnClickListener() {
-            @Override
+        mySubImage1.setOnClickListener(new View.OnClickListener() {       @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, GET_IMAGE_FOR_PICTURE2);
             }
         });
-        myImage3.setOnClickListener(new View.OnClickListener() {
+        mySubImage2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -151,20 +144,17 @@ public class MyProfile extends AppCompatActivity {
                     selectedImageUri = data.getData();
                     uri[0] = selectedImageUri;
                     isUri[0]=true;
-                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(myImage1);
-                    break;
+                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(myMainImage);     break;
                 case GET_IMAGE_FOR_PICTURE2:
                     selectedImageUri = data.getData();
                     uri[1] = selectedImageUri;
                     isUri[1]=true;
-                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(myImage2);
-                    break;
+                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(mySubImage1);   break;
                 case GET_IMAGE_FOR_PICTURE3:
                     selectedImageUri = data.getData();
                     uri[2] = selectedImageUri;
                     isUri[2] = true;
-                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(myImage3);
-                    break;
+                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(mySubImage2);break;
             }
         }
     }

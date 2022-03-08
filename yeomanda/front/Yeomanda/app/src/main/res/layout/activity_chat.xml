@@ -29,8 +29,7 @@
             android:id="@+id/chatEdt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:text="Test" />
+            android:layout_weight="9" />
 
         <Button
             android:id="@+id/sendChatBtn"

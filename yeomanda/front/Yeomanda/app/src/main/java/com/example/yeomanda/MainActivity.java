@@ -39,7 +39,6 @@ import com.example.yeomanda.Retrofit.RetrofitClient;
 import com.example.yeomanda.Retrofit.RequestDto.TeamInfoDto;
 import com.example.yeomanda.chatPkg.ChatActivity;
 import com.example.yeomanda.chatPkg.ChatListActivity;
-import com.example.yeomanda.joinActivity.JoinActivity1;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -93,17 +92,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private Location location;
     private LocationResponseDto locationResponseDto=null;
-    Button createBoardBtn,nextTeamBtn, backTeamBtn, favoriteBtn, chatBtn;
+    Button createBoardBtn;
     double lat,lon;
     int teamNumCount;
     String locationArr[];
     String myToken, myEmail;
     Boolean hasPlanned;
-    View boardDialogView,profileDialogView, testView;
+    View boardDialogView,profileDialogView;
     ArrayList<String> items=new ArrayList<>();
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-    TextView customDLTitle,favoriteTeam,profileRetouch,cancelTravel,chatRoom;
-    ArrayList<ArrayList<TeamInfoDto>> sameLocationTeams=new ArrayList<>();
+    TextView customTravelDate,favoriteTeam,profileRetouch,cancelTravel,chatRoom;
+    ArrayList<ArrayList<TeamInfoDto>> sameLocationTeams=new ArrayList<ArrayList<TeamInfoDto>>();
 
     ImageView menuBtn;
 
@@ -112,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-    ImageView selfImage1,selfImage2,selfImage3;
-    TextView personEmail,personSex,personName,personBirth;
+    ImageView personSubImage1, personMainImage, personSubImage2,nextTeamBtn, backTeamBtn, chatBtn, favoriteBtn;
+    TextView personEmail,personSex,personName,personBirth,teamName;
     ProfileResponseDto profileResponseDto;
 
 
@@ -241,84 +240,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-/*
-    @Override
-    public  boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_option, menu);
-        return true;
-    }
-
-
-    //메뉴바
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
-
-            case R.id.cancelTravel:
-                // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-                builder.setMessage("게시판 등록을 취소하시겠습니까?");
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                        retrofitClient=new RetrofitClient();
-                        WithoutDataResponseDto withoutDataResponseDto =retrofitClient.deleteBoard(myToken);
-                        while(withoutDataResponseDto ==null){
-                            Log.d("error", " withoutDataResponseDto is null");
-                        }
-                        if(withoutDataResponseDto.getSuccess()) {
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        }
-                        Toast.makeText(getApplicationContext(), withoutDataResponseDto.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                Toast.makeText(this, "여행취소", Toast.LENGTH_SHORT).show();
-
-                break;
-
-            case R.id.profileRetouch:
-                Intent intent=new Intent(getApplicationContext(),MyProfile.class);
-                intent.putExtra("token",myToken);
-                intent.putExtra("email",myEmail);
-                startActivity(intent);
-                Toast.makeText(this, "회원정보 수정", Toast.LENGTH_SHORT).show();
-
-                break;
-
-
-            case R.id.favoriteTeam:
-                Intent favoriteIntent=new Intent(getApplicationContext(),MyFavoriteList.class);
-                favoriteIntent.putExtra("token", myToken);
-                startActivity(favoriteIntent);
-                Toast.makeText(this, "즐겨찾기", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.chatRoom:
-                Intent chatIntent=new Intent(getApplicationContext(), ChatListActivity.class);
-                chatIntent.putExtra("token", myToken);
-                chatIntent.putExtra("myEmail",myEmail);
-                startActivity(chatIntent);
-                Toast.makeText(this, "채팅방", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-
-    }
-
-
- */
 
 
     @Override
@@ -602,7 +523,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         nextTeamBtn=alertDialog.findViewById(R.id.nextTeamBtn);
         favoriteBtn=alertDialog.findViewById(R.id.favoriteBtn);
         chatBtn=alertDialog.findViewById(R.id.chatBtn);
-        customDLTitle=alertDialog.findViewById(R.id.customDLTitle);
+        customTravelDate=alertDialog.findViewById(R.id.customTravelDate);
+        teamName=alertDialog.findViewById(R.id.customTeamName);
         favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -618,12 +540,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasPlanned) {
-                    RetrofitClient retrofitClient = new RetrofitClient();
-                    ChatRoomResponseDto chatRoomResponseDto = retrofitClient.inToChatRoom(myToken, teamInfoDto.get(teamNumCount).getTeamNo().toString());
-                    while (chatRoomResponseDto == null) {
-                        Log.e("error", "chatRoomResponseDto is null");
-                    }
+                RetrofitClient retrofitClient = new RetrofitClient();
+                ChatRoomResponseDto chatRoomResponseDto = retrofitClient.inToChatRoom(myToken, teamInfoDto.get(teamNumCount).getTeamNo().toString());
+                while (chatRoomResponseDto == null) {
+                    Log.e("error", "chatRoomResponseDto is null");
+                }
+                if (chatRoomResponseDto.getSuccess()) {
 
                     Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                     intent.putExtra("roomId", chatRoomResponseDto.getData().getRoomId());
@@ -650,9 +572,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
 
-                selfImage1=alertDialog.findViewById(R.id.personImage1);
-                selfImage2=alertDialog.findViewById(R.id.personImage2);
-                selfImage3=alertDialog.findViewById(R.id.personImage3);
+                personSubImage1 =alertDialog.findViewById(R.id.personSubImage1);
+                personMainImage =alertDialog.findViewById(R.id.personMainImage);
+                personSubImage2 =alertDialog.findViewById(R.id.personsubImage2);
                 personEmail=alertDialog.findViewById(R.id.personEmail);
                 personSex=alertDialog.findViewById(R.id.personSex);
                 personName=alertDialog.findViewById(R.id.personName);
@@ -669,28 +591,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Glide.with(context)
                         .load(profileResponseDto.getData().getFiles().get(0))
-                        .into(selfImage1);
+                        .into(personMainImage);
+
 
                 Glide.with(context)
                         .load(profileResponseDto.getData().getFiles().get(1))
-                        .into(selfImage2);
+                        .into(personSubImage1);
 
                 Glide.with(context)
                         .load(profileResponseDto.getData().getFiles().get(2))
-                        .into(selfImage3);
+                        .into(personSubImage2);
 
                 //이미지 크게 보기1
-                selfImage1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
-                        intent.putExtra("uri",profileResponseDto.getData().getFiles().get(0));
-                        startActivity(intent);
-
-                    }
-                });
-                //이미지 크게 보기2
-                selfImage2.setOnClickListener(new View.OnClickListener() {
+                personSubImage1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
@@ -699,8 +612,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     }
                 });
+                //이미지 크게 보기2
+                personMainImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
+                        intent.putExtra("uri",profileResponseDto.getData().getFiles().get(0));
+                        startActivity(intent);
+
+                    }
+                });
                 //이미지 크게 보기3
-                selfImage3.setOnClickListener(new View.OnClickListener() {
+                personSubImage2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
@@ -716,16 +639,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //같은 위치에 한 팀만 있을 경우
         if(teamInfoDto.size()==1){
             items.addAll(teamInfoDto.get(teamNumCount).getNameList());
-            customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
-            adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+            customTravelDate.setText(teamInfoDto.get(teamNumCount).getTravelDate());
+            teamName.setText(teamInfoDto.get(teamNumCount).getTeamName());
+            adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.single_listview_item,items);
             listView.setAdapter(adapter);
         }
         //같은 위치에 2개 이상의 팀이 있을 경우
         else{
             nextTeamBtn.setVisibility(View.VISIBLE);
             items.addAll(teamInfoDto.get(teamNumCount).getNameList());
-            customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
-            adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+            customTravelDate.setText(teamInfoDto.get(teamNumCount).getTravelDate());
+            teamName.setText(teamInfoDto.get(teamNumCount).getTeamName());
+            adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.single_listview_item,items);
             listView.setAdapter(adapter);
             nextTeamBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -734,8 +659,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     backTeamBtn.setVisibility(View.VISIBLE);
                     items.clear();
                     items.addAll(teamInfoDto.get(teamNumCount).getNameList());
-                    customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
-                    adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+                    customTravelDate.setText(teamInfoDto.get(teamNumCount).getTravelDate());
+                    teamName.setText(teamInfoDto.get(teamNumCount).getTeamName());
+                    adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.single_listview_item,items);
                     listView.setAdapter(adapter);
                     //마지막 팀(다음버튼 없애기)
                     if(teamInfoDto.size()== teamNumCount +1) {
@@ -753,8 +679,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     items.clear();
                     //첫번째 팀
                     items.addAll(teamInfoDto.get(teamNumCount).getNameList());
-                    customDLTitle.setText(teamInfoDto.get(teamNumCount).getTravelDate());
-                    adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,items);
+                    customTravelDate.setText(teamInfoDto.get(teamNumCount).getTravelDate());
+                    teamName.setText(teamInfoDto.get(teamNumCount).getTeamName());
+                    adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.single_listview_item,items);
                     listView.setAdapter(adapter);
                     if (teamNumCount==0)
                         backTeamBtn.setVisibility(View.INVISIBLE);

@@ -28,7 +28,7 @@ public class MyFavoriteTeamProfile extends AppCompatActivity {
 
     View profileDialogView;
     Context context=this;
-    ImageView selfImage1,selfImage2,selfImage3;
+    ImageView personSubImage1, personMainImage, personSubImage2;
     TextView personEmail,personSex,personName,personBirth;
     ProfileResponseDto profileResponseDto;
     @Override
@@ -65,9 +65,9 @@ public class MyFavoriteTeamProfile extends AppCompatActivity {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
 
-                selfImage1=alertDialog.findViewById(R.id.personImage1);
-                selfImage2=alertDialog.findViewById(R.id.personImage2);
-                selfImage3=alertDialog.findViewById(R.id.personImage3);
+                personMainImage =alertDialog.findViewById(R.id.personMainImage);
+                personSubImage1 =alertDialog.findViewById(R.id.personSubImage1);
+                personSubImage2 =alertDialog.findViewById(R.id.personsubImage2);
                 personEmail=alertDialog.findViewById(R.id.personEmail);
                 personSex=alertDialog.findViewById(R.id.personSex);
                 personName=alertDialog.findViewById(R.id.personName);
@@ -84,28 +84,18 @@ public class MyFavoriteTeamProfile extends AppCompatActivity {
 
                 Glide.with(context)
                         .load(profileResponseDto.getData().getFiles().get(0))
-                        .into(selfImage1);
+                        .into(personMainImage);
 
                 Glide.with(context)
                         .load(profileResponseDto.getData().getFiles().get(1))
-                        .into(selfImage2);
+                        .into(personSubImage1);
 
                 Glide.with(context)
                         .load(profileResponseDto.getData().getFiles().get(2))
-                        .into(selfImage3);
+                        .into(personSubImage2);
 
                 //이미지 크게 보기1
-                selfImage1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
-                        intent.putExtra("uri",profileResponseDto.getData().getFiles().get(0));
-                        startActivity(intent);
-
-                    }
-                });
-                //이미지 크게 보기2
-                selfImage2.setOnClickListener(new View.OnClickListener() {
+                personSubImage1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
@@ -114,9 +104,18 @@ public class MyFavoriteTeamProfile extends AppCompatActivity {
 
                     }
                 });
-                //이미지 크게 보기3
-                selfImage3.setOnClickListener(new View.OnClickListener() {
+                //이미지 크게 보기2
+                personMainImage.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
+                        intent.putExtra("uri",profileResponseDto.getData().getFiles().get(0));
+                        startActivity(intent);
+
+                    }
+                });
+                //이미지 크게 보기3
+                personSubImage2.setOnClickListener(new View.OnClickListener() {     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(getApplicationContext(),SelectImageActivity.class);
                         intent.putExtra("uri",profileResponseDto.getData().getFiles().get(2));

@@ -3,87 +3,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:minHeight="128dp">
 
     <LinearLayout
+        android:id="@+id/customDLNextandBackLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/customDLNextandBackLayout"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <ImageView
             android:id="@+id/backTeamBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="21dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="left"
-            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
-            android:text="이전"
+            android:src="@drawable/ic_baseline_arrow_back_24"
             android:visibility="invisible" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/nextTeamBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="21dp"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
-            android:text="다음"
-            android:visibility="invisible" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/customDLItemLayout"
-        app:layout_constraintBottom_toTopOf="@id/customDLChatandFavoriteBtnLayout"
-        app:layout_constraintTop_toBottomOf="@+id/customDLNextandBackLayout">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:id="@+id/customDLTitle"
+            android:id="@+id/customTeamName"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TeamName"
+            android:textColor="#000000"
             android:textSize="16sp"
-            android:text="TravelDate"/>
-        <ListView
-            android:id="@+id/personList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@null"
-            android:dividerHeight="0dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/nextTeamBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_baseline_arrow_forward_24"
+            android:visibility="invisible" />
 
     </LinearLayout>
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/personList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/customDLChatandFavoriteBtnLayout"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        app:layout_constraintBottom_toTopOf="@id/favoriteBtn"
+        app:layout_constraintTop_toBottomOf="@+id/customDLNextandBackLayout" />
 
-        <Button
-            android:id="@+id/favoriteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="21dp"
-            android:layout_gravity="left"
-            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
-            android:text="즐겨찾기" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+    <ImageView
+        android:id="@+id/favoriteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="left"
+        android:src="@drawable/favorite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/chatBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="21dp"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_pale_sky_blue_rounded_rectangle"
-            android:text="채팅" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/customTravelDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="TravelDate"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/favoriteBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/favoriteBtn" />
+
+    <ImageView
+        android:id="@+id/chatBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="right"
+        android:src="@drawable/chat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

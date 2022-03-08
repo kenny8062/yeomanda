@@ -20,9 +20,9 @@ public class TeamInfoDto {
     @SerializedName("isfinished")
     @Expose
     private Integer isfinished;
-    @SerializedName("region_info")
+    @SerializedName("team_name")
     @Expose
-    private String regionInfo;
+    private String teamName;
     @SerializedName("name")
     @Expose
     private ArrayList<String> nameList;
@@ -68,12 +68,13 @@ public class TeamInfoDto {
         this.isfinished = isfinished;
     }
 
-    public String getRegionInfo() {
-        return regionInfo;
+    public String getTeamName() {
+        return teamName;
+
     }
 
-    public void setRegionInfo(String regionInfo) {
-        this.regionInfo = regionInfo;
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
     public ArrayList<String> getNameList() {

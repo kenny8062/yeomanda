@@ -71,6 +71,7 @@ const showFavoriteTeamName = async(req, res) => {
             })
             result.push({"team_name" : teamNameList[0], "member" : data[0].length, "team_no" : teamNoList[0]})
             if(result.length === Favorites.length){
+                console.log(result)
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.QUERY_SUCCESS, result ))                                        
             }
         }

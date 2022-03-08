@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.yeomanda.ListView.ChatListViewAdapter;
 import com.example.yeomanda.R;
@@ -39,14 +40,15 @@ public class ChatListActivity extends AppCompatActivity {
         while(chatListResponseDto==null){
             Log.e("error","chatListResponseDto is Null");
         }
-        for (int i=0;i<chatListResponseDto.getData().size();i++){
-            Log.d("test",chatListResponseDto.getData().get(i).getRoomId());
-            Log.d("test",chatListResponseDto.getData().get(i).getOtherTeamName());
-            Log.d("test",chatListResponseDto.getData().get(i).getChatMessages().getCreatedAt());
+        if (chatListResponseDto.getSuccess()) {
+            for (int i = 0; i < chatListResponseDto.getData().size(); i++) {
+                adapter.addItem(chatListResponseDto.getData().get(i).getOtherTeamName(), chatListResponseDto.getData().get(i).getChatMessages().getContent(), chatListResponseDto.getData().get(i).getChatMessages().getCreatedAt().split(" ")[4]);
 
-            adapter.addItem(chatListResponseDto.getData().get(i).getOtherTeamName(),chatListResponseDto.getData().get(i).getChatMessages().getContent(),chatListResponseDto.getData().get(i).getChatMessages().getCreatedAt().split(" ")[4]);
-
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"채팅방이 없습니다.",Toast.LENGTH_LONG).show();
         }
+
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

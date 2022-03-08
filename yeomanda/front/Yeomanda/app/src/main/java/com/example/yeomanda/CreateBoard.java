@@ -76,6 +76,8 @@ public class CreateBoard extends AppCompatActivity {
                 if(edts.size()!=0)
                     ll.removeView(edts.get(edts.size()-1));
                     edts.remove(edts.size()-1);
+                    if(count>0) count--;
+
             }
         });
 

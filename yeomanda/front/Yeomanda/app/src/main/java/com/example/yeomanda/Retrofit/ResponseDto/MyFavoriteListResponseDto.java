@@ -18,7 +18,7 @@ public class MyFavoriteListResponseDto {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<String> data = null;
+    private List<MyFavoriteListResponseDataDto> data = null;
 
     public Integer getStatus() {
         return status;
@@ -44,12 +44,11 @@ public class MyFavoriteListResponseDto {
         this.message = message;
     }
 
-    public List<String> getData() {
+    public List<MyFavoriteListResponseDataDto> getData() {
         return data;
     }
-
-    public void setData(List<String> data) {
-        this.data = data;
+    public void setData(List<MyFavoriteListResponseDataDto> data) {
+            this.data = data;
     }
 
 }

@@ -30,6 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = remoteMessage.getData().get("message");//firebase에서 보낸 메세지의 내용
         String test = remoteMessage.getData().get("test");
 
+        //알림을 눌렀을때 실행할 액티비티
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("test", test);
 

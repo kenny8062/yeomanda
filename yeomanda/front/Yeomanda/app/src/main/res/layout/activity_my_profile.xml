@@ -4,93 +4,169 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     tools:context=".MyProfile">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        app:cardCornerRadius="20dp"
+        android:layout_gravity="center"
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/myProfileLL"
-        app:layout_constraintTop_toTopOf="parent"
-        android:weightSum="3">
+        android:layout_marginEnd="@dimen/spacing_xs"
+        android:layout_marginRight="@dimen/spacing_xs"
+        android:layout_marginTop="@dimen/spacing_xl"
+        android:layout_marginBottom="@dimen/spacing_l"
+        app:layout_constraintEnd_toStartOf="@id/cv_myMainImage"
+        app:layout_constraintTop_toTopOf="@id/cv_myMainImage"
+        app:layout_constraintBottom_toBottomOf="@id/cv_myMainImage"
+        app:cardElevation="0dp">
 
         <ImageView
             android:id="@+id/myImage1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="192dp"
+        android:layout_height="192dp"
+        app:cardCornerRadius="20dp"
+        android:id="@+id/cv_myMainImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/spacing_xl"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/myMainImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
+
+
+        <ImageView
+            android:id="@+id/image_edit_profile"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintEnd_toEndOf="@id/cv_myMainImage"
+            app:layout_constraintBottom_toBottomOf="@id/cv_myMainImage"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_edit_profile" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        app:cardCornerRadius="20dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/spacing_xs"
+        android:layout_marginLeft="@dimen/spacing_xs"
+        android:layout_marginTop="@dimen/spacing_xl"
+        android:layout_marginBottom="@dimen/spacing_l"
+        app:layout_constraintStart_toEndOf="@id/cv_myMainImage"
+        app:layout_constraintTop_toTopOf="@id/cv_myMainImage"
+        app:layout_constraintBottom_toBottomOf="@id/cv_myMainImage"
+        app:cardElevation="0dp">
 
         <ImageView
             android:id="@+id/myImage2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_xxs"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars" />
-
-        <ImageView
-            android:id="@+id/myImage3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_xxs"
-            android:layout_weight="1"
-            tools:srcCompat="@tools:sample/avatars" />
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_xxl_2"
-        android:layout_marginEnd="@dimen/spacing_xxl_2"
-
-        app:layout_constraintTop_toBottomOf="@+id/myProfileLL"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:background="#f8f8fa"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_myMainImage"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="email" />
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:text="이메일" />
 
         <TextView
             android:id="@+id/myEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_light_yellow_rounded_rectangle"/>
+            android:text="aaa@aaa.com"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:background="@drawable/ic_light_yellow_rounded_rectangle"
+            android:textSize="32sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="name" />
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:text="이름" />
 
         <TextView
             android:id="@+id/myName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:textSize="32sp"
             android:background="@drawable/ic_light_yellow_rounded_rectangle" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="birth" />
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:text="생년월일" />
 
         <TextView
             android:id="@+id/myBirth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:textSize="32sp"
             android:background="@drawable/ic_light_yellow_rounded_rectangle"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="sex" />
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:text="성별" />
 
         <TextView
             android:id="@+id/mySex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:textSize="32sp"
             android:background="@drawable/ic_light_yellow_rounded_rectangle"/>
 
     </LinearLayout>
@@ -101,5 +177,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="#BEB1AF"
+        android:textColor="#ffffff"
         android:text="수정" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,6 +39,10 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
 import okio.Okio;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -59,7 +63,7 @@ public class RetrofitClient {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
                 //.baseUrl("http://172.30.1.7:3000/")
-                .baseUrl("http://ec2-54-180-202-228.ap-northeast-2.compute.amazonaws.com:3000/")
+                .baseUrl("http://192.168.0.20:3000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         retrofitService =retrofit.create(RetrofitService.class);
@@ -138,7 +142,7 @@ public class RetrofitClient {
         }
     }
 
-    public CreateBoardResponseDto createboard(ArrayList<CreateBoardDto> createBoardDto){
+    public CreateBoardResponseDto createboard(ArrayList<CreateBoardDto> createBoardDto) {
         Thread thread = new Thread() {
             @Override
             public void run() {
@@ -282,7 +286,7 @@ public class RetrofitClient {
             @Override
             public  void run() {
                 try {
-                    withoutDataResponseDto = retrofitService.postFavoriteTeam(userToken, teamNum).execute().body();
+                    withoutDataResponseDto = retrofitService.deleteFavoriteTeam(userToken, teamNum).execute().body();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

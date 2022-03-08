@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/light_yellow"
+    android:orientation="vertical"
+    android:weightSum="3">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/chatListTeamName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/light_yellow"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="127dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/chatListTeamName"
-            android:textSize="10sp"
-            android:background="@color/yellow"
-            android:textColor="@color/black"
-            android:layout_weight="1" />
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/chatListContent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:orientation="horizontal">
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/chatListContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/chatListTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="TextView"
-                android:textSize="10sp"/>
-        </LinearLayout>
-
-    </LinearLayout>
+        <TextView
+            android:id="@+id/chatListTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="TextView"
+            android:textColor="@color/dark_gray"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

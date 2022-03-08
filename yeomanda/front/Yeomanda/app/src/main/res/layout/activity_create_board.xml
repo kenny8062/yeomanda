@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="travelDate"
+            android:text="여행 일자"
             android:textSize="16sp"
             android:layout_marginTop="26dp"
             />
@@ -124,7 +124,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="teamName"
+                android:text="팀 이름"
                 android:textSize="16sp" />
 
 
@@ -138,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="62dp"
-                android:text="travelMate"
+                android:text="여행 멤버"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -164,7 +164,7 @@
                     android:id="@+id/cancelBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:backgroundTint="@color/pale_sky_blue"
+                    android:backgroundTint="@color/gray"
                     android:text="취소"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
@@ -178,7 +178,7 @@
                     android:id="@+id/plusBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:backgroundTint="@color/pale_sky_blue"
+                    android:backgroundTint="@color/gray"
                     android:text="추가"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
@@ -192,9 +192,9 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:textSize="12sp"
-            android:text="create"
+            android:text="등록"
             android:textColor="@color/black"
-            android:backgroundTint="@color/pale_sky_blue"
+            android:backgroundTint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

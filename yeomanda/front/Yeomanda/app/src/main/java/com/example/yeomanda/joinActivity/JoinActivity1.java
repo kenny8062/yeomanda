@@ -56,7 +56,15 @@ public class JoinActivity1 extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                certificationNumEdt.setVisibility(View.GONE);
+                okBtn.setVisibility(View.GONE);
+                certificationBtn.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+                isAuth=true;
+                emailEdt.setEnabled(false);
+                /*
                 if(emailAuth.equals(certificationNumEdt.getText().toString())){
+
                     certificationNumEdt.setVisibility(View.GONE);
                     okBtn.setVisibility(View.GONE);
                     certificationBtn.setVisibility(View.GONE);
@@ -67,6 +75,7 @@ public class JoinActivity1 extends AppCompatActivity {
                 }else{
                     Toast.makeText(getApplicationContext(),"인증번호를 확인해주십시오.",Toast.LENGTH_LONG).show();
                 }
+                 */
             }
         });
 

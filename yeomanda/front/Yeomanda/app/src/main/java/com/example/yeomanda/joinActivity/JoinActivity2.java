@@ -30,7 +30,8 @@ public class JoinActivity2 extends AppCompatActivity {
     public static Context context;
     JoinDto joinDto;
     Button nextBtn;
-    ImageView selfimage1,selfimage2,selfimage3;
+    ImageView joinMyMainImage, joinMySubImage1, joinMySubImage2;
+
     MultipartBody.Part[] selfimage=new MultipartBody.Part[3];
     Uri uri[]=new Uri[3];
     boolean isComplete[]={false,false,false};
@@ -55,9 +56,9 @@ public class JoinActivity2 extends AppCompatActivity {
         joinDto= (JoinDto) intent.getSerializableExtra("joinDto");
 
         nextBtn=findViewById(R.id.nextBtn3);
-        selfimage1=findViewById(R.id.selfimage1);
-        selfimage2=findViewById(R.id.selfimage2);
-        selfimage3=findViewById(R.id.selfimage3);
+        joinMyMainImage =findViewById(R.id.joinMyMainImage);
+        joinMySubImage1 =findViewById(R.id.joinMySubImage1);
+        joinMySubImage2 =findViewById(R.id.joinMySubImage2);
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +72,7 @@ public class JoinActivity2 extends AppCompatActivity {
             }
         });
 
-        selfimage1.setOnClickListener(new View.OnClickListener() {
+        joinMyMainImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -79,7 +80,7 @@ public class JoinActivity2 extends AppCompatActivity {
                 startActivityForResult(intent, GET_IMAGE_FOR_PICTURE1);
             }
         });
-        selfimage2.setOnClickListener(new View.OnClickListener() {
+        joinMySubImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -87,7 +88,7 @@ public class JoinActivity2 extends AppCompatActivity {
                 startActivityForResult(intent, GET_IMAGE_FOR_PICTURE2);
             }
         });
-        selfimage3.setOnClickListener(new View.OnClickListener() {
+        joinMySubImage2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -108,22 +109,19 @@ public class JoinActivity2 extends AppCompatActivity {
                 case GET_IMAGE_FOR_PICTURE1:
                     selectedImageUri = data.getData();
                     uri[0] = selectedImageUri;
-                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(selfimage1);
-                    isComplete[0]=true;
+                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(joinMyMainImage); isComplete[0]=true;
                     if(isComplete[0]&&isComplete[1]&&isComplete[2]) onNextBtn();
                     break;
                 case GET_IMAGE_FOR_PICTURE2:
                     selectedImageUri = data.getData();
                     uri[1] = selectedImageUri;
-                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(selfimage2);
-                    isComplete[1]=true;
+                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(joinMySubImage1);isComplete[1]=true;
                     if(isComplete[0]&&isComplete[1]&&isComplete[2]) onNextBtn();
                     break;
                 case GET_IMAGE_FOR_PICTURE3:
                     selectedImageUri = data.getData();
                     uri[2] = selectedImageUri;
-                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(selfimage3);
-                    isComplete[2]=true;
+                    Glide.with(getApplicationContext()).asBitmap().load(selectedImageUri).apply(RequestOptions.bitmapTransform(multiOption)).into(joinMySubImage2); isComplete[2]=true;
                     if(isComplete[0]&&isComplete[1]&&isComplete[2]) onNextBtn();
                     break;
             }
