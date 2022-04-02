@@ -9,8 +9,11 @@
 <br>
 
 
+# Retrofit
+<br>
 
-> ## Retrofit Request Method
+> ## Request Method
+> 
 @Get, @Post 사용
 - Get은 Read, 정보 조회용도
   ``` java
@@ -39,7 +42,7 @@
     ```
     
 <br><br>
-> ## Retrofit execute vs enqueue
+> ## execute vs enqueue
 - execute
 동기처리시 사용
 단, 메인쓰레드에서 네트워크 연결을 제한하므로 새로운 Thread를 생성 하여 사용 가능
