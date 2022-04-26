@@ -5,5 +5,7 @@ yeomanda - 여행가서 만나다
 
 ##### front - android
 ##### back - nodejs express
+Front Skill Link - https://github.com/kenny8062/yeomanda/tree/main/yeomanda
+
 
 
